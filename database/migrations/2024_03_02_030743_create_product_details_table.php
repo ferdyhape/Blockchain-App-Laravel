@@ -11,14 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('product_details', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('name', 100);
-            $table->string('email', 100)->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('wallet_account_address', 50)->unique()->nullable();
-            $table->string('password');
-            $table->rememberToken();
+            $table->foreignUuid('product_id')->references('id')->on('products')->cascadeOnDelete();
+            $table->foreignUuid('buyer_id')->nullable()->references('id')->on('users')->cascadeOnDelete();
+            $table->string('token');
+            // $table->string('name');
+            $table->string('price');
             $table->timestamps();
         });
     }
@@ -28,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('product_details');
     }
 };
