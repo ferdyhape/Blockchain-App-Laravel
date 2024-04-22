@@ -9,6 +9,7 @@ class UserSeeder extends Seeder
 {
     public function run(): void
     {
+        $faker = \Faker\Factory::create('id_ID');
         // seeder for admin
         \App\Models\User::create([
             'name' => 'Admin Ferdy',
@@ -17,14 +18,24 @@ class UserSeeder extends Seeder
             'role_id' => \App\Models\Role::where('name', 'Admin')->first()->id,
         ]);
 
-        // seeder for user non admin
-        $faker = \Faker\Factory::create('id_ID');
-        for ($i = 0; $i < 30; $i++) {
+        // seeder for shareholder
+        for ($i = 0; $i < 10; $i++) {
             \App\Models\User::create([
                 'name' => $faker->name,
-                'email' => $faker->unique()->safeEmail,
+                'email' => $faker->unique()->email(),
                 'password' => \Illuminate\Support\Facades\Hash::make('password'),
-                'role_id' => \App\Models\Role::whereNot('name', 'Admin')->first()->id,
+                'role_id' => \App\Models\Role::where('name', 'Shareholder')->first()->id,
+                'wallet_account_address' => '0x' . $faker->uuid,
+            ]);
+        }
+
+        // seeder for owner
+        for ($i = 0; $i < 10; $i++) {
+            \App\Models\User::create([
+                'name' => $faker->name,
+                'email' => $faker->unique()->email(),
+                'password' => \Illuminate\Support\Facades\Hash::make('password'),
+                'role_id' => \App\Models\Role::where('name', 'Owner')->first()->id,
                 'wallet_account_address' => '0x' . $faker->uuid,
             ]);
         }

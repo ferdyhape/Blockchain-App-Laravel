@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignUuid('user_id')->constrained('users')->onUpdate('cascade')->onDelete('cascade');
             $table->string('name', 100);
             $table->longText('description');
+            $table->string('wallet_account_address', 50);
             $table->string('address');
             $table->string('logo');
             $table->string('city', 100);
