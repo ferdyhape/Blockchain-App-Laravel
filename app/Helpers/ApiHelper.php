@@ -9,6 +9,8 @@ class APIHelper
     private static $arraySegmentApi = [
         'getTransactions' => '/transactions',
         'getTransactionDetails' => '/transaction-details',
+        'addTransaction' => '/transactions',
+        'addTransactionDetail' => '/transaction-details',
     ];
 
     public static function initialize()
@@ -28,6 +30,7 @@ class APIHelper
     public static function httpPost($key, $data)
     {
         $config = self::buildConfig($key);
+
         return Http::withHeaders([
             'Authorization' => self::$apiToken,
         ])->post($config['fullApiUrl'], $data)->json();

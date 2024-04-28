@@ -11,12 +11,11 @@
                             <tr>
                                 <th>No</th>
                                 <th>Transaction Code</th>
-                                <th>Buyer</th>
-                                <th>Buyer ID</th>
-                                <th>Seller Company</th>
-                                <th>Seller ID</th>
-                                <th>Sum Of Product</th>
-                                <th>Total Price</th>
+                                <th>From</th>
+                                <th>From Id</th>
+                                <th>To</th>
+                                <th>To Id</th>
+                                <th>Order Type</th>
                                 <th>Payment Status</th>
                                 <th>Created At</th>
                             </tr>
@@ -36,9 +35,7 @@
                 processing: true,
                 serverSide: true,
                 ajax: '{{ url()->current() }}',
-                columns: [
-
-                    {
+                columns: [{
                         data: 'DT_RowIndex',
                         name: 'DT_RowIndex',
                         orderable: false,
@@ -50,28 +47,24 @@
                         name: 'transactionCode'
                     },
                     {
-                        data: 'buyer',
-                        name: 'buyer'
+                        data: 'from',
+                        name: 'from'
                     },
                     {
-                        data: 'buyerId',
-                        name: 'buyerId'
+                        data: 'fromId',
+                        name: 'fromId'
                     },
                     {
-                        data: 'sellerCompany',
-                        name: 'sellerCompany'
+                        data: 'to',
+                        name: 'to'
                     },
                     {
-                        data: 'sellerId',
-                        name: 'sellerId'
+                        data: 'toId',
+                        name: 'toId'
                     },
                     {
-                        data: 'sumOfProduct',
-                        name: 'sumOfProduct'
-                    },
-                    {
-                        data: 'totalPrice',
-                        name: 'totalPrice'
+                        data: 'orderType',
+                        name: 'orderType'
                     },
                     {
                         data: 'paymentStatus',

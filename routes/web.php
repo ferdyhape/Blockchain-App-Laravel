@@ -37,6 +37,7 @@ Route::middleware('auth')->group(function () {
     Route::prefix('dashboard')->name('dashboard.')->group(function () {
         Route::prefix('admin')->name('admin.')->middleware('checkRoles:Admin')->group(function () {
             Route::get('/', [AdminDashboardController::class, 'index'])->name('index');
+            Route::get('test-post', [AdminDashboardController::class, 'testPost'])->name('test-post');
         });
 
         Route::prefix('shareholder')->name('shareholder.')->middleware('checkRoles:Admin,Shareholder')->group(function () {

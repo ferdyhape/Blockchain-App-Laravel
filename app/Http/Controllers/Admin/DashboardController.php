@@ -22,4 +22,20 @@ class DashboardController extends Controller
 
         return view('auth.admin.dashboard.index');
     }
+
+    public function testPost()
+    {
+        $postData = [
+            'transactionCode' => 'TRX-0001',
+            'from' => 'Ferdy Doe',
+            'fromId' => '1',
+            'to' => 'John Doe',
+            'toId' => '2',
+            'orderType' => 'buy',
+            'paymentStatus' => 'pending',
+            'createdAt' => time(),
+        ];
+        $response = APIHelper::httpPost('addTransaction', $postData);
+        return response()->json($response);
+    }
 }
