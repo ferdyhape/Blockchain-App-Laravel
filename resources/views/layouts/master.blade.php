@@ -18,6 +18,7 @@
     @endif
 
     @include('layouts.partials.script')
+    @stack('custom-scripts')
 </body>
 
 </html>

@@ -28,6 +28,7 @@ class CompanySeeder extends Seeder
                 'phone' => $faker->phoneNumber,
                 'employee_count' => $faker->numberBetween(10, 1000),
                 'established_year' => $faker->year,
+                'legal_document' => $faker->imageUrl(),
             ]);
         }
     }

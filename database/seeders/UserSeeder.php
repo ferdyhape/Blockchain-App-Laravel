@@ -25,7 +25,6 @@ class UserSeeder extends Seeder
                 'email' => $faker->unique()->email(),
                 'password' => \Illuminate\Support\Facades\Hash::make('password'),
                 'role_id' => \App\Models\Role::where('name', 'Shareholder')->first()->id,
-                'wallet_account_address' => '0x' . $faker->uuid,
             ]);
         }
 
@@ -36,7 +35,6 @@ class UserSeeder extends Seeder
                 'email' => $faker->unique()->email(),
                 'password' => \Illuminate\Support\Facades\Hash::make('password'),
                 'role_id' => \App\Models\Role::where('name', 'Owner')->first()->id,
-                'wallet_account_address' => '0x' . $faker->uuid,
             ]);
         }
     }

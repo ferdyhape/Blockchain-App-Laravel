@@ -76,8 +76,11 @@
 
         <img src="{{ asset('assets/img/register.png') }}" class="card-img-top mx-auto" style="width: 65%">
         <div class="card-body">
-            <form action="{{ route('register-owner.process') }}" method="post">
+            <form action="{{ route('register-owner.process') }}" method="post" enctype="multipart/form-data">
                 @csrf
+                <p class="text-center">
+                    <strong>User Information</strong>
+                </p>
                 <div class="form-group mb-3">
                     <input type="text" class="form-control" name="name" placeholder="Name">
 
@@ -206,6 +209,17 @@
                         placeholder="Company Established Year">
 
                     @error('company_established_year')
+                        <div class="alert alert-danger">
+                            {{ $message }}
+                        </div>
+                    @enderror
+                </div>
+
+                {{-- input for legal document --}}
+                <div class="form-group mb-3">
+                    <input type="file" class="form-control" name="legal_document" placeholder="Legal Document">
+
+                    @error('legal_document')
                         <div class="alert alert-danger">
                             {{ $message }}
                         </div>

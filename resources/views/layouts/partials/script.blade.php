@@ -2,8 +2,11 @@
     integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous">
 </script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="{{ asset('assets/js/base.js') }}"></script>
+
 
 <script>
+    let currentUrl = '{{ url()->current() }}';
     document.addEventListener("DOMContentLoaded", function(event) {
 
         const showNavbar = (toggleId, navId, bodyId, headerId) => {
@@ -16,7 +19,7 @@
             if (toggle && nav && bodypd && headerpd) {
                 toggle.addEventListener('click', () => {
                     // show navbar
-                    nav.classList.toggle('show')
+                    nav.classList.toggle('show-navbar')
                     // change icon
                     toggle.classList.toggle('bx-x')
                     // add padding to body

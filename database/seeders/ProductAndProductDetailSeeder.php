@@ -23,6 +23,7 @@ class ProductAndProductDetailSeeder extends Seeder
                 'description' => 'Description of Saham ' . $company_name,
                 'divided_into' => $divided_into,
                 'nominal_requested' => (string) $nominated_requested,
+                'proposal_document' => 'proposal_document/' . $company_name . '.pdf',
             ]);
 
             for ($i = 1; $i <= $divided_into; $i++) {

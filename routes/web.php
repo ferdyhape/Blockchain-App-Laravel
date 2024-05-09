@@ -2,9 +2,11 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Admin\UserManagementController;
+use App\Http\Controllers\Admin\CompanyManagementController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
-use App\Http\Controllers\Shareholder\DashboardController as ShareholderDashboardController;
 use App\Http\Controllers\Owner\DashboardController as OwnerDashboardController;
+use App\Http\Controllers\Shareholder\DashboardController as ShareholderDashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,6 +30,9 @@ Route::middleware('guest')->group(function () {
     Route::post('/login', [AuthController::class, 'postLogin'])->name('login.process');
     Route::post('/register/owner', [AuthController::class, 'postRegisterOwner'])->name('register-owner.process');
     Route::post('/register/shareholder', [AuthController::class, 'postRegisterShareholder'])->name('register-shareholder.process');
+    Route::get('/test-confirmation', function () {
+        return view('auth.credentials.on_confirmation');
+    })->name('test-confirmation');
 });
 
 
@@ -38,6 +43,8 @@ Route::middleware('auth')->group(function () {
         Route::prefix('admin')->name('admin.')->middleware('checkRoles:Admin')->group(function () {
             Route::get('/', [AdminDashboardController::class, 'index'])->name('index');
             Route::get('test-post', [AdminDashboardController::class, 'testPost'])->name('test-post');
+            Route::resource('user-management', UserManagementController::class)->names('user-management');
+            Route::resource('company-management', CompanyManagementController::class)->names('company-management');
         });
 
         Route::prefix('shareholder')->name('shareholder.')->middleware('checkRoles:Admin,Shareholder')->group(function () {
