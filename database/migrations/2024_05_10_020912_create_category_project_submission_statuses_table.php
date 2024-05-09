@@ -11,12 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('product_details', function (Blueprint $table) {
+        Schema::create('category_project_submission_statuses', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignUuid('product_id')->references('id')->on('products')->cascadeOnDelete();
-            $table->foreignUuid('owner_id')->nullable()->references('id')->on('users')->cascadeOnDelete();
-            $table->string('token');
-            $table->string('price');
+            $table->string('name', 150);
             $table->timestamps();
         });
     }
@@ -26,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('product_details');
+        Schema::dropIfExists('category_project_submission_statuses');
     }
 };
