@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9c491b8531eec05ba41a11d9276a5749",
+    "content-hash": "2170212e83ada97cfce89ccfc709c204",
     "packages": [
         {
             "name": "brick/math",
@@ -3186,6 +3186,88 @@
             "time": "2023-11-08T05:53:05+00:00"
         },
         {
+            "name": "spatie/laravel-permission",
+            "version": "6.7.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/spatie/laravel-permission.git",
+                "reference": "17607924aa0aa89bc0153c2ce45ed7c55083367b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/spatie/laravel-permission/zipball/17607924aa0aa89bc0153c2ce45ed7c55083367b",
+                "reference": "17607924aa0aa89bc0153c2ce45ed7c55083367b",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/auth": "^8.12|^9.0|^10.0|^11.0",
+                "illuminate/container": "^8.12|^9.0|^10.0|^11.0",
+                "illuminate/contracts": "^8.12|^9.0|^10.0|^11.0",
+                "illuminate/database": "^8.12|^9.0|^10.0|^11.0",
+                "php": "^8.0"
+            },
+            "require-dev": {
+                "laravel/passport": "^11.0|^12.0",
+                "orchestra/testbench": "^6.23|^7.0|^8.0|^9.0",
+                "phpunit/phpunit": "^9.4|^10.1"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "6.x-dev",
+                    "dev-master": "6.x-dev"
+                },
+                "laravel": {
+                    "providers": [
+                        "Spatie\\Permission\\PermissionServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "files": [
+                    "src/helpers.php"
+                ],
+                "psr-4": {
+                    "Spatie\\Permission\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Freek Van der Herten",
+                    "email": "freek@spatie.be",
+                    "homepage": "https://spatie.be",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Permission handling for Laravel 8.0 and up",
+            "homepage": "https://github.com/spatie/laravel-permission",
+            "keywords": [
+                "acl",
+                "laravel",
+                "permission",
+                "permissions",
+                "rbac",
+                "roles",
+                "security",
+                "spatie"
+            ],
+            "support": {
+                "issues": "https://github.com/spatie/laravel-permission/issues",
+                "source": "https://github.com/spatie/laravel-permission/tree/6.7.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/spatie",
+                    "type": "github"
+                }
+            ],
+            "time": "2024-04-19T12:35:28+00:00"
+        },
+        {
             "name": "symfony/console",
             "version": "v6.4.4",
             "source": {
@@ -5683,6 +5765,93 @@
                 "source": "https://github.com/webmozarts/assert/tree/1.11.0"
             },
             "time": "2022-06-03T18:03:27+00:00"
+        },
+        {
+            "name": "yajra/laravel-datatables-oracle",
+            "version": "v10.11.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/yajra/laravel-datatables.git",
+                "reference": "a11dc9cf5ec7f7dc68ad0d5959c5e7aec0af29a5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/yajra/laravel-datatables/zipball/a11dc9cf5ec7f7dc68ad0d5959c5e7aec0af29a5",
+                "reference": "a11dc9cf5ec7f7dc68ad0d5959c5e7aec0af29a5",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/database": "^9|^10",
+                "illuminate/filesystem": "^9|^10",
+                "illuminate/http": "^9|^10",
+                "illuminate/support": "^9|^10",
+                "illuminate/view": "^9|^10",
+                "php": "^8.0.2"
+            },
+            "require-dev": {
+                "algolia/algoliasearch-client-php": "^3.4",
+                "larastan/larastan": "^2.4",
+                "laravel/scout": "^10.5",
+                "meilisearch/meilisearch-php": "^1.4",
+                "orchestra/testbench": "^8",
+                "yajra/laravel-datatables-html": "^9.3.4|^10"
+            },
+            "suggest": {
+                "yajra/laravel-datatables-buttons": "Plugin for server-side exporting of dataTables.",
+                "yajra/laravel-datatables-editor": "Plugin to use DataTables Editor (requires a license).",
+                "yajra/laravel-datatables-export": "Plugin for server-side exporting using livewire and queue worker.",
+                "yajra/laravel-datatables-fractal": "Plugin for server-side response using Fractal.",
+                "yajra/laravel-datatables-html": "Plugin for server-side HTML builder of dataTables."
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "10.x-dev"
+                },
+                "laravel": {
+                    "providers": [
+                        "Yajra\\DataTables\\DataTablesServiceProvider"
+                    ],
+                    "aliases": {
+                        "DataTables": "Yajra\\DataTables\\Facades\\DataTables"
+                    }
+                }
+            },
+            "autoload": {
+                "files": [
+                    "src/helper.php"
+                ],
+                "psr-4": {
+                    "Yajra\\DataTables\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Arjay Angeles",
+                    "email": "aqangeles@gmail.com"
+                }
+            ],
+            "description": "jQuery DataTables API for Laravel 4|5|6|7|8|9|10",
+            "keywords": [
+                "datatables",
+                "jquery",
+                "laravel"
+            ],
+            "support": {
+                "issues": "https://github.com/yajra/laravel-datatables/issues",
+                "source": "https://github.com/yajra/laravel-datatables/tree/v10.11.4"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/sponsors/yajra",
+                    "type": "github"
+                }
+            ],
+            "time": "2024-02-28T05:00:23+00:00"
         }
     ],
     "packages-dev": [
@@ -8112,6 +8281,66 @@
                 }
             ],
             "time": "2023-11-20T00:12:19+00:00"
+        },
+        {
+            "name": "timwassenburg/laravel-service-generator",
+            "version": "v1.0.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/timwassenburg/laravel-service-generator.git",
+                "reference": "9fcd0e48d418f36c94efcb1917062fa9ea7a0fcc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/timwassenburg/laravel-service-generator/zipball/9fcd0e48d418f36c94efcb1917062fa9ea7a0fcc",
+                "reference": "9fcd0e48d418f36c94efcb1917062fa9ea7a0fcc",
+                "shasum": ""
+            },
+            "require-dev": {
+                "laravel/pint": "^1.10",
+                "nunomaduro/larastan": "^2.0",
+                "orchestra/testbench": "^8.5",
+                "pestphp/pest": "^2.5"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "TimWassenburg\\ServiceGenerator\\Http\\Providers\\CommandServiceProvider",
+                        "TimWassenburg\\ServiceGenerator\\ServiceGeneratorServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "TimWassenburg\\ServiceGenerator\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Tim Wassenburg"
+                }
+            ],
+            "description": "Generate Laravel services",
+            "homepage": "https://github.com/timwassenburg/laravel-service-generator",
+            "keywords": [
+                "artisan",
+                "cli",
+                "generator",
+                "laravel",
+                "pattern",
+                "php",
+                "services"
+            ],
+            "support": {
+                "issues": "https://github.com/timwassenburg/laravel-service-generator/issues",
+                "source": "https://github.com/timwassenburg/laravel-service-generator/tree/v1.0.5"
+            },
+            "time": "2023-04-27T09:49:57+00:00"
         }
     ],
     "aliases": [],

@@ -12,7 +12,7 @@ class CompanySeeder extends Seeder
      */
     public function run(): void
     {
-        $userWithoutAdmin = \App\Models\User::whereNot('role_id', \App\Models\Role::where('name', 'Admin')->first()->id)->get();
+        $userWithoutAdmin = \App\Models\User::where('role_id', \App\Models\Role::where('name', 'Owner')->first()->id)->get();
         $countOfUserWithoutAdmin = $userWithoutAdmin->count();
 
         $faker = \Faker\Factory::create('id_ID');
@@ -28,6 +28,7 @@ class CompanySeeder extends Seeder
                 'phone' => $faker->phoneNumber,
                 'employee_count' => $faker->numberBetween(10, 1000),
                 'established_year' => $faker->year,
+                'legal_document' => $faker->imageUrl(),
             ]);
         }
     }

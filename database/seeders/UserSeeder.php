@@ -2,31 +2,53 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Role;
+use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class UserSeeder extends Seeder
 {
     public function run(): void
     {
-        // seeder for admin
-        \App\Models\User::create([
-            'name' => 'Admin Ferdy',
-            'email' => 'admin@admin.com',
-            'password' => \Illuminate\Support\Facades\Hash::make('password'),
-            'role_id' => \App\Models\Role::where('name', 'Admin')->first()->id,
-        ]);
+        $adminRole = Role::where('name', 'admin')->first();
+        $regularMemberRole = Role::where('name', 'Regular Member')->first();
+        $platinumMemberRole = Role::where('name', 'Platinum Member')->first();
 
-        // seeder for user non admin
         $faker = \Faker\Factory::create('id_ID');
-        for ($i = 0; $i < 30; $i++) {
-            \App\Models\User::create([
-                'name' => $faker->name,
-                'email' => $faker->unique()->safeEmail,
+        // seeder for admin
+        $adminUser =
+            User::create([
+                'name' => 'Admin Ferdy',
+                'email' => 'admin@admin.com',
                 'password' => \Illuminate\Support\Facades\Hash::make('password'),
-                'role_id' => \App\Models\Role::whereNot('name', 'Admin')->first()->id,
-                'wallet_account_address' => '0x' . $faker->uuid,
             ]);
+        // asign role
+        $adminUser->assignRole($adminRole);
+
+
+        // seeder for platinum member
+        for ($i = 0; $i < 10; $i++) {
+            $userPlatinum =
+                User::create([
+                    'name' => $faker->name,
+                    'email' => $faker->unique()->email(),
+                    'password' => \Illuminate\Support\Facades\Hash::make('password'),
+                ]);
+            // asign role
+            $userPlatinum->assignRole($platinumMemberRole);
+        }
+
+        // seeder for regular member
+        for ($i = 0; $i < 10; $i++) {
+            $userRegular =
+                User::create([
+                    'name' => $faker->name,
+                    'email' => $faker->unique()->email(),
+                    'password' => \Illuminate\Support\Facades\Hash::make('password'),
+                ]);
+            // asign role
+            $userRegular->assignRole($regularMemberRole);
         }
     }
 }

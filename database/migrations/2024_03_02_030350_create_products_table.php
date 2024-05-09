@@ -19,6 +19,7 @@ return new class extends Migration
             $table->longText('description');
             $table->integer('divided_into');
             $table->string('nominal_requested');
+            $table->string('proposal_document')->comment('Path to proposal file');
             $table->timestamps();
         });
     }

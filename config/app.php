@@ -18,6 +18,9 @@ return [
 
     'name' => env('APP_NAME', 'Laravel'),
 
+    'base_api_url' => env('BASE_API_URL'),
+    'api_token' => env('API_TOKEN'),
+
     /*
     |--------------------------------------------------------------------------
     | Application Environment
@@ -168,6 +171,8 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        Yajra\DataTables\DataTablesServiceProvider::class,
+        Spatie\Permission\PermissionServiceProvider::class,
     ])->toArray(),
 
     /*

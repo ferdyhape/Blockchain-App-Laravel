@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('companies', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->foreignUuid('user_id')->constrained('users')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignUuid('accept_by_id')->nullable()->references('id')->on('users')->cascadeOnDelete();
             $table->string('name', 100);
             $table->longText('description');
             $table->string('address');
@@ -23,6 +24,7 @@ return new class extends Migration
             $table->string('phone', 20);
             $table->integer('employee_count');
             $table->string('established_year', 4);
+            $table->string('legal_document')->comment('Path to legal document file');
             $table->timestamps();
         });
     }
