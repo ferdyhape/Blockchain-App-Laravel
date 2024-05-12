@@ -15,8 +15,16 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->string('name', 100);
             $table->string('email', 100)->unique();
+            $table->string('phone', 20)->unique();
+            $table->date('date_of_birth');
+            $table->string('place_of_birth', 100);
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->string('province_id', 100);
+            $table->string('city_id', 100);
+            $table->string('subdistrict_id', 100);
+            $table->string('address_detail', 100);
+            $table->string('number_id', 16)->unique();
             $table->rememberToken();
             $table->timestamps();
         });

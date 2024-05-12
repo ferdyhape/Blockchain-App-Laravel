@@ -43,8 +43,8 @@ class User extends Authenticatable
         return $this->belongsTo(Role::class);
     }
 
-    public function companies()
+    public function projects()
     {
-        return $this->hasMany(Company::class);
+        return $this->hasMany(Project::class, 'user_id', 'id');
     }
 }
