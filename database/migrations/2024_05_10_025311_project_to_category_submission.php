@@ -11,8 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
+        // foreign ini berfungsi untuk memberikan sampai mana status dari pengajuan proyek ini
         Schema::table('projects', function (Blueprint $table) {
-            $table->foreignUuid('category_project_submission_status_id')->constrained('category_project_submission_statuses');
+            $table->foreignUuid('category_project_submission_status_id')->after('project_category_id')->constrained('category_project_submission_statuses');
         });
     }
 

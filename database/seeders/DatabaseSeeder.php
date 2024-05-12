@@ -17,6 +17,9 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             ProjectCategorySeeder::class,
             CategoryProjectSubmissionStatusSeeder::class,
+            SubCategoryProjectSubmissionSeeder::class,
+            ProjectSeeder::class,
+            ProgressStatusOfProjectSubmissionSeeder::class,
             // CompanySeeder::class,
             // ProductAndProductDetailSeeder::class,
         ]);

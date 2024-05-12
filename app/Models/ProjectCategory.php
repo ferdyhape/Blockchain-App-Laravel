@@ -10,4 +10,9 @@ class ProjectCategory extends Model
 {
     use HasFactory, HasUuids;
     protected $guarded = ['id', 'created_at', 'updated_at'];
+
+    public function projects()
+    {
+        return $this->hasMany(Project::class, 'project_category_id', 'id');
+    }
 }

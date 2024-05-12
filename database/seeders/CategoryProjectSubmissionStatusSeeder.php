@@ -13,8 +13,9 @@ class CategoryProjectSubmissionStatusSeeder extends Seeder
     public function run(): void
     {
         $data = [
+            'Proposal Project Terkirim',
+            'Peninjauan Proposal',
             'Proses Approval Komitee',
-            'Disetujui Komitee',
             'Proses Tanda Tangan Kontrak',
             'Proses Penggalangan Dana',
             'Dibatalkan'

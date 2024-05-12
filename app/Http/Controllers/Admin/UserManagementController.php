@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Services\JsonService;
 use App\Services\DatatableService;
 use App\Http\Controllers\Controller;
 use Yajra\DataTables\Facades\DataTables;
@@ -16,8 +17,7 @@ class UserManagementController extends Controller
     public function index()
     {
         if (request()->ajax()) {
-            $query = User::select('users.*', 'roles.name as role_name')
-                ->leftJoin('roles', 'users.role_id', '=', 'roles.id');
+            $query = User::with('roles')->get();
 
             return DatatableService::buildDatatable(
                 $query,
@@ -57,7 +57,8 @@ class UserManagementController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $data = User::findOrFail($id);
+        return JsonService::editData($data);
     }
 
     /**
@@ -73,6 +74,12 @@ class UserManagementController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $data = User::findOrFail($id);
+        try {
+            $data->delete();
+            return JsonService::response(['message' => 'Data deleted successfully']);
+        } catch (\Exception $e) {
+            return JsonService::response(['message' => 'Data failed to delete'], 500);
+        }
     }
 }

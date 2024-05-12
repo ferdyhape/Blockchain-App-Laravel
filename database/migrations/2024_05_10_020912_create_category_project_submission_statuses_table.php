@@ -11,6 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
+        // tabel category status pengajuan proyek,tabel ini akan berisi status seperti 'Proses Approval Komitee', 'Disetujui Komitee', 'Proses Tanda Tangan Kontrak', 'Proses Penggalangan Dana', dan 'Dibatalkan'
         Schema::create('category_project_submission_statuses', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('name', 150);

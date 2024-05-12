@@ -11,6 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
+        // tabel project ini representasi dari awal suatu project di usulkan
         Schema::create('projects', function (Blueprint $table) {
             // dokumen pendukung akan dihandle media library
             // brosur katalog product akan di handle media library
@@ -36,7 +37,7 @@ return new class extends Migration
             $table->decimal('expenses_per_month', 15, 2); // pengeluaran per bulan
             $table->longText('projected_monthly_expenses'); // proyeksi pengeluaran per bulan
 
-            $table->string('income_statement_upload_every', 50); // upload laporan keuangan setiap (bulan)
+            $table->integer('income_statement_upload_every'); // upload laporan keuangan setiap (bulan)
             $table->longText('description_of_profit_sharing'); // deskripsi bagi hasil
 
             $table->timestamps();
