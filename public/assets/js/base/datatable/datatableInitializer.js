@@ -1,4 +1,4 @@
-console.log("datatable.js loaded");
+console.log("datatableInitializer.js loaded");
 
 // apabila document sudah siap
 $(document).ready(function () {

@@ -40,18 +40,18 @@ Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
     Route::prefix('dashboard')->name('dashboard.')->group(function () {
-        Route::prefix('admin')->name('admin.')->middleware('checkRoles:Admin')->group(function () {
+        Route::prefix('admin')->name('admin.')->middleware('role:Admin')->group(function () {
             Route::get('/', [AdminDashboardController::class, 'index'])->name('index');
             Route::get('test-post', [AdminDashboardController::class, 'testPost'])->name('test-post');
             Route::resource('user-management', UserManagementController::class)->names('user-management');
             Route::resource('company-management', CompanyManagementController::class)->names('company-management');
         });
 
-        Route::prefix('shareholder')->name('shareholder.')->middleware('checkRoles:Admin,Shareholder')->group(function () {
+        Route::prefix('shareholder')->name('shareholder.')->middleware('role:Admin,Shareholder')->group(function () {
             Route::get('/', [ShareholderDashboardController::class, 'index'])->name('index');
         });
 
-        Route::prefix('owner')->name('owner.')->middleware('checkRoles:Admin,Owner')->group(function () {
+        Route::prefix('owner')->name('owner.')->middleware('role:Admin,Owner')->group(function () {
             Route::get('/', [OwnerDashboardController::class, 'index'])->name('index');
         });
     });

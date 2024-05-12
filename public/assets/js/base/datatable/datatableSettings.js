@@ -1,4 +1,4 @@
-console.log("base_datatable.js loaded");
+console.log("datatableSettings.js loaded");
 
 let isDatatableWithoutActionColumn = false;
 let columns = [];

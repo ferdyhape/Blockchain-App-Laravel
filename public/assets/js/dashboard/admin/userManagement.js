@@ -1,4 +1,4 @@
-console.log("company_management.js loaded");
+console.log("userManagement.js loaded");
 
 tableName = "#userManagementTable";
 columns = [
@@ -14,12 +14,24 @@ columns = [
         name: "name",
     },
     {
-        data: "role_name",
-        name: "role_name",
+        data: "roles.0.name",
+        name: "roles.0.name",
     },
     {
         data: "email",
         name: "email",
+    },
+    {
+        data: "phone",
+        name: "phone",
+    },
+    {
+        data: "date_of_birth",
+        name: "date_of_birth",
+    },
+    {
+        data: "place_of_birth",
+        name: "place_of_birth",
     },
     {
         data: "created_at",

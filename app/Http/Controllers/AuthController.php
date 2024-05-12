@@ -27,11 +27,19 @@ class AuthController extends Controller
 
         if (auth()->attempt($credentials)) {
             $request->session()->regenerate();
-            if (checkRoles(['Admin'])) {
+            // if (checkRoles(['Admin'])) {
+            //     return redirect()->route('dashboard.admin.index');
+            // } elseif (checkRoles(['Admin', 'Shareholder'])) {
+            //     return redirect()->route('dashboard.shareholder.index');
+            // } elseif (checkRoles(['Admin', 'Owner'])) {
+            //     return redirect()->route('dashboard.owner.index');
+            // }
+            // change using spatie hasrole
+            if (auth()->user()->hasRole('Admin')) {
                 return redirect()->route('dashboard.admin.index');
-            } elseif (checkRoles(['Admin', 'Shareholder'])) {
+            } elseif (auth()->user()->hasRole('Shareholder')) {
                 return redirect()->route('dashboard.shareholder.index');
-            } elseif (checkRoles(['Admin', 'Owner'])) {
+            } elseif (auth()->user()->hasRole('Owner')) {
                 return redirect()->route('dashboard.owner.index');
             }
         }

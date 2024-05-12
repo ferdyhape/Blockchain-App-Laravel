@@ -26,3 +26,15 @@ function showEditModal(id, url, modalId) {
         },
     });
 }
+
+function deleteData(id, url) {
+    if (confirm("Are you sure?")) {
+        $.ajax({
+            url: url + "/" + id,
+            type: "DELETE",
+            success: function (response) {
+                reinitTable();
+            },
+        });
+    }
+}
