@@ -8,8 +8,8 @@
 <div class="col-md-12">
     <h1>{{ $header }}</h1>
     <div class="table-responsive mt-5">
-        <table id="{{ $tableId }}" class="table">
-            <thead>
+        <table id="{{ $tableId }}" class="display w-100 nowrap">
+            <thead class="text-center">
                 @if ($oneRowThArray)
                     <tr>
                         @foreach ($oneRowThArray as $th)
@@ -20,8 +20,6 @@
                     {{ $theadContent }}
                 @endif
             </thead>
-            <tbody>
-            </tbody>
         </table>
     </div>
 

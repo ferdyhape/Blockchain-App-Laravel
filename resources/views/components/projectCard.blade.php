@@ -1,0 +1,64 @@
+<!-- ProjectCard.blade.php -->
+
+@props(['project'])
+
+<div class="col-md-4">
+    <div class="card p-3 shadow border-0">
+        <div class="card-body">
+            {{-- head of card, project image and status --}}
+            <div class="card-head">
+                <div class="d-flex justify-content-between">
+                    <div class="project-image">
+                        <img src="https://fakeimg.pl/300/" class=" rounded-circle" alt="..." width="60"
+                            height="60">
+                    </div>
+                    <div class="btn btn-sm my-auto btn-primary">
+                        {{ $project->categoryProjectSubmissionStatus->name }}</div>
+                </div>
+            </div>
+
+            {{-- card content --}}
+            <div class="card-content mt-4">
+
+                {{-- project title --}}
+                <h5 class="card-title fw-semibold fs-5"><a
+                        href= "{{ route('dashboard.user.project-management.show', $project) }}">{{ $project->title }}</a>
+                </h5>
+                <h5 class="text-secondary
+                        fs-6">{{ $project->user->name }}</h5>
+
+                {{-- coins offered --}}
+                <div class="d-flex justify-content-between my-4">
+                    <div class="coins-offered border px-3 py-2 rounded dashed-border text-start">
+                        <h5>-</h5>
+                        <p class="my-0 text-secondary">Koin Ditawarkan</p>
+                    </div>
+                    <div class="coins-offered border px-3 py-2 rounded dashed-border text-end">
+                        <h5>-</h5>
+                        <p class="my-0 text-secondary">Min Beli</p>
+                    </div>
+                </div>
+
+                {{-- progress bar --}}
+                <div class="progress" role="progressbar" aria-label="Success example" aria-valuenow="25"
+                    aria-valuemin="0" aria-valuemax="100">
+                    <div class="progress-bar bg-warning" style="width: 65%"></div>
+                </div>
+
+                {{-- progress bar info --}}
+                <div class="d-flex justify-content-between mt-4">
+                    <div class="coins-offered rounded  text-start">
+                        <p class="my-1 text-secondary">Terkumpul</p>
+                        <h5>- Koin</h5>
+                    </div>
+                    <div class="coins-offered rounded  text-end">
+                        <p class="my-1 text-secondary">Sisa hari</p>
+                        <h5>- </h5>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
