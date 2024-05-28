@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Services\JsonService;
 use App\Services\DatatableService;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\UpdateUserRequest;
+use App\Services\UserManagementService;
 use Yajra\DataTables\Facades\DataTables;
 
 class UserManagementController extends Controller
@@ -17,12 +19,7 @@ class UserManagementController extends Controller
     public function index()
     {
         if (request()->ajax()) {
-            $query = User::with('roles')->get();
-
-            return DatatableService::buildDatatable(
-                $query,
-                'auth.admin.user_management.action'
-            );
+            return UserManagementService::ajaxDatatableByAdmin();
         }
 
         return view('auth.admin.user_management.index');
@@ -57,25 +54,36 @@ class UserManagementController extends Controller
      */
     public function edit(string $id)
     {
-        $data = User::findOrFail($id);
-        return JsonService::editData($data);
+        try {
+            $data = UserManagementService::getUserData($id);
+            return JsonService::editData($data);
+        } catch (\Exception $e) {
+            return JsonService::response(['message' => 'Data not found'], 404);
+        }
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateUserRequest $request, string $id)
     {
-        //
+        try {
+            $user = UserManagementService::getUserData($id);
+            $user->update($request->all());
+            return JsonService::response(['message' => 'Data updated successfully']);
+        } catch (\Exception $e) {
+            return JsonService::response(['message' => 'Data failed to update'], 500);
+        }
     }
+
 
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(string $id)
     {
-        $data = User::findOrFail($id);
         try {
+            $data = UserManagementService::getUserData($id);
             $data->delete();
             return JsonService::response(['message' => 'Data deleted successfully']);
         } catch (\Exception $e) {

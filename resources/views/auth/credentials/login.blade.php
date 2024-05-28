@@ -6,6 +6,11 @@
 
         <img src="{{ asset('assets/img/login.png') }}" class="card-img-top mx-auto" style="width: 65%">
         <div class="card-body">
+            @if (session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
             @error('credentials')
                 <div class="alert alert-danger">
                     {{ $message }}

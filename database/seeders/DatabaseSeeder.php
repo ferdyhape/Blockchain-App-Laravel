@@ -14,12 +14,14 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             RoleSeeder::class,
+            AdminSeeder::class,
             UserSeeder::class,
             ProjectCategorySeeder::class,
-            CategoryProjectSubmissionStatusSeeder::class,
+            // CategoryProjectSubmissionStatusSeeder::class,
+            IconCategoryProjectSubmissionSeeder::class,
             SubCategoryProjectSubmissionSeeder::class,
-            ProjectSeeder::class,
-            ProgressStatusOfProjectSubmissionSeeder::class,
+            // ProjectSeeder::class,
+            // ProgressStatusOfProjectSubmissionSeeder::class,
             // CompanySeeder::class,
             // ProductAndProductDetailSeeder::class,
         ]);

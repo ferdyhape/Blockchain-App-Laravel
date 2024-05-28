@@ -1,7 +1,7 @@
 console.log("userManagement.js loaded");
 
 tableName = "#userManagementTable";
-columns = [
+columnsDatatable = [
     {
         data: "DT_RowIndex",
         name: "DT_RowIndex",
@@ -32,6 +32,24 @@ columns = [
     {
         data: "place_of_birth",
         name: "place_of_birth",
+    },
+    {
+        data: "supporting_documents",
+        name: "supporting_documents",
+        render: function (data) {
+            var documents = "";
+            if (data.length > 0) {
+                data.forEach(function (document) {
+                    documents +=
+                        '<a href="' +
+                        document.original_url +
+                        '" target="_blank">' +
+                        document.name +
+                        "</a><br>";
+                });
+            }
+            return documents;
+        },
     },
     {
         data: "created_at",

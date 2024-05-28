@@ -13,7 +13,11 @@
                 @if ($oneRowThArray)
                     <tr>
                         @foreach ($oneRowThArray as $th)
-                            <th>{{ $th }}</th>
+                            @if ($th == 'Action')
+                                <th class="text-center">{{ $th }}</th>
+                            @else
+                                <th>{{ $th }}</th>
+                            @endif
                         @endforeach
                     </tr>
                 @else

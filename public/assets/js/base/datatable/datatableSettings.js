@@ -1,5 +1,7 @@
 console.log("datatableSettings.js loaded");
 
 let isDatatableWithoutActionColumn = false;
-let columns = [];
-let tableName = "#dataTable";
+let columnsDatatable = [];
+let tableName = "#tableName";
+let dataDatatable = {};
+let methodDatatable = "GET";

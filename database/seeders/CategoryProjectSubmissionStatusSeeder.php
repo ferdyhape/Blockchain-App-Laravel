@@ -18,7 +18,7 @@ class CategoryProjectSubmissionStatusSeeder extends Seeder
             'Proses Approval Komitee',
             'Proses Tanda Tangan Kontrak',
             'Proses Penggalangan Dana',
-            'Dibatalkan'
+            'Ditolak'
         ];
 
         foreach ($data as $item) {

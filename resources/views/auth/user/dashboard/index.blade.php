@@ -4,7 +4,7 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <h1>Dashboard Owner Page</h1>
+                <h1>Dashboard User Page</h1>
             </div>
         </div>
     </div>

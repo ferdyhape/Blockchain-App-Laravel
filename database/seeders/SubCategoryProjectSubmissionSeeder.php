@@ -15,6 +15,8 @@ class SubCategoryProjectSubmissionSeeder extends Seeder
         $nameDataWithKeyNameForCategory = [
             'Proposal Project Terkirim' => [
                 'submitted',
+            ],
+            'Peninjauan Proposal' => [
                 'on_review',
                 'need_revision',
                 'revised',
@@ -23,18 +25,21 @@ class SubCategoryProjectSubmissionSeeder extends Seeder
             ],
             'Proses Approval Komitee' => [
                 'on_approving_committee',
-                'approved_by_committee'
+                'approved_by_committee',
+                'rejected_by_committee'
             ],
             'Proses Tanda Tangan Kontrak' => [
                 'on_contract_signing',
-                'contract_signed'
+                'contract_signed',
+                'contract_signed_accepted',
+                'contract_signed_need_revision'
             ],
             'Proses Penggalangan Dana' => [
                 'on_fundraising',
                 'fundraised'
             ],
-            'Dibatalkan' => [
-                'cancelled'
+            'Ditolak' => [
+                'rejected'
             ]
         ];
 

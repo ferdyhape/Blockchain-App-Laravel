@@ -15,6 +15,7 @@ return new class extends Migration
         Schema::create('category_project_submission_statuses', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('name', 150);
+            $table->string('icon', 150)->nullable();
             $table->timestamps();
         });
     }

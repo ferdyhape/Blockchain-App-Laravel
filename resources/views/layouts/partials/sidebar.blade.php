@@ -1,30 +1,27 @@
+@php
+    $sidebarData[] = getSidebarData();
+@endphp
+
 <body id="body-pd">
     <header class="header" id="header">
         <div class="header_toggle"> <i class='bx bx-menu' id="header-toggle"></i> </div>
-        {{-- <div class="header_img"> <img src="https://i.imgur.com/hczKIze.jpg" alt=""> </div> --}}
+        <div class="btn btn-sm btn-primary">
+            {{ auth()->user()->name }}
+        </div>
     </header>
     <div class="l-navbar" id="nav-bar">
-        <nav class="nav">
+        <nav class="nav-template">
             <div>
                 <a href="#" class="nav_logo"> <i class='bx bx-layer nav_logo-icon'></i> <span
                         class="nav_logo-name">BBBootstrap</span>
                 </a>
                 <div class="nav_list">
-                    <a href="{{ route('dashboard.admin.index') }}"
-                        class="nav_link {{ checkClassIsActive('dashboard.admin.index') }}">
-                        <i class='bx bx-grid-alt nav_icon'></i> <span class="nav_name">Dashboard</span> </a>
-                    <a href="{{ route('dashboard.admin.user-management.index') }}"
-                        class="nav_link {{ checkClassIsActive('dashboard.admin.user-management.index') }}"> <i
-                            class='bx bx-user nav_icon'></i> <span class="nav_name">Users</span> </a>
-                    <a href="{{ route('dashboard.admin.company-management.index') }}"
-                        class="nav_link {{ checkClassIsActive('dashboard.admin.company-management.index') }}"> <i
-                            class='bx bx-buildings nav_icon'></i> <span class="nav_name">Company</span>
-                    </a> <a href="#" class="nav_link"> <i class='bx bx-bookmark nav_icon'></i> <span
-                            class="nav_name">Bookmark</span> </a>
-                    <a href="#" class="nav_link"> <i class='bx bx-folder nav_icon'></i> <span
-                            class="nav_name">Files</span> </a>
-                    <a href="#" class="nav_link"> <i class='bx bx-bar-chart-alt-2 nav_icon'></i> <span
-                            class="nav_name">Stats</span> </a>
+                    @foreach ($sidebarData[0] as $sidebar)
+                        @hasrole($sidebar['role'])
+                            <x-anchorSidebar route="{{ $sidebar['route'] }}" icon="{{ $sidebar['icon'] }}"
+                                name="{{ $sidebar['name'] }}" />
+                        @endhasrole
+                    @endforeach
                 </div>
 
             </div>

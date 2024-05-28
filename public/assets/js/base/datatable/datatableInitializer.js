@@ -9,15 +9,31 @@ $(document).ready(function () {
 
 function initDatatable() {
     if (isDatatableWithoutActionColumn) {
-        buildDatatable(tableName, currentUrl, columns, false);
+        buildDatatable(
+            tableName,
+            currentUrl,
+            columnsDatatable,
+            false,
+            dataDatatable,
+            methodDatatable
+        );
     } else {
-        buildDatatable(tableName, currentUrl, columns);
+        buildDatatable(
+            tableName,
+            currentUrl,
+            columnsDatatable,
+            true,
+            dataDatatable,
+            methodDatatable
+        );
     }
 }
 
 function reinitTable() {
-    $(tableName).DataTable().destroy();
-    initDatatable();
+    let table = $(tableName).DataTable();
+    console.log([table, table.length]);
+    table.settings()[0].ajax.data = dataDatatable;
+    table.ajax.reload();
 }
 
 function buildDatatable(
@@ -58,6 +74,7 @@ function buildDatatable(
         });
     }
 
+    console.log([datatable, datatable.length]);
     return datatable;
 }
 
