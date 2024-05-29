@@ -2,62 +2,78 @@
     'pageTitle' => 'Upload Kontrak',
 ])
     @slot('contentOfContainer')
-        <x-headerSection breadcrumbMenu="User Project Management" breadcrumbCurrent="Revise Project" />
+        <x-headerSection :breadcrumbMenu="['Project', 'Upload Signed Contract']" />
 
         {{-- content --}}
         @component('components.contentSection')
             @slot('contentOfContentSection')
                 <div class="card-content border p-4 rounded ">
-                    <h5 class="card-title fw-semibold fs-5">{{ $project->title }}</h5>
-                    <h5 class="text-secondary fs-6">{{ $project->user->name }}</h5>
+                    {{-- <h5 class="card-title fw-semibold fs-5">{{ $project->title }}</h5>
+                    <h5 class="text-secondary fs-6">{{ $project->user->name }}</h5> --}}
                     <div class="my-4">
-                        <table class="w-100">
+                        <table class="w-100" style="">
                             <tr>
                                 <td class="text-start text-secondary">
-                                    Target Dana
+                                    Nama Proyek
                                 </td>
-                                <td class="text-end currency">
-                                    {{ $project->nominal_required }}
+                                <td class="text-start fw-semibold">
+                                    {{ $project->title }}
                                 </td>
                             </tr>
                             <tr>
                                 <td class="text-start text-secondary">
-                                    Aset Jaminan
+                                    Proyek Owner
                                 </td>
-                                <td class="text-end">
-                                    {{ $project->collateral_assets }}
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="text-start text-secondary">
-                                    Nominal Jaminan
-                                </td>
-                                <td class="text-end currency">
-                                    {{ $project->collateral_value }}
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-
-                    <hr>
-
-                    <div class="my-4">
-                        <h5 class="fs-5">Model dan Rencana Bisnis</h5>
-                        <table class="w-100">
-                            <tr>
-                                <td class="text-start text-secondary">
-                                    Pendapatan/bulan
-                                </td>
-                                <td class="text-end currency">
-                                    {{ $project->income_per_month }}
+                                <td class="text-start fw-semibold">
+                                    {{ $project->user->name }}
                                 </td>
                             </tr>
                             <tr>
                                 <td class="text-start text-secondary">
-                                    Pengeluaran/bulan
+                                    Proyek Kategori
                                 </td>
-                                <td class="text-end currency">
-                                    {{ $project->expenses_per_month }}
+                                <td class="text-start fw-semibold">
+                                    {{ $project->category->name }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-start text-secondary">
+                                    Nominal Disetujui
+                                </td>
+                                <td class="text-start fw-semibold currency">
+                                    {{ $project->campaign->approved_amount }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-start text-secondary">
+                                    Jumlah Koin Ditawarkan
+                                </td>
+                                <td class="text-start fw-semibold">
+                                    {{ $project->campaign->offered_token_amount }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-start text-secondary">
+                                    Harga Per Unit
+                                </td>
+                                <td class="text-start fw-semibold currency">
+                                    {{ $project->campaign->price_per_unit }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-start text-secondary">
+                                    Minimal Beli
+                                </td>
+                                <td class="text-start fw-semibold">
+                                    {{ $project->campaign->minimum_purchase }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-start text-secondary">
+                                    Maksimal Beli
+                                </td>
+                                <td class="text-start fw-semibold">
+                                    {{ $project->campaign->maximum_purchase }}
                                 </td>
                             </tr>
                         </table>

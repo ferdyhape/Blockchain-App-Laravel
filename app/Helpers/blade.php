@@ -58,66 +58,15 @@ function getSidebarData()
             'role' => 'Platinum Member', // Add this line
             'route' => 'dashboard.user.project-management.index',
             'icon' => 'bx-folder',
-            'name' => 'Project',
+            'name' => 'My Project',
         ],
         [
             'role' => 'Platinum Member', // Add this line
-            'route' => null,
+            'route' => 'dashboard.user.available-project.index',
             'icon' => 'bx-bar-chart-alt-2',
-            'name' => 'Stats',
+            'name' => 'Available Projects',
         ],
     ];
 
     return $sidebarData;
-}
-
-function getBreadcrumb()
-{
-    $breadcrumb = [
-        'User Project Management' => [
-            [
-                'route' => 'dashboard.user.project-management.index',
-                'name' => 'Project',
-                'level' => '1',
-            ],
-            [
-                'route' => 'dashboard.user.project-management.create',
-                'name' => 'Create Project',
-                'level' => '2',
-            ],
-            [
-                'route' => '#',
-                'name' => 'Revise Project',
-                'level' => '2',
-            ],
-            [
-                'route' => '#',
-                'name' => 'Show Project',
-
-                'level' => '2',
-            ],
-
-        ],
-        'Admin Project Management' => [
-            [
-                'route' => 'dashboard.admin.project-management.index',
-                'name' => 'Project',
-                'level' => '1',
-            ],
-            [
-                'route' => '#',
-                'name' => 'Show Project',
-                'level' => '2',
-            ],
-        ],
-        'Admin User Management' => [
-            [
-                'route' => 'dashboard.admin.user-management.index',
-                'name' => 'Users',
-                'level' => '1',
-            ],
-        ],
-    ];
-
-    return $breadcrumb;
 }

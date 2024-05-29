@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\User\DashboardController as UserDashboardController;
 use App\Http\Controllers\User\ProjectManagementController as UserProjectManagementController;
 use App\Http\Controllers\Admin\ProjectManagementController as AdminProjectManagementController;
+use App\Http\Controllers\User\AvailableProjectController as UserAvailableProjectController;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,7 +46,7 @@ Route::middleware('auth')->group(function () {
             Route::get('test-post', [AdminDashboardController::class, 'testPost'])->name('test-post');
             Route::resource('user-management', UserManagementController::class)->names('user-management');
 
-            // prefix project-management
+            // prefix project-management on admin
             Route::prefix('project-management')->name('project-management.')->group(function () {
                 Route::resource('/', AdminProjectManagementController::class)->parameter('', 'project_management');
                 Route::post('{id}/add-revision', [AdminProjectManagementController::class, 'addRevision'])->name('add-revision');
@@ -60,11 +61,20 @@ Route::middleware('auth')->group(function () {
 
         Route::name('user.')->middleware(['role:Platinum Member|Admin'])->group(function () {
             Route::get('/', [UserDashboardController::class, 'index'])->name('index');
-            Route::resource('project-management', UserProjectManagementController::class)->names('project-management');
-            Route::get('project-management/{id}/revise', [UserProjectManagementController::class, 'reviseProject'])->name('project-management.revise');
-            Route::post('project-management/{id}/revise', [UserProjectManagementController::class, 'postReviseProject'])->name('project-management.revise.post');
-            Route::get('upload-signed-contract/{id}', [UserProjectManagementController::class, 'uploadSignedContract'])->name('project-management.upload-signed-contract');
-            Route::post('upload-signed-contract/{id}', [UserProjectManagementController::class, 'postUploadSignedContract'])->name('project-management.upload-signed-contract.post');
+
+            // prefix project-management on user
+            Route::prefix('project-management')->name('project-management.')->group(function () {
+                Route::resource('/', UserProjectManagementController::class)->parameter('', 'project_management');
+                Route::get('{id}/revise', [UserProjectManagementController::class, 'reviseProject'])->name('revise');
+                Route::post('{id}/revise', [UserProjectManagementController::class, 'postReviseProject'])->name('revise.post');
+                Route::get('{id}/upload-signed-contract', [UserProjectManagementController::class, 'uploadSignedContract'])->name('upload-signed-contract');
+                Route::post('{id}/upload-signed-contract', [UserProjectManagementController::class, 'postUploadSignedContract'])->name('upload-signed-contract.post');
+            });
+
+            // Route::get('available-projects', [UserAvailableProjectController::class, 'index'])->name('available-projects');
+            Route::prefix('available-project')->name('available-project.')->group(function () {
+                Route::resource('/', UserAvailableProjectController::class)->parameter('', 'available_projects');
+            });
         });
     });
 

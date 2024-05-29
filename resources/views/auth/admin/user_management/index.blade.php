@@ -1,6 +1,6 @@
 <x-containerTemplate pageTitle="User">
     @slot('contentOfContainer')
-        <x-headerSection breadcrumbMenu="Admin User Management" breadcrumbCurrent="Users" />
+        <x-headerSection :breadcrumbMenu="['User Management']" />
 
         <x-contentSection>
             @slot('contentOfContentSection')

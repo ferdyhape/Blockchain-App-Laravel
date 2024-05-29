@@ -29,4 +29,9 @@ class Campaign extends Model
     {
         return $this->belongsTo(Project::class);
     }
+
+    public function campaignDetails()
+    {
+        return $this->hasMany(CampaignDetail::class);
+    }
 }

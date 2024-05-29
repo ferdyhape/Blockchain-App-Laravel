@@ -2,7 +2,7 @@
     'pageTitle' => 'Revise Project',
 ])
     @slot('contentOfContainer')
-        <x-headerSection breadcrumbMenu="User Project Management" breadcrumbCurrent="Revise Project" />
+        <x-headerSection :breadcrumbMenu="['Project', 'Revisi Project']" />
 
         {{-- content --}}
         @component('components.contentSection')

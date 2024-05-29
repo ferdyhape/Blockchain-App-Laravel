@@ -99,6 +99,7 @@ class ProjectManagementController extends Controller
             return redirect()->back()->with('error', 'Something went wrong');
         }
     }
+
     public function addRevision($id, AddRevisionProjectRequest $request)
     {
         $validated = $request->validated();

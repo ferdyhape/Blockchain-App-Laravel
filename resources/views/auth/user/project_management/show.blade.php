@@ -1,6 +1,6 @@
 <x-containerTemplate pageTitle="Project">
     @slot('contentOfContainer')
-        <x-headerSection breadcrumbMenu="User Project Management" breadcrumbCurrent="Show Project" />
+        <x-headerSection :breadcrumbMenu="['Project', 'Show Project']" />
 
         <x-contentSection>
             @slot('contentOfContentSection')
