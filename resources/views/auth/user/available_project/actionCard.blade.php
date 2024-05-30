@@ -3,9 +3,11 @@
         <div class="card-content ">
             <div class="d-flex flex-column justify-content-center gap-2">
                 <div class="col-12">
-                    <button type="button" class="btn btn-success w-100" data-bs-toggle="modal" data-bs-target="#">
+                    {{-- <button type="button" class="btn btn-success w-100" data-bs-toggle="modal" data-bs-target="#">
                         Beli
-                    </button>
+                    </button> --}}
+                    <a href="{{ route('dashboard.user.available-project.buy', $project->id) }}"
+                        class="btn btn-success w-100">Beli</a>
                 </div>
                 <div class="col-12">
                     <button type="button" class="btn btn-secondary w-100" data-bs-toggle="modal" data-bs-target="#">

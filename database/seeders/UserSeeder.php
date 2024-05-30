@@ -39,6 +39,7 @@ class UserSeeder extends Seeder
             ]);
             // Assign role
             $userPlatinum->assignRole($platinumMemberRole);
+            $userPlatinum->wallet->deposit(100, ['description' => 'Initiate 100 to created platinum Member']);
         }
 
         // // Seeder for regular member

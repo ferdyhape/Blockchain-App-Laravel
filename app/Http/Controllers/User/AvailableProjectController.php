@@ -12,6 +12,21 @@ class AvailableProjectController extends Controller
     /**
      * Display a listing of the resource.
      */
+
+
+    //  postBuyProject
+    public function postBuyProject(Request $request, string $id)
+    {
+        dd($request->all());
+    }
+
+    // buyProject
+    public function buyProject(string $id)
+    {
+        $project = ProjectService::getProjectById($id);
+        return view('auth.user.available_project.buy', compact('project'));
+    }
+
     public function index()
     {
         $campaigns = CampaignService::getCampaigns();

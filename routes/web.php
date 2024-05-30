@@ -74,6 +74,8 @@ Route::middleware('auth')->group(function () {
             // Route::get('available-projects', [UserAvailableProjectController::class, 'index'])->name('available-projects');
             Route::prefix('available-project')->name('available-project.')->group(function () {
                 Route::resource('/', UserAvailableProjectController::class)->parameter('', 'available_projects');
+                Route::get('buy/{id}', [UserAvailableProjectController::class, 'buyProject'])->name('buy');
+                Route::post('buy/{id}', [UserAvailableProjectController::class, 'postBuyProject'])->name('buy.post');
             });
         });
     });

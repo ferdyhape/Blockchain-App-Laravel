@@ -12,11 +12,12 @@ use Spatie\Permission\Traits\HasPermissions;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use MannikJ\Laravel\Wallet\Traits\HasWallet;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
 class User extends Authenticatable implements HasMedia
 {
-    use HasApiTokens, HasFactory, Notifiable, HasUuids, HasRoles, HasPermissions, InteractsWithMedia;
+    use HasApiTokens, HasFactory, Notifiable, HasUuids, HasRoles, HasPermissions, InteractsWithMedia, HasWallet;
 
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
@@ -35,6 +36,7 @@ class User extends Authenticatable implements HasMedia
      *
      * @var array<string, string>
      */
+
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
