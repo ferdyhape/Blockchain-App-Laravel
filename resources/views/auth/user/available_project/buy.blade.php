@@ -85,10 +85,10 @@
                         <h5>Buy Action</h5>
                         <div class="card border-0 shadow-sm p-4 my-3">
 
-                            <form action="{{ route('dashboard.user.available-project.buy.post', $project->id) }}"
+                            <form action="{{ route('dashboard.user.available-project.preview-transaction', $project->id) }}"
                                 method="POST">
+                                @method('POST')
                                 @csrf
-
                                 <div class="d-flex flex-column gap-3">
                                     <div class="d-flex flex-row gap-3">
                                         <button type="button" class="btn btn-danger" id="decrement">-</button>
@@ -102,6 +102,7 @@
                                             {{ $project->campaign->price_per_unit }}
                                     </div>
                                     <button type="submit" class="btn btn-success">Selanjutnya</button>
+                                </div>
                             </form>
                         </div>
                     </div>
