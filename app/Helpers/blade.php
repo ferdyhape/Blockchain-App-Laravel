@@ -49,6 +49,12 @@ function getSidebarData()
             'name' => 'Project',
         ],
         [
+            'role' => 'Admin', // Add this line
+            'route' => 'dashboard.admin.payment-method.index',
+            'icon' => 'bx-credit-card',
+            'name' => 'Payment Method',
+        ],
+        [
             'role' => 'Platinum Member', // Add this line
             'route' => 'dashboard.user.index',
             'icon' => 'bx-home',

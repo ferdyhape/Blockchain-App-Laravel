@@ -20,6 +20,8 @@ class DatabaseSeeder extends Seeder
             // CategoryProjectSubmissionStatusSeeder::class,
             IconCategoryProjectSubmissionSeeder::class,
             SubCategoryProjectSubmissionSeeder::class,
+            PaymentMethodSeeder::class,
+
             // ProjectSeeder::class,
             // ProgressStatusOfProjectSubmissionSeeder::class,
             // CompanySeeder::class,

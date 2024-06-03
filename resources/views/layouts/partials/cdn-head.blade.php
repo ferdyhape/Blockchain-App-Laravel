@@ -34,3 +34,6 @@
 
 {{-- link to style.css --}}
 <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
+
+{{-- csrf token --}}
+<meta name="csrf-token" content="{{ csrf_token() }}">

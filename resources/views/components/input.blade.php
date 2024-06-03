@@ -6,6 +6,7 @@
     'id' => null,
     'value' => null,
     'placeholder' => null,
+    'usingScript' => true,
 ])
 
 <div class="mb-3">
@@ -30,7 +31,7 @@
                 </div>
             @enderror
 
-            <script>
+            {{-- <script>
                 ClassicEditor
                     .create(document.querySelector('#{{ $id ?? $name }}'), {
                         removePlugins: ['Resize']
@@ -38,7 +39,18 @@
                     .catch(error => {
                         console.error(error);
                     });
-            </script>
+            </script> --}}
+            @if ($usingScript)
+                <script>
+                    ClassicEditor
+                        .create(document.querySelector('#{{ $id ?? $name }}'), {
+                            removePlugins: ['Resize']
+                        })
+                        .catch(error => {
+                            console.error(error);
+                        });
+                </script>
+            @endif
         @break
 
         @case('select')

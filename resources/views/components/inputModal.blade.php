@@ -2,7 +2,7 @@
     'id' => 'defaultId',
     'method' => 'POST',
     'route' => 'defaultRoute',
-    'routeParams' => 'defaultRouteParams',
+    'routeParams' => [],
     'buttonName' => 'Edit',
     'modalTitle' => 'Edit Data',
     'handlingWithJSFunc' => null,
@@ -25,6 +25,7 @@
                 <form id="editForm" {{ !$handlingWithJSFunc ? 'action=' . $route : '' }} method="POST">
                     @csrf
                     @method($method)
+
                     {{ $input }}
 
                     <button type="submit" class="btn btn-primary"

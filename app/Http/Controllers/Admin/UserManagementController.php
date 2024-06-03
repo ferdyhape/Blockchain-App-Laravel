@@ -82,8 +82,8 @@ class UserManagementController extends Controller
      */
     public function destroy(string $id)
     {
+        $data = UserManagementService::getUserData($id);
         try {
-            $data = UserManagementService::getUserData($id);
             $data->delete();
             return JsonService::response(['message' => 'Data deleted successfully']);
         } catch (\Exception $e) {

@@ -37,6 +37,12 @@
     border-style: dotted !important;
 }
 
+.dashed-border {
+    border-style: dashed !important;
+    /* space of dashed */
+    border-width: 2px !important;
+}
+
 :root {
     --header-height: 3rem;
     --nav-width: 68px;

@@ -2,13 +2,14 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Admin\PaymentMethodController;
 use App\Http\Controllers\Admin\UserManagementController;
 use App\Http\Controllers\Admin\CompanyManagementController;
-use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\User\DashboardController as UserDashboardController;
+use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\User\AvailableProjectController as UserAvailableProjectController;
 use App\Http\Controllers\User\ProjectManagementController as UserProjectManagementController;
 use App\Http\Controllers\Admin\ProjectManagementController as AdminProjectManagementController;
-use App\Http\Controllers\User\AvailableProjectController as UserAvailableProjectController;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,6 +46,8 @@ Route::middleware('auth')->group(function () {
             Route::get('/', [AdminDashboardController::class, 'index'])->name('index');
             Route::get('test-post', [AdminDashboardController::class, 'testPost'])->name('test-post');
             Route::resource('user-management', UserManagementController::class)->names('user-management');
+            Route::resource('payment-method', PaymentMethodController::class)->names('payment-method');
+
 
             // prefix project-management on admin
             Route::prefix('project-management')->name('project-management.')->group(function () {
@@ -74,8 +77,8 @@ Route::middleware('auth')->group(function () {
             // Route::get('available-projects', [UserAvailableProjectController::class, 'index'])->name('available-projects');
             Route::prefix('available-project')->name('available-project.')->group(function () {
                 Route::resource('/', UserAvailableProjectController::class)->parameter('', 'available_projects');
-                Route::get('buy/{id}', [UserAvailableProjectController::class, 'buyProject'])->name('buy');
-                Route::post('buy/{id}', [UserAvailableProjectController::class, 'postBuyProject'])->name('buy.post');
+                Route::get('buy/{id}/', [UserAvailableProjectController::class, 'buyProject'])->name('buy');
+                Route::post('preview-transaction/{id}', [UserAvailableProjectController::class, 'previewTransaction'])->name('preview-transaction');
             });
         });
     });

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Services\ProjectService;
 use App\Services\CampaignService;
 use App\Http\Controllers\Controller;
+use App\Services\PaymentMethodService;
 
 class AvailableProjectController extends Controller
 {
@@ -15,9 +16,17 @@ class AvailableProjectController extends Controller
 
 
     //  postBuyProject
-    public function postBuyProject(Request $request, string $id)
+    public function previewTransaction(Request $request, string $id)
     {
-        dd($request->all());
+        $validated = $request->validate([
+            'quantity' => 'required|numeric',
+        ]);
+
+        $project = ProjectService::getProjectById($id);
+        $totalPrice = $project->campaign->price_per_unit * $validated['quantity'];
+        $quantityBuy = $validated['quantity'];
+        $paymentMethods = PaymentMethodService::getPaymentMethod();
+        return view('auth.user.available_project.preview_transaction', compact('project', 'quantityBuy', 'totalPrice', 'paymentMethods'));
     }
 
     // buyProject
