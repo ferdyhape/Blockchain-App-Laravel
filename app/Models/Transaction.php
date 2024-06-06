@@ -14,10 +14,7 @@ class Transaction extends Model
     {
         parent::boot();
         static::creating(function ($transaction) {
-            do {
-                $transaction_code = \Illuminate\Support\Str::random(15);
-            } while (Transaction::where('transaction_code', $transaction_code)->exists());
-            $transaction->transaction_code = $transaction_code;
+            $transaction->transaction_code = 'T' . date('Ymd') . '-' . (self::count() + 1);
         });
     }
 
