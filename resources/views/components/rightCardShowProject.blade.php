@@ -33,7 +33,7 @@
                             </tr>
                             <tr>
                                 <td class="text-start text-secondary">
-                                    Harga Per Unit
+                                    Harga Per Token
                                 </td>
                                 <td class="text-end currency">
                                     {{ $project->campaign->price_per_unit }}

@@ -11,12 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('payment_method_details', function (Blueprint $table) {
+        Schema::create('transaction_details', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignUuid('payment_method_id')->constrained('payment_methods');
-            $table->string('name')->unique();
-            $table->longText('description')->nullable();
-            $table->uuid('user_id')->nullable()->constrained('users');
+            $table->foreignUuid('transaction_id')
+                ->constrained('transactions')
+                ->cascadeOnDelete();
+
+            $table->decimal('price', 10, 2);
+            $table->string('token');
+
             $table->timestamps();
         });
     }
@@ -26,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('payment_method_details');
+        Schema::dropIfExists('transaction_details');
     }
 };

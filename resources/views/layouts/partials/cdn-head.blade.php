@@ -26,10 +26,8 @@
 {{-- cdn toastr --}}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
 
-
 {{-- script ckeditor --}}
 <script src="https://cdn.ckeditor.com/ckeditor5/41.3.1/classic/ckeditor.js"></script>
-
 
 
 {{-- link to style.css --}}

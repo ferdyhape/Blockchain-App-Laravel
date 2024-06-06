@@ -13,7 +13,9 @@
         <nav class="nav-template">
             <div>
                 <a href="#" class="nav_logo"> <i class='bx bx-layer nav_logo-icon'></i> <span
-                        class="nav_logo-name">BBBootstrap</span>
+                        class="nav_logo-name">
+                        {{ config('app.name') }}
+                    </span>
                 </a>
                 <div class="nav_list">
                     @foreach ($sidebarData[0] as $sidebar)
@@ -30,7 +32,7 @@
             </form>
 
             <a href="#" id='logout-btn' class="nav_link"> <i class='bx bx-log-out nav_icon'></i>
-                <span class="nav_name">SignOut</span> </a>
+                <span class="nav_name">Logout</span> </a>
         </nav>
     </div>
     <!--Container Main start-->

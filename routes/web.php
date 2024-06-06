@@ -10,6 +10,9 @@ use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\User\AvailableProjectController as UserAvailableProjectController;
 use App\Http\Controllers\User\ProjectManagementController as UserProjectManagementController;
 use App\Http\Controllers\Admin\ProjectManagementController as AdminProjectManagementController;
+use App\Http\Controllers\User\TransactionController as UserTransactionController;
+use App\Http\Controllers\Admin\TransactionController as AdminTransactionController;
+use App\Http\Controllers\User\TokenController as UserTokenController;
 
 /*
 |--------------------------------------------------------------------------
@@ -60,6 +63,12 @@ Route::middleware('auth')->group(function () {
                 Route::post('{id}/reject-committee', [AdminProjectManagementController::class, 'rejectCommittee'])->name('reject-committee');
                 Route::post('{id}/accept-contract', [AdminProjectManagementController::class, 'acceptContract'])->name('accept-contract');
             });
+
+
+            Route::prefix('transaction')->name('transaction.')->group(function () {
+                Route::resource('/', AdminTransactionController::class)->parameter('', 'transaction');
+                Route::put('{id}/change-status', [AdminTransactionController::class, 'changeStatus'])->name('change-status');
+            });
         });
 
         Route::name('user.')->middleware(['role:Platinum Member|Admin'])->group(function () {
@@ -79,6 +88,19 @@ Route::middleware('auth')->group(function () {
                 Route::resource('/', UserAvailableProjectController::class)->parameter('', 'available_projects');
                 Route::get('buy/{id}/', [UserAvailableProjectController::class, 'buyProject'])->name('buy');
                 Route::post('preview-transaction/{id}', [UserAvailableProjectController::class, 'previewTransaction'])->name('preview-transaction');
+                Route::post('buy', [UserAvailableProjectController::class, 'postBuyProject'])->name('buy.post');
+            });
+
+            Route::prefix('transaction')->name('transaction.')->group(function () {
+                Route::get('/', [UserTransactionController::class, 'index'])->name('index');
+                Route::get('{code}', [UserTransactionController::class, 'show'])->name('show');
+                Route::post('{code}/upload-proof', [UserTransactionController::class, 'uploadProof'])->name('upload-proof');
+            });
+
+            Route::prefix('token')->name('token.')->group(function () {
+                Route::get('/', [UserTokenController::class, 'index'])->name('index');
+                Route::get('/{id}', [UserTokenController::class, 'show'])->name('show');
+                Route::post('/{id}/sell', [UserTokenController::class, 'sell'])->name('sell');
             });
         });
     });

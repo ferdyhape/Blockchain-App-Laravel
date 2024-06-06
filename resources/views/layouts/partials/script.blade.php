@@ -16,6 +16,7 @@
 
 <script>
     let currentUrl = '{{ url()->current() }}';
+    let baseUrl = '{{ url('/') }}';
     document.addEventListener("DOMContentLoaded", function(event) {
 
         const showNavbar = (toggleId, navId, bodyId, headerId) => {

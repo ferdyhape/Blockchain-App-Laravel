@@ -15,6 +15,7 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->foreignUuid('project_id')
                 ->constrained('projects');
+            $table->string('campaign_code')->unique();
             $table->decimal('approved_amount', 20, 2); // nominal disetujui
             $table->decimal('offered_token_amount', 20, 0); // jumlah token yang ditawarkan
             $table->decimal('price_per_unit', 20, 2); // harga per unit
@@ -22,6 +23,7 @@ return new class extends Migration
             $table->decimal('maximum_purchase', 20, 0); // pembelian maksimum
             $table->date('fundraising_period_start')->nullable(); // Fundraising period start
             $table->date('fundraising_period_end')->nullable(); // Fundraising period end
+            $table->decimal('sold_token_amount', 20, 0)->default(0);
             $table->string('status')->default('pending'); // status proses penggalangan dana
             // dokumen prospektus akan di handle media library
             $table->timestamps();

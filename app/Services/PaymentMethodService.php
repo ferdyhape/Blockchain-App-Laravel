@@ -10,8 +10,6 @@ use App\Models\PaymentMethodDetail;
  */
 class PaymentMethodService
 {
-
-
     public static function storePaymentMethodDetail($data)
     {
         $createdPaymentMethodDetail =  PaymentMethodDetail::create([
@@ -53,12 +51,16 @@ class PaymentMethodService
 
     public static function getPaymentMethodDetailById($paymentMethodDetailId)
     {
-        return PaymentMethodDetail::findOrFail($paymentMethodDetailId);
+        return PaymentMethodDetail::findOrFail($paymentMethodDetailId)->load('paymentMethod');
     }
 
     public static function getPaymentMethod()
     {
         return PaymentMethod::with('details')->get();
+    }
+    public static function getPaymentMethodForBuyToken()
+    {
+        return PaymentMethod::with('details')->where('user_id', null)->get();
     }
 
 

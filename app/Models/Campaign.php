@@ -12,6 +12,14 @@ class Campaign extends Model
         HasUuids;
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
+    protected static function boot()
+    {
+        parent::boot();
+        static::creating(function ($campaign) {
+            $campaign->campaign_code = 'C' . date('Ymd') . '-' . (self::count() + 1);
+        });
+    }
+
     protected static function booted()
     {
         static::creating(function ($campaign) {
@@ -25,13 +33,22 @@ class Campaign extends Model
         });
     }
 
+    // Accessor for user_token_count
+    public function getUserTokenCountAttribute()
+    {
+        return CampaignToken::where('sold_to', auth()->id())
+            ->where('campaign_id', $this->id)
+            ->count();
+    }
+
+    // relationships
     public function project()
     {
         return $this->belongsTo(Project::class);
     }
 
-    public function campaignDetails()
+    public function campaignTokens()
     {
-        return $this->hasMany(CampaignDetail::class);
+        return $this->hasMany(CampaignToken::class);
     }
 }

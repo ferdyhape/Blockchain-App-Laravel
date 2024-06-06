@@ -2,7 +2,7 @@
 
 @props(['project', 'useForRoute' => 'project-management'])
 
-<div class="col-md-4">
+<div class="col-md-12 col-lg-4">
     <div class="card p-3 shadow border-0">
         <div class="card-body">
             {{-- head of card, project image and status --}}
@@ -49,14 +49,20 @@
                 {{-- progress bar --}}
                 <div class="progress" role="progressbar" aria-label="Success example" aria-valuenow="25"
                     aria-valuemin="0" aria-valuemax="100">
-                    <div class="progress-bar bg-warning" style="width: 65%"></div>
+                    <div class="progress-bar bg-warning"
+                        style="width: {{ $project->campaign ? ($project->campaign->sold_token_amount / $project->campaign->offered_token_amount) * 100 : 0 }}%">
+                    </div>
                 </div>
 
                 {{-- progress bar info --}}
                 <div class="d-flex justify-content-between mt-4">
                     <div class="coins-offered rounded text-start">
                         <p class="my-1 text-secondary">Terkumpul</p>
-                        <h5>- Koin</h5>
+                        @if ($project->campaign)
+                            <h5>{{ $project->campaign->sold_token_amount }} Koin</h5>
+                        @else
+                            <h5>-</h5>
+                        @endif
                     </div>
                     <div class="coins-offered rounded text-end">
                         <p class="my-1 text-secondary">Sisa hari</p>

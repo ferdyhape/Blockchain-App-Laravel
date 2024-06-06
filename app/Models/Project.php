@@ -31,7 +31,9 @@ class Project extends Model implements HasMedia
 
     public function isOnReview()
     {
-        $categoryProjectSubmissionStatus = CategoryProjectSubmissionStatus::where('name', 'Peninjauan Proposal')->first();
+        $categoryProjectSubmissionStatus = CategoryProjectSubmissionStatus::where('name', 'Peninjauan Proposal')->first([
+            'id',
+        ]);
         return $this->category_project_submission_status_id === $categoryProjectSubmissionStatus->id;
     }
 

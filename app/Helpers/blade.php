@@ -50,6 +50,12 @@ function getSidebarData()
         ],
         [
             'role' => 'Admin', // Add this line
+            'route' => 'dashboard.admin.transaction.index',
+            'icon' => 'bx-transfer',
+            'name' => 'Transaction',
+        ],
+        [
+            'role' => 'Admin', // Add this line
             'route' => 'dashboard.admin.payment-method.index',
             'icon' => 'bx-credit-card',
             'name' => 'Payment Method',
@@ -71,6 +77,18 @@ function getSidebarData()
             'route' => 'dashboard.user.available-project.index',
             'icon' => 'bx-bar-chart-alt-2',
             'name' => 'Available Projects',
+        ],
+        [
+            'role' => 'Platinum Member', // Add this line
+            'route' => 'dashboard.user.transaction.index',
+            'icon' => 'bx-transfer',
+            'name' => 'My Transaction',
+        ],
+        [
+            'role' => 'Platinum Member', // Add this line
+            'route' => 'dashboard.user.token.index',
+            'icon' => 'bx-coin-stack',
+            'name' => 'My Token',
         ],
     ];
 
