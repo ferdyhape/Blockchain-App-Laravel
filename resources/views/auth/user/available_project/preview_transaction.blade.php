@@ -1,4 +1,4 @@
-<x-containerTemplate pageTitle="Project">
+<x-containerTemplate pageTitle="Preview Transaction">
     @slot('contentOfContainer')
         <x-headerSection :breadcrumbMenu="['Available Project', 'Buy Project', 'Preview Transaction']" />
 
@@ -78,74 +78,18 @@
             @endslot
         </x-contentSection>
 
-        @if (session('success'))
-            @push('custom-scripts')
-                <script>
-                    showAlert('{{ session('success') }}', "success");
-                </script>
-            @endpush
-        @endif
+        @include('components.errorAlertValidation')
+        @include('components.ifSuccessAlert')
 
         @push('custom-scripts')
             <script>
-                $(document).ready(function() {
-                    // If a payment method radio button is selected, show the details in the div
-                    $('input[name="paymentMethod"]').change(function() {
-                        let paymentMethodId = $(this).val();
-                        $.ajax({
-                            url: "{{ route('get-payment-methods-details') }}",
-                            type: "GET",
-                            data: {
-                                paymentMethodId: paymentMethodId
-                            },
-                            success: function(response) {
-                                let accordionContent = $('#paymentMethodDetailAccordion');
-                                accordionContent.empty();
-                                if (response.data.length > 0) {
-                                    let content = response.data.map((detail, index) => `
-                                        <div class="accordion-item">
-                                            <h2 class="accordion-header" id="heading${index}">
-                                                <button class="accordion-button ${index !== 0 ? 'collapsed' : ''}" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${index}" aria-expanded="${index === 0}" aria-controls="collapse${index}">
-                                                    ${detail.name}
-                                                </button>
-                                            </h2>
-                                            <div id="collapse${index}" class="accordion-collapse collapse ${index === 0 ? 'show' : ''}" aria-labelledby="heading${index}" data-bs-parent="#paymentMethodDetailAccordion">
-                                                <div class="accordion-body px-5 d-flex flex-column">
-                                                    <p class="">
-                                                        ${detail.description}
-                                                    </p>
-                                                    <button class="btn btn-primary mt-2 select-payment-method"
-                                                        data-payment-method-id="${detail.id}">Pilih</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    `).join('');
-                                    accordionContent.html(content).show();
-                                } else {
-                                    accordionContent.hide();
-                                }
-                            },
-                            error: function(error) {
-                                $('#paymentMethodDetailAccordion').html(
-                                    '<p>Error fetching payment method details</p>').show();
-                            }
-                        });
-                    });
-
-                    $(document).on('click', '.select-payment-method', function() {
-                        let paymentMethodId = $(this).data('payment-method-id');
-                        // Perform further actions here, like submitting the selected payment method ID
-                        // through another AJAX request or form submission.
-                        // console.log('Selected payment method ID:', paymentMethodId);
-                        console.log([
-                            'payment method ID: ' + paymentMethodId,
-                            'project ID: ' + '{{ $project->id }}',
-                            'quantity buy: ' + '{{ $quantityBuy }}',
-                        ])
-                        // Example: You can submit the selected payment method ID through AJAX here.
-                    });
-                });
+                let getPaymentMethodDetailUrl = "{{ route('get-payment-methods-details') }}";
+                let campaignId = "{{ $project->campaign->id }}";
+                let quantityBuy = "{{ $quantityBuy }}";
+                let routeBuyProject = "{{ route('dashboard.user.available-project.buy.post') }}";
             </script>
+
+            <script src="{{ asset('assets/js/dashboard/user/available_project/preview_transaction.js') }}"></script>
         @endpush
 
     @endslot

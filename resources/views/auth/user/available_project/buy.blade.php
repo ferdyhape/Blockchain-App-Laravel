@@ -1,6 +1,6 @@
-<x-containerTemplate pageTitle="Project">
+<x-containerTemplate pageTitle="Buy Token">
     @slot('contentOfContainer')
-        <x-headerSection :breadcrumbMenu="['Available Project', 'Buy Project']" />
+        <x-headerSection :breadcrumbMenu="['Available Project', 'Buy Token']" />
 
         <x-contentSection>
             @slot('contentOfContentSection')
@@ -52,7 +52,7 @@
                                     </tr>
                                     <tr>
                                         <td class="text-start text-secondary">
-                                            Harga Per Unit
+                                            Harga Per Token
                                         </td>
                                         <td class="text-start fw-semibold currency">
                                             {{ $project->campaign->price_per_unit }}
@@ -111,13 +111,8 @@
             @endslot
         </x-contentSection>
 
-        @if (session('success'))
-            @push('custom-scripts')
-                <script>
-                    showAlert('{{ session('success') }}', "success");
-                </script>
-            @endpush
-        @endif
+        @include('components.errorAlertValidation')
+        @include('components.ifSuccessAlert')
 
         @push('custom-scripts')
             <script>

@@ -1,4 +1,4 @@
-<x-containerTemplate pageTitle="Project">
+<x-containerTemplate pageTitle="Available Project">
     @slot('contentOfContainer')
         <x-headerSection :breadcrumbMenu="['Available Project']">
             @slot('headerContent')
@@ -24,12 +24,7 @@
             @endslot
         </x-contentSection>
 
-        @if (session('success'))
-            @push('custom-scripts')
-                <script>
-                    showAlert('{{ session('success') }}', "success");
-                </script>
-            @endpush
-        @endif
+        @include('components.errorAlertValidation')
+        @include('components.ifSuccessAlert')
     @endslot
 </x-containerTemplate>

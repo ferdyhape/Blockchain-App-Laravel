@@ -1,6 +1,6 @@
-<x-containerTemplate pageTitle="Project">
+<x-containerTemplate pageTitle="Show Available Project">
     @slot('contentOfContainer')
-        <x-headerSection :breadcrumbMenu="['Available Project', 'Show Project']" />
+        <x-headerSection :breadcrumbMenu="['Available Project', 'Show Available Project']" />
 
         <x-contentSection>
             @slot('contentOfContentSection')

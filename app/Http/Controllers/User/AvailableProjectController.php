@@ -5,29 +5,64 @@ namespace App\Http\Controllers\User;
 use Illuminate\Http\Request;
 use App\Services\ProjectService;
 use App\Services\CampaignService;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\User\BuyProjectRequest;
+use App\Http\Requests\User\PreviewTransactionRequest;
+use App\Services\TransactionService;
 use App\Services\PaymentMethodService;
 
 class AvailableProjectController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-
 
     //  postBuyProject
-    public function previewTransaction(Request $request, string $id)
+    public function postBuyProject(BuyProjectRequest $request)
     {
-        $validated = $request->validate([
-            'quantity' => 'required|numeric',
-        ]);
+        $validated = $request->validated();
 
-        $project = ProjectService::getProjectById($id);
-        $totalPrice = $project->campaign->price_per_unit * $validated['quantity'];
-        $quantityBuy = $validated['quantity'];
-        $paymentMethods = PaymentMethodService::getPaymentMethod();
-        return view('auth.user.available_project.preview_transaction', compact('project', 'quantityBuy', 'totalPrice', 'paymentMethods'));
+        try {
+            DB::beginTransaction();
+            $transaction = TransactionService::storeTransaction($validated);
+            DB::commit();
+            return response()->json(
+                [
+                    'redirect' => route('dashboard.user.transaction.show', $transaction->transaction_code),
+                    'message' => 'Transaction success'
+                ],
+                200
+            );
+        } catch (\Exception $e) {
+            $e->getMessage();
+            return redirect()->back()->with('error', 'Something went wrong');
+        }
     }
+
+    // previewTransaction
+    public function previewTransaction(PreviewTransactionRequest $request, string $id)
+    {
+        $validated = $request->validated();
+
+        try {
+            $project = ProjectService::getProjectById($id);
+
+            if (!TransactionService::checkIfMaximumPurchased($project->campaign->id, $validated['quantity'])) {
+                return redirect()->back()->with('error', 'Maximum purchase exceeded');
+            }
+
+            $totalPrice = $project->campaign->price_per_unit * $validated['quantity'];
+            $paymentMethods = PaymentMethodService::getPaymentMethod();
+
+            return view('auth.user.available_project.preview_transaction', [
+                'project' => $project,
+                'quantityBuy' => $validated['quantity'],
+                'totalPrice' => $totalPrice,
+                'paymentMethods' => $paymentMethods
+            ]);
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Something went wrong');
+        }
+    }
+
 
     // buyProject
     public function buyProject(string $id)
