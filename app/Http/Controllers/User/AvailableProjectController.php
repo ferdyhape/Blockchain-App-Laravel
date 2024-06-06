@@ -50,7 +50,7 @@ class AvailableProjectController extends Controller
             }
 
             $totalPrice = $project->campaign->price_per_unit * $validated['quantity'];
-            $paymentMethods = PaymentMethodService::getPaymentMethod();
+            $paymentMethods = PaymentMethodService::getPaymentMethodForBuyToken();
 
             return view('auth.user.available_project.preview_transaction', [
                 'project' => $project,
