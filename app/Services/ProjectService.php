@@ -118,7 +118,7 @@ class ProjectService
 
     private static function startStoreCampaign(Project $project, $data)
     {
-        $campaign = $project->campaign()->create($data);
+        $campaign = $project->campaign()->create($data)->wallet->deposit(0, ['description' => 'Initiate campaign for project']);
     }
 
     private static function onApprovingComitte($projectId)
@@ -305,6 +305,7 @@ class ProjectService
         ]);
         $project->save();
     }
+
 
     private static function attachMediaToProject($project, $files, $collection, $isArray = true)
     {

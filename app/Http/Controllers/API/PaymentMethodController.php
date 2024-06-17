@@ -9,9 +9,9 @@ use App\Http\Resources\PaymentMethodDetailResource;
 
 class PaymentMethodController extends Controller
 {
-    public function getPaymentMethodDetail(Request $request)
+    public function getPaymentMethodDetailForBuyToken(Request $request)
     {
-        $paymentMethod = PaymentMethodService::getPaymentMethodDetailByPaymentMethodId($request->paymentMethodId);
+        $paymentMethod = PaymentMethodService::getPaymentMethodDetailForBuyToken($request->paymentMethodId);
 
         if (count($paymentMethod) == 0) {
             return response()->json([
@@ -22,6 +22,22 @@ class PaymentMethodController extends Controller
         return response()->json(
             [
                 'data' => PaymentMethodDetailResource::collection($paymentMethod),
+                'message' => 'Success get detail payment method'
+            ],
+            200
+        );
+    }
+
+    // getPaymentMethodDetailForBuyToken
+    public function getPaymentMethodDetailForSellToken(Request $request)
+    {
+        $paymentMethod = PaymentMethodService::getPaymentMethodDetailForSellToken($request->paymentMethodId);
+
+        // dd($paymentMethod);
+
+        return response()->json(
+            [
+                'data' => $paymentMethod,
                 'message' => 'Success get detail payment method'
             ],
             200

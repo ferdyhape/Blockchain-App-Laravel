@@ -22,7 +22,7 @@ class CreateWalletTables extends Migration
                 $table->string('owner_type')->nullable();
                 $type = config('wallet.column_type');
                 if ($type == 'decimal') {
-                    $table->decimal('balance', 12, 0)->default(0); // amount is an decimal, it could be "dollars" or "cents"
+                    $table->decimal('balance', 20, 2)->default(0); // amount is an decimal, it could be "dollars" or "cents"
                 } elseif ($type == 'integer') {
                     $table->integer('balance');
                 }

@@ -15,9 +15,9 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->foreignUuid('campaign_id')
                 ->constrained('campaigns');
-            $table->uuid('transaction_code');
+            $table->string('transaction_code');
 
-            $table->uuid('token')->unique();
+            $table->string('token');
             $table->enum('status', ['available', 'sold', 'pending'])->default('pending');
 
             $table->foreignUuid('sold_to')->nullable()->references('id')->on('users')->cascadeOnDelete();

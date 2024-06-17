@@ -59,11 +59,6 @@ $(document).ready(function () {
 
     $(document).on("click", ".select-payment-method-detail", function () {
         let paymentMethodId = $(this).data("payment-method-id");
-        console.log([
-            "campaign ID: " + campaignId,
-            "quantity buy: " + quantityBuy,
-            "route buy project: " + routeBuyProject,
-        ]);
 
         $.ajax({
             url: routeBuyProject,

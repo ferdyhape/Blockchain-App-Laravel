@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('payment_method_details', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->foreignUuid('payment_method_id')->constrained('payment_methods');
-            $table->string('name')->unique();
+            $table->string('name');
             $table->longText('description')->nullable();
             $table->uuid('user_id')->nullable()->constrained('users');
             $table->timestamps();

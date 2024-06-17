@@ -7,15 +7,58 @@ use App\Models\ProjectCategory;
 use App\Services\ProjectService;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\User\ReviseProjectRequest;
-use App\Http\Requests\User\SignedContractRequest;
+use App\Http\Requests\User\PayForSaleTokenRequest;
+use App\Services\TransactionService;
+use App\Services\PaymentMethodService;
 use App\Services\ProjectCategoryService;
 use App\Http\Requests\User\StoreProjectRequest;
+use App\Http\Requests\User\ReviseProjectRequest;
+use App\Http\Requests\User\SignedContractRequest;
+use App\Services\CampaignService;
 use App\Services\CategoryProjectSubmissionStatusService;
-use App\Services\ProgressStatusOfProjectSubmissionService;
 
 class ProjectManagementController extends Controller
 {
+
+    public function payForSaleToken($transactionCode, PayForSaleTokenRequest $request)
+    {
+        $validated = $request->validated();
+
+        try {
+            DB::beginTransaction();
+            TransactionService::payForSaleToken($transactionCode, $validated['payment_method'], $validated['payment_method'] === 'transfer' ? $request->file('payment_proof') : null);
+            DB::commit();
+
+            return redirect()->back()->with('success', 'Upload payment proof successfully');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Something went wrong');
+        }
+    }
+
+    public function showTransaction(string $transactionCode)
+    {
+        // dd($transactionCode);
+        $transaction = TransactionService::getTransactionByCode($transactionCode);
+        $paymentMethodDetail = PaymentMethodService::getPaymentMethodDetailById($transaction->payment_method_detail_id);
+        $walletBalance = CampaignService::getCampaignWalletBalanceFromTransaction($transactionCode);
+        return view('auth.user.project_management.showTransaction', compact('transaction', 'walletBalance', 'paymentMethodDetail'));
+    }
+
+    public function checkTransaction(string $projectId)
+    {
+        $project = ProjectService::getProjectById($projectId);
+
+        if (request()->ajax()) {
+            $transactions = TransactionService::ajaxDatatableTransactionInProjectManagementByUser($project->campaign->id);
+            return $transactions;
+        }
+
+        $transactions = TransactionService::getTransactionByCampaignId($project->campaign->id);
+        // dd($transactions->toArray());
+
+        return view('auth.user.project_management.checkTransaction', compact('project', 'transactions'));
+    }
 
     public function postUploadSignedContract(string $id, SignedContractRequest $request)
     {

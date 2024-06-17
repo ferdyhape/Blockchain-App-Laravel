@@ -111,45 +111,22 @@
 
 
                     <div id="sell-token">
-                        <h5 class="fw-semibold">Sell Action</h5>
+                        <h5>Sell Action</h5>
                         <div class="card border-0 shadow-sm p-4 my-3">
 
                             <form action="{{ route('dashboard.user.token.sell', $campaign->id) }}" method="POST">
                                 @method('POST')
                                 @csrf
-
-                                <div class="d-flex flex-column">
-                                    <p>Pilih Bank Tujuan</p>
-                                    @foreach ($wallets as $wallet)
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="payment_method_detail_id"
-                                                id="radio-payment-{{ $wallet->id }}" value="{{ $wallet->id }}"
-                                                {{ $loop->first ? 'checked' : '' }}>
-                                            <label class="form-check-label" for="radio-payment-{{ $wallet->id }}">
-                                                <div class="fw-semibold">
-                                                    {{ $wallet->name }}
-                                                </div>
-                                                <div>
-                                                    {{ $wallet->description }}
-                                                </div>
-                                            </label>
-                                        </div>
-                                    @endforeach
-                                </div>
-
-                                <div class="d-flex flex-column gap-3 mt-4">
-                                    <div class="">
-                                        <p>Jumlah Token Dijual</p>
-                                        <div class="d-flex flex-row gap-3">
-                                            <button type="button" class="btn btn-danger" id="decrement">-</button>
-                                            <input type="number" name="quantity" class="form-control text-center"
-                                                id="quantity" value="1" min="1" max="{{ $tokens->count() }}">
-                                            <button type="button" class="btn btn-success" id="increment">+</button>
-                                        </div>
+                                <div class="d-flex flex-column gap-3">
+                                    <div class="d-flex flex-row gap-3">
+                                        <button type="button" class="btn btn-danger" id="decrement">-</button>
+                                        <input type="number" name="quantity" class="form-control text-center" id="quantity"
+                                            value="1" min="1" max="{{ $tokens->count() }}">
+                                        <button type="button" class="btn btn-success" id="increment">+</button>
                                     </div>
                                     <div class="p">
                                         Nominal dalam rupiah: <span id="total" class="fw-semibold currency">
-                                            Rp. {{ number_format($tokens->first()->campaign->price_per_unit, 2, ',', '.') }}
+                                            {{ $tokens->first()->campaign->price_per_unit }}
                                     </div>
                                     <button type="submit" class="btn btn-success">Selanjutnya</button>
                                 </div>
@@ -170,15 +147,12 @@
                     let tokenPrice = {{ $tokens->first()->campaign->price_per_unit }};
                     let tokenCount = {{ $tokens->count() }};
                     let quantity = 1;
-                    let total = $('#total');
-
-                    total.text(formatRupiah(tokenPrice));
-
+                    // handle increment and decrement with auto add currency class
                     $('#increment').click(function() {
                         if (quantity < tokenCount) {
                             quantity++;
                             $('#quantity').val(quantity);
-                            total.text(formatRupiah(tokenPrice * quantity));
+                            $('#total').text((tokenPrice * quantity).toLocaleString('id-ID'));
                         }
                     });
 
@@ -186,13 +160,13 @@
                         if (quantity > 1) {
                             quantity--;
                             $('#quantity').val(quantity);
-                            total.text(formatRupiah(tokenPrice * quantity));
+                            $('#total').text((tokenPrice * quantity).toLocaleString('id-ID'));
                         }
                     });
 
                     $('#quantity').change(function() {
                         quantity = $(this).val();
-                        total.text(formatRupiah(tokenPrice * quantity));
+                        $('#total').text((tokenPrice * quantity).toLocaleString('id-ID'));
                     });
                 });
             </script>

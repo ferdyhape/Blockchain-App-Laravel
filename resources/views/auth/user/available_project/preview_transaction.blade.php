@@ -78,12 +78,12 @@
             @endslot
         </x-contentSection>
 
-        @include('components.errorAlertValidation')
-        @include('components.ifSuccessAlert')
+        <x-errorAlertValidation />
+        <x-ifSuccessAlert />
 
         @push('custom-scripts')
             <script>
-                let getPaymentMethodDetailUrl = "{{ route('get-payment-methods-details') }}";
+                let getPaymentMethodDetailUrl = "{{ route('get-payment-methods-details-for-buy-token') }}";
                 let campaignId = "{{ $project->campaign->id }}";
                 let quantityBuy = "{{ $quantityBuy }}";
                 let routeBuyProject = "{{ route('dashboard.user.available-project.buy.post') }}";

@@ -28,6 +28,14 @@
                                     </tr>
                                     <tr>
                                         <td class="text-start text-secondary">
+                                            Tipe Order
+                                        </td>
+                                        <td class="text-end fw-semibold">
+                                            {{ $transaction->order_type }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-start text-secondary">
                                             Harga Per Token
                                         </td>
                                         <td class="text-end fw-semibold currency">
@@ -63,18 +71,69 @@
                         </div>
                     </div>
 
-                    <div id="how-to-pay">
-                        <h5 class="fw-semibold">Tata Cara Pembayaran</h5>
-                        <div class="card border-0 shadow-sm p-4 my-3">
-                            <div class="card-content rounded">
-                                {!! $paymentMethodDetail->description !!}
+                    {{-- apabila order type buy dan status pending --}}
+                    @if ($transaction->order_type == 'buy' && $transaction->status == 'pending')
+                        <div id="how-to-pay">
+                            <h5 class="fw-semibold">Tata Cara Pembayaran</h5>
+                            <div class="card border-0 shadow-sm p-4 my-3">
+                                <div class="card-content rounded">
+                                    {!! $paymentMethodDetail->description !!}
+                                </div>
                             </div>
                         </div>
-                    </div>
+                        {{-- apabila order type sell --}}
+                    @elseif ($transaction->order_type == 'sell')
+                        <div id="account-number">
+                            <h5 class="fw-semibold">Bank Tujuan</h5>
+                            <div class="card border-0 shadow-sm p-4 my-3">
+                                <div class="card-content rounded">
+                                    <div class="">
+                                        Nama Bank: <span class="fw-semibold">{{ $paymentMethodDetail->name }}</span>
+                                    </div>
+                                    <div class="">
+                                        Nomor rekening: <span class="fw-semibold">{{ $paymentMethodDetail->description }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
 
-                    {{-- {{ url($transaction->payment_proof) }} --}}
+                    @if ($transaction->payment_proof)
+                        <div id="payment-proof">
+                            <h5 class="fw-semibold">Bukti Pembayaran</h5>
+                            <div class="card border-0 shadow-sm p-4 my-3">
+                                <div class="card-content rounded">
+                                    <img src="{{ asset($transaction->payment_proof) }}" alt="Payment Proof" class="img-fluid">
+                                </div>
+                            </div>
+                        </div>
+                        @if (
+                            $transaction->status == 'pending' &&
+                                $transaction->order_type == 'sell' &&
+                                $transaction->payment_status == 'paidByCampaignBalance')
+                            <div class="mt-3">
+                                <form
+                                    action="{{ route('dashboard.user.transaction.change-status', $transaction->transaction_code) }}"
+                                    method="POST" class="d-inline">
+                                    @csrf
+                                    @method('PUT')
+                                    <input type="hidden" name="status" value="success">
+                                    <button type="submit" class="btn btn-success">Accept</button>
+                                </form>
+                                <form
+                                    action="{{ route('dashboard.user.transaction.change-status', $transaction->transaction_code) }}"
+                                    method="POST" class="d-inline">
+                                    @csrf
+                                    @method('PUT')
+                                    <input type="hidden" name="status" value="failed">
+                                    <button type="submit" class="btn btn-danger">Reject</button>
+                                </form>
+                            </div>
+                        @endif
+                    @endif
 
-                    @if (!$transaction->payment_proof)
+                    {{-- apabila order type buy dan belum upload bukti pembayaran --}}
+                    @if (!$transaction->payment_proof && $transaction->order_type == 'buy')
                         <div id="upload-proof">
                             <h5 class="fw-semibold">Bukti Pembayaran</h5>
                             <div class="card border-0 shadow-sm p-4 my-3">
@@ -94,9 +153,10 @@
                                     </form>
                                 </div>
                             </div>
-
                         </div>
-                    @else
+
+                        {{-- apabila order type buy dan sudah upload bukti pembayaran --}}
+                    @elseif ($transaction->payment_proof && $transaction->order_type == 'buy' && $transaction->status == 'pending')
                         <div id="">
                             <h5 class="fw-semibold">Menunggu Konfirmasi</h5>
                             <div class="card border-0 shadow-sm p-4 my-3">

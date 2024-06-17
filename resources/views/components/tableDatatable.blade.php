@@ -6,7 +6,7 @@
 ])
 
 <div class="col-md-12">
-    <h1>{{ $header }}</h1>
+    <h5 class="fw-semibold">{{ $header }}</h5>
     <div class="table-responsive mt-5">
         <table id="{{ $tableId }}" class="display w-100 nowrap">
             <thead class="text-center">

@@ -86,7 +86,7 @@
                             </div>
                         </div>
 
-                        @if ($transaction->payment_proof != null)
+                        @if ($transaction->payment_proof)
                             <div id="payment-proof">
                                 <h5 class="fw-semibold">Bukti Pembayaran</h5>
                                 <div class="card border-0 shadow-sm p-4 my-3">
@@ -96,24 +96,74 @@
                                     </div>
                                 </div>
                             </div>
+                        @endif
 
-                            {{-- acc status --}}
-                            @if ($transaction->status == 'pending')
-                                <div class="mt-3">
-                                    <form action="{{ route('dashboard.admin.transaction.change-status', $transaction->id) }}"
-                                        method="POST" class="d-inline">
-                                        @csrf
-                                        @method('PUT')
-                                        <input type="hidden" name="status" value="success">
-                                        <button type="submit" class="btn btn-success">Accept</button>
-                                    </form>
-                                    <form action="{{ route('dashboard.admin.transaction.change-status', $transaction->id) }}"
-                                        method="POST" class="d-inline">
-                                        @csrf
-                                        @method('PUT')
-                                        <input type="hidden" name="status" value="failed">
-                                        <button type="submit" class="btn btn-danger">Reject</button>
-                                    </form>
+                        @if ($transaction->order_type == 'buy')
+                            @if ($transaction->payment_proof != null)
+                                {{-- acc status --}}
+                                @if ($transaction->status == 'pending')
+                                    <div class="mt-3">
+                                        <form
+                                            action="{{ route('dashboard.admin.transaction.change-status', $transaction->transaction_code) }}"
+                                            method="POST" class="d-inline">
+                                            @csrf
+                                            @method('PUT')
+                                            <input type="hidden" name="status" value="success">
+                                            <button type="submit" class="btn btn-success">Accept</button>
+                                        </form>
+                                        <form
+                                            action="{{ route('dashboard.admin.transaction.change-status', $transaction->transaction_code) }}"
+                                            method="POST" class="d-inline">
+                                            @csrf
+                                            @method('PUT')
+                                            <input type="hidden" name="status" value="failed">
+                                            <button type="submit" class="btn btn-danger">Reject</button>
+                                        </form>
+                                    </div>
+                                @endif
+                            @endif
+                        @elseif($transaction->order_type == 'sell')
+                            <div id="account-number">
+                                <h5 class="fw-semibold">Tujuan</h5>
+                                <div class="card border-0 shadow-sm p-4 my-3">
+                                    <div class="card-content rounded">
+                                        @if ($transaction->order_type == 'sell')
+                                            <div class="">
+                                                Nama Bank: <span class="fw-semibold">{{ $paymentMethodDetail->name }}</span>
+                                            </div>
+                                            <div class="">
+                                                <span class="fw-semibold">{!! $paymentMethodDetail->description !!}</span>
+                                            </div>
+                                        @else
+                                            <div class="">
+                                                <span class="fw-semibold">{!! $paymentMethodDetail->description !!}</span>
+                                            </div>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+
+                            @if ($transaction->payment_status == 'needAdminAction')
+                                <div id="upload-proof">
+                                    <h5 class="fw-semibold">Bukti Pembayaran</h5>
+                                    <div class="card border-0 shadow-sm p-4 my-3">
+                                        <div class="card-content rounded">
+                                            <div class="mb-3">
+                                                Pemilik proyek ingin membayar dengan saldo yang ada pada campaign wallet,
+                                                silahkan
+                                                upload bukti pembayaran
+                                            </div>
+                                            <form
+                                                action="{{ route('dashboard.admin.transaction.upload-proof', $transaction->transaction_code) }}"
+                                                method="POST" enctype="multipart/form-data">
+                                                @csrf
+                                                @method('POST')
+                                                <x-input type="file" name="payment_proof" required="true" id="payment_proof"
+                                                    placeholder="Bukti Pembayaran" />
+                                                <button type="submit" class="btn btn-primary">Upload</button>
+                                            </form>
+                                        </div>
+                                    </div>
                                 </div>
                             @endif
                         @endif

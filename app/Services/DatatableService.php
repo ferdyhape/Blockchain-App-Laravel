@@ -14,11 +14,17 @@ class DatatableService
      *
      * @return mixed
      */
-    public static function buildDatatable($query, $actions)
+    public static function buildDatatable($query, $actions = null)
     {
-        return datatables($query)
+        if ($actions) {
+            return datatables($query)
+                ->addIndexColumn()
+                ->addColumn('action', $actions)
+                ->make(true);
+        }
+        return
+            datatables($query)
             ->addIndexColumn()
-            ->addColumn('action', $actions)
             ->make(true);
     }
 }

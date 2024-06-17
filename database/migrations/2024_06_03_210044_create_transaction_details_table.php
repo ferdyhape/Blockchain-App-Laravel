@@ -13,10 +13,11 @@ return new class extends Migration
     {
         Schema::create('transaction_details', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignUuid('transaction_id')
-                ->constrained('transactions')
-                ->cascadeOnDelete();
+            // $table->foreignUuid('transaction_id')
+            //     ->constrained('transactions')
+            //     ->cascadeOnDelete();
 
+            $table->string('transaction_code');
             $table->decimal('price', 10, 2);
             $table->string('token');
 

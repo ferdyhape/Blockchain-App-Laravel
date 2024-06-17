@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\ProjectManagementController as AdminProjectManage
 use App\Http\Controllers\User\TransactionController as UserTransactionController;
 use App\Http\Controllers\Admin\TransactionController as AdminTransactionController;
 use App\Http\Controllers\User\TokenController as UserTokenController;
+use App\Http\Controllers\User\WalletController as UserWalletController;
 
 /*
 |--------------------------------------------------------------------------
@@ -67,7 +68,8 @@ Route::middleware('auth')->group(function () {
 
             Route::prefix('transaction')->name('transaction.')->group(function () {
                 Route::resource('/', AdminTransactionController::class)->parameter('', 'transaction');
-                Route::put('{id}/change-status', [AdminTransactionController::class, 'changeStatus'])->name('change-status');
+                Route::post('{code}/upload-proof', [AdminTransactionController::class, 'uploadProof'])->name('upload-proof');
+                Route::put('{code}/change-status', [AdminTransactionController::class, 'changeStatus'])->name('change-status');
             });
         });
 
@@ -81,6 +83,9 @@ Route::middleware('auth')->group(function () {
                 Route::post('{id}/revise', [UserProjectManagementController::class, 'postReviseProject'])->name('revise.post');
                 Route::get('{id}/upload-signed-contract', [UserProjectManagementController::class, 'uploadSignedContract'])->name('upload-signed-contract');
                 Route::post('{id}/upload-signed-contract', [UserProjectManagementController::class, 'postUploadSignedContract'])->name('upload-signed-contract.post');
+                Route::get('{projectId}/check-transaction', [UserProjectManagementController::class, 'checkTransaction'])->name('check-transaction');
+                Route::get('{transactionCode}/show', [UserProjectManagementController::class, 'showTransaction'])->name('show-transaction');
+                Route::post('{transactionCode}/pay-for-sale-token', [UserProjectManagementController::class, 'payForSaleToken'])->name('pay-for-sale-token');
             });
 
             // Route::get('available-projects', [UserAvailableProjectController::class, 'index'])->name('available-projects');
@@ -95,12 +100,18 @@ Route::middleware('auth')->group(function () {
                 Route::get('/', [UserTransactionController::class, 'index'])->name('index');
                 Route::get('{code}', [UserTransactionController::class, 'show'])->name('show');
                 Route::post('{code}/upload-proof', [UserTransactionController::class, 'uploadProof'])->name('upload-proof');
+                Route::put('{code}/change-status', [UserTransactionController::class, 'changeStatus'])->name('change-status');
             });
 
             Route::prefix('token')->name('token.')->group(function () {
                 Route::get('/', [UserTokenController::class, 'index'])->name('index');
                 Route::get('/{id}', [UserTokenController::class, 'show'])->name('show');
-                Route::post('/{id}/sell', [UserTokenController::class, 'sell'])->name('sell');
+                Route::post('/{campaign_id}/sell', [UserTokenController::class, 'sell'])->name('sell');
+            });
+
+
+            Route::prefix('my-walllet')->name('my-wallet.')->group(function () {
+                Route::resource('/', UserWalletController::class)->parameter('', 'my_wallet');
             });
         });
     });

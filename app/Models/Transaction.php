@@ -10,19 +10,20 @@ class Transaction extends Model
 {
     use HasFactory, HasUuids;
 
+    protected $guarded = ['id', 'created_at', 'updated_at'];
+
     protected static function boot()
     {
         parent::boot();
+
         static::creating(function ($transaction) {
-            $transaction->transaction_code = 'T' . date('Ymd') . '-' . (self::count() + 1);
+            $prefix = $transaction->order_type === 'sell' ? 'TS' : 'TB';
+            $transaction->transaction_code = $prefix . date('Ymd') . '-' . (self::count() + 1);
         });
     }
 
-
-    protected $guarded = ['id', 'created_at', 'updated_at'];
-
     public function transactionDetails()
     {
-        return $this->hasMany(TransactionDetail::class);
+        return $this->hasMany(TransactionDetail::class, 'transaction_code', 'transaction_code');
     }
 }

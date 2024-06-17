@@ -6,20 +6,39 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Services\TransactionService;
+use App\Services\PaymentMethodService;
+use App\Http\Requests\Admin\UploadPaymentProofRequest;
 
 class TransactionController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-
-
-    public function changeStatus(Request $request, string $id)
+    public function uploadProof(UploadPaymentProofRequest $request, $code)
     {
-        DB::beginTransaction();
-        TransactionService::changeStatus($id, $request->status);
-        DB::commit();
-        return redirect()->back()->with('success', 'Transaction status has been changed');
+        $validated = $request->validated();
+
+        try {
+            DB::beginTransaction();
+            TransactionService::uploadPaymentProof($code, $validated['payment_proof'], true);
+            DB::commit();
+            return redirect()->back()->with('success', 'Payment proof has been uploaded');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Something went wrong');
+        }
+    }
+    public function changeStatus(Request $request, string $code)
+    {
+        $request->validate([
+            'status' => 'required|in:success,failed'
+        ]);
+
+        try {
+            DB::beginTransaction();
+            TransactionService::changeTransactionStatus($code, $request->status, $request->status == 'success' ? 'paid' : 'failed');
+            DB::commit();
+            return redirect()->back()->with('success', 'Transaction status has been changed');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Something went wrong');
+        }
     }
 
     public function index()
@@ -50,10 +69,11 @@ class TransactionController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $code)
     {
-        $transaction = TransactionService::getTransactionById($id);
-        return view('auth.admin.transaction.show', compact('transaction'));
+        $transaction = TransactionService::getTransactionByCode($code);
+        $paymentMethodDetail = PaymentMethodService::getPaymentMethodDetailById($transaction->payment_method_detail_id);
+        return view('auth.admin.transaction.show', compact('transaction', 'paymentMethodDetail'));
     }
 
     /**

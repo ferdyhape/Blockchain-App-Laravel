@@ -55,6 +55,14 @@
                                     {{ $project->campaign->maximum_purchase }}
                                 </td>
                             </tr>
+                            <tr>
+                                <td class="text-start text-secondary">
+                                    Jumlah Token Terbeli
+                                </td>
+                                <td class="text-end">
+                                    {{ $project->campaign->sold_token_amount }}
+                                </td>
+                            </tr>
                         </table>
                     </div>
                 @else
@@ -143,6 +151,10 @@
             </div>
         </div>
         @include('auth.admin.project_management.actionCard')
+    @elseif($project->campaign && $project->user->id == auth()->user()->id)
+        @if ($project->campaign->status == 'on_fundraising')
+            @include('auth.user.project_management.actionCard')
+        @endif
     @elseif($useFor == 'available-project')
         @include('auth.user.available_project.actionCard')
     @endif

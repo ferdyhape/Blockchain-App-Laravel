@@ -1,6 +1,6 @@
-console.log("transactionManagement.js loaded");
+console.log("transactions.js loaded");
 
-tableName = "#transactionManagementTable";
+tableName = "#transactionsTable";
 console.log(baseUrl);
 columnsDatatable = [
     {
@@ -48,23 +48,6 @@ columnsDatatable = [
             } else {
                 return '<div class="btn btn-sm btn-danger">Failed</div>';
             }
-        },
-    },
-    {
-        data: "payment_proof",
-        name: "payment_proof",
-        render: function (data) {
-            if (data == null) {
-                return '<div class="btn btn-sm btn-danger">No Proof</div>';
-            }
-
-            return (
-                '<a href="' +
-                baseUrl +
-                "/" +
-                data +
-                '" target="_blank">Lihat Bukti Pembayaran</a>'
-            );
         },
     },
     {

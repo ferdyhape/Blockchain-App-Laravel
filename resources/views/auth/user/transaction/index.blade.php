@@ -24,16 +24,13 @@
                         <div class="col-md-12 col-lg-4">
                             <div class="card shadow-sm border-0">
                                 <div class="card-header d-flex justify-content-between">
-                                    <div class="fw-semibold">
-                                        {{ $transaction->transaction_code }}
+                                    <div
+                                        class="fw-semibold text-uppercase btn btn-sm {{ $transaction->order_type == 'sell' ? 'btn-danger' : 'btn-success' }}">
+                                        {{ $transaction->order_type }}
                                     </div>
-                                    @if ($transaction->status == 'pending')
-                                        <div class="btn btn-sm btn-warning text-uppercase">{{ $transaction->status }}</div>
-                                    @elseif ($transaction->status == 'success')
-                                        <div class="btn btn-sm btn-success text-uppercase">{{ $transaction->status }}</div>
-                                    @else
-                                        <div class="btn btn-sm btn-danger text-uppercase">{{ $transaction->status }}</div>
-                                    @endif
+                                    <div class="text-secondary">
+                                        {{ $transaction->created_at->diffForHumans() }}
+                                    </div>
                                 </div>
                                 <div class="card-body">
                                     <table class="w-100">
@@ -47,10 +44,35 @@
                                         </tr>
                                         <tr>
                                             <td class="text-start text-secondary">
+                                                Kode Transaksi
+                                            </td>
+                                            <td class="text-end">
+                                                {{ $transaction->transaction_code }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-start text-secondary">
                                                 Total pembelian
                                             </td>
                                             <td class="text-end">
-                                                {{ $transaction->transactionDetails->count() }} Token
+                                                {{ $transaction->quantity }} Token
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-start text-secondary">
+                                                Status
+                                            </td>
+                                            <td class="text-end">
+                                                @if ($transaction->status == 'pending')
+                                                    <div class="btn btn-sm btn-warning py-0 px-2 text-uppercase">
+                                                        {{ $transaction->status }}</div>
+                                                @elseif ($transaction->status == 'success')
+                                                    <div class="btn btn-sm btn-success py-0 px-2 text-uppercase">
+                                                        {{ $transaction->status }}</div>
+                                                @else
+                                                    <div class="btn btn-sm btn-danger py-0 px-2 text-uppercase">
+                                                        {{ $transaction->status }}</div>
+                                                @endif
                                             </td>
                                         </tr>
                                         <tr>
@@ -65,7 +87,8 @@
 
                                     <div class="d-flex justify-content-end">
                                         <a href="{{ route('dashboard.user.transaction.show', $transaction->transaction_code) }}"
-                                            class="btn btn-primary btn-sm mt-3">{{ $transaction->payment_proof == null ? 'Bayar Sekarang' : 'Lihat Detail' }}</a>
+                                            class="btn btn-primary btn-sm mt-3">
+                                            {{ $transaction->payment_proof == null && $transaction->order_type == 'buy' ? 'Bayar Sekarang' : 'Lihat Detail' }}</a>
                                     </div>
                                 </div>
                             </div>

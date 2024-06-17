@@ -2,12 +2,14 @@ console.log("datatableInitializer.js loaded");
 
 // apabila document sudah siap
 $(document).ready(function () {
+    // apabila document sudah siap
     if (typeof initDatatable === "function") {
-        initDatatable();
+        initDatatable(); // mulai inisiasi datatable
     }
 });
 
 function initDatatable() {
+    // func inisisasi datatable
     if (isDatatableWithoutActionColumn) {
         buildDatatable(
             tableName,

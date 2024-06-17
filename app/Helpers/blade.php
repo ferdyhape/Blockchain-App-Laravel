@@ -90,7 +90,31 @@ function getSidebarData()
             'icon' => 'bx-coin-stack',
             'name' => 'My Token',
         ],
+        [
+            'role' => 'Platinum Member', // Add this line
+            'route' => 'dashboard.user.my-wallet.index',
+            'icon' => 'bx-wallet',
+            'name' => 'My Wallet',
+        ]
     ];
 
     return $sidebarData;
+}
+
+
+function getBankTransferList()
+{
+    $data = [
+        'Bank Mandiri',
+        'Bank BCA',
+        'Bank BNI',
+        'Bank BRI',
+        'Bank CIMB Niaga',
+        'Bank Danamon',
+        'Bank Permata',
+        'Bank Panin',
+        'Bank OCBC NISP',
+        'Bank Maybank',
+    ];
+    return $data;
 }

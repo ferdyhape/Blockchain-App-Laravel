@@ -99,7 +99,7 @@
                                     </div>
                                     <div class="p">
                                         Nominal dalam rupiah: <span id="total" class="fw-semibold currency">
-                                            {{ $project->campaign->price_per_unit }}
+                                            Rp. {{ number_format($project->campaign->price_per_unit, 2, ',', '.') }}
                                     </div>
                                     <button type="submit" class="btn btn-success">Selanjutnya</button>
                                 </div>
@@ -116,43 +116,44 @@
 
         @push('custom-scripts')
             <script>
-                // if document ready jquery
                 $(document).ready(function() {
-                    // get element
-                    const decrement = document.getElementById('decrement');
-                    const increment = document.getElementById('increment');
-                    const quantity = document.getElementById('quantity');
-                    const total = document.getElementById('total');
+                    let pricePerUnit = {{ $project->campaign->price_per_unit }};
+                    let minimumPurchase = {{ $project->campaign->minimum_purchase }};
+                    let maximumPurchase = {{ $project->campaign->maximum_purchase }};
+                    let quantity = $('#quantity').val();
+                    let total = $('#total');
 
-                    // add event listener
-                    decrement.addEventListener('click', () => {
-                        if (quantity.value > quantity.min) {
-                            quantity.value = parseInt(quantity.value) - 1;
-                            total.innerText = new Intl.NumberFormat('id-ID', {
-                                style: 'currency',
-                                currency: 'IDR'
-                            }).format(parseInt(quantity.value) * parseInt(
-                                '{{ $project->campaign->price_per_unit }}'));
+                    total.text(formatRupiah(pricePerUnit));
+
+                    $('#increment').click(function() {
+                        quantity = $('#quantity').val();
+                        if (quantity < maximumPurchase) {
+                            quantity++;
+                            $('#quantity').val(quantity);
+                            total.text(formatRupiah(pricePerUnit * quantity));
                         }
                     });
 
-                    increment.addEventListener('click', () => {
-                        if (quantity.value < quantity.max) {
-                            quantity.value = parseInt(quantity.value) + 1;
-                            total.innerText = new Intl.NumberFormat('id-ID', {
-                                style: 'currency',
-                                currency: 'IDR'
-                            }).format(parseInt(quantity.value) * parseInt(
-                                '{{ $project->campaign->price_per_unit }}'));
+                    $('#decrement').click(function() {
+                        quantity = $('#quantity').val();
+                        if (quantity > minimumPurchase) {
+                            quantity--;
+                            $('#quantity').val(quantity);
+                            total.text(formatRupiah(pricePerUnit * quantity));
                         }
                     });
 
-                    quantity.addEventListener('change', () => {
-                        total.innerText = new Intl.NumberFormat('id-ID', {
-                            style: 'currency',
-                            currency: 'IDR'
-                        }).format(parseInt(quantity.value) * parseInt(
-                            '{{ $project->campaign->price_per_unit }}'));
+                    $('#quantity').change(function() {
+                        quantity = $('#quantity').val();
+                        if (quantity < minimumPurchase) {
+                            $('#quantity').val(minimumPurchase);
+                            total.text(formatRupiah(pricePerUnit * minimumPurchase));
+                        } else if (quantity > maximumPurchase) {
+                            $('#quantity').val(maximumPurchase);
+                            total.text(formatRupiah(pricePerUnit * maximumPurchase));
+                        } else {
+                            total.text(formatRupiah(pricePerUnit * quantity));
+                        }
                     });
                 });
             </script>

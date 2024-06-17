@@ -20,4 +20,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 
-Route::get('/payment-methods-detail', [PaymentMethodController::class, 'getPaymentMethodDetail'])->name('get-payment-methods-details');
+Route::get('/payment-methods-detail-buy-token', [PaymentMethodController::class, 'getPaymentMethodDetailForBuyToken'])->name('get-payment-methods-details-for-buy-token');
+Route::get('/payment-methods-detail-sell-token', [PaymentMethodController::class, 'getPaymentMethodDetailForSellToken'])->name('get-payment-methods-details-for-sell-token');

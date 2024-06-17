@@ -13,13 +13,6 @@ class CampaignToken extends Model
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
     // when boot, generate token like generate uuid on boot
-    protected static function booted()
-    {
-        static::creating(function ($campaignDetail) {
-            $campaignDetail->token = Str::random(10);
-        });
-    }
-
 
     public function campaign()
     {
