@@ -20,3 +20,4 @@ if [ -d "$TARGET_DIR" ]; then
 else
   echo "Directory $TARGET_DIR does not exist."
 fi
+

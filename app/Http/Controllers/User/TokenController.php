@@ -25,6 +25,7 @@ class TokenController extends Controller
     public function index()
     {
         $campaigns = CampaignTokenService::getSoldTokenGroupByCampaign();
+        // dd($campaigns);
         return view('auth.user.token.index', compact('campaigns'));
     }
 

@@ -39,7 +39,7 @@
                                             Harga Per Token
                                         </td>
                                         <td class="text-end fw-semibold currency">
-                                            {{ $transaction->transactionDetails->first()->price }}
+                                            {{ $price }}
                                         </td>
                                     </tr>
                                     <tr>
@@ -47,7 +47,7 @@
                                             Total pembelian
                                         </td>
                                         <td class="text-end fw-semibold">
-                                            {{ $transaction->transactionDetails->count() }} Token
+                                            {{ $count }} Token
                                         </td>
                                     </tr>
                                     <tr>
@@ -55,7 +55,7 @@
                                             Metode Pembayaran
                                         </td>
                                         <td class="text-end fw-semibold">
-                                            {{ $transaction->payment_method_detail }}
+                                            {{ $paymentMethodDetail->name }}
                                         </td>
                                     </tr>
                                     <tr>
@@ -98,7 +98,7 @@
                         </div>
                     @endif
 
-                    @if ($transaction->payment_proof)
+                    @if ($transaction->payment_proof != 'null')
                         <div id="payment-proof">
                             <h5 class="fw-semibold">Bukti Pembayaran</h5>
                             <div class="card border-0 shadow-sm p-4 my-3">
@@ -110,7 +110,7 @@
                         @if (
                             $transaction->status == 'pending' &&
                                 $transaction->order_type == 'sell' &&
-                                $transaction->payment_status == 'paidByCampaignBalance')
+                                ($transaction->payment_status == 'paidByCampaignBalance' || $transaction->payment_status == 'paid'))
                             <div class="mt-3">
                                 <form
                                     action="{{ route('dashboard.user.transaction.change-status', $transaction->transaction_code) }}"
@@ -133,7 +133,7 @@
                     @endif
 
                     {{-- apabila order type buy dan belum upload bukti pembayaran --}}
-                    @if (!$transaction->payment_proof && $transaction->order_type == 'buy')
+                    @if ($transaction->payment_proof == 'null' && $transaction->order_type == 'buy')
                         <div id="upload-proof">
                             <h5 class="fw-semibold">Bukti Pembayaran</h5>
                             <div class="card border-0 shadow-sm p-4 my-3">

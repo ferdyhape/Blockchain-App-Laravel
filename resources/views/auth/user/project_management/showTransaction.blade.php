@@ -39,7 +39,7 @@
                                             Harga Per Token
                                         </td>
                                         <td class="text-end fw-semibold currency">
-                                            {{ $transaction->transactionDetails->first()->price }}
+                                            {{ $price }}
                                         </td>
                                     </tr>
                                     <tr>
@@ -47,7 +47,7 @@
                                             Total pembelian
                                         </td>
                                         <td class="text-end fw-semibold">
-                                            {{ $transaction->transactionDetails->count() }} Token
+                                            {{ $count }} Token
                                         </td>
                                     </tr>
                                     <tr>

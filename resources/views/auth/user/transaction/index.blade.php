@@ -29,7 +29,9 @@
                                         {{ $transaction->order_type }}
                                     </div>
                                     <div class="text-secondary">
-                                        {{ $transaction->created_at->diffForHumans() }}
+                                        {{-- sample created at : 1718716825 --}}
+                                        {{-- convert created at to date time --}}
+                                        {{ date('d M Y', $transaction->created_at) }}
                                     </div>
                                 </div>
                                 <div class="card-body">

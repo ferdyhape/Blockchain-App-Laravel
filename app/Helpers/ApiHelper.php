@@ -7,11 +7,29 @@ class APIHelper
     private static $baseApiUrl;
     private static $apiToken;
     private static $arraySegmentApi = [
-        'getTransactions' => '/transactions',
+        // get transaction
+        'getAllTransactions' => '/transactions',
         'getTransactionDetails' => '/transaction-details',
+        'getTransactionByCode' => '/transactions/code',
+        'getTransactionByFromToUserId' => '/transactions/fromToUserId',
+        'getTransactionByCampaignId' => '/transactions/campaignId',
+        'getCountTransaction' => '/transactions/count',
+
+        // post transaction
         'addTransaction' => '/transactions',
+        'updateTransactionStatus' => '/transactions/update-status',
+        'updateTransactionPaymentStatus' => '/transactions/update-payment-status',
+        'uploadTransactionPaymentProof' => '/transactions/upload-payment-proof',
+
+        // get transaction details
+        'getTransactionDetailByTransactionCode' => '/transaction-details/getTransactionDetails',
+        'getCountTransactionDetailByTransactionCode' => '/transaction-details/count',
+        'getPriceFromTransactionDetailByTransactionCode' => '/transaction-details/price',
+
+        // post transaction details
         'addTransactionDetail' => '/transaction-details',
     ];
+
 
     public static function initialize()
     {
@@ -19,17 +37,44 @@ class APIHelper
         self::$apiToken = config('app.api_token');
     }
 
-    public static function httpGet($key)
+    public static function httpGet($key, string $param = null, $encodeDecode = true)
     {
         $config = self::buildConfig($key);
-        return Http::withHeaders([
+        $url = $config['fullApiUrl'];
+
+        if ($param) {
+            // get params value
+            $url .= '/' . $param;
+        }
+
+        $response = Http::withHeaders([
             'Authorization' => self::$apiToken,
-        ])->get($config['fullApiUrl'])->json();
+        ])->get($url)->json();
+
+        if (!$encodeDecode) {
+            return $response;
+        }
+        return self::encodeDecode($response);
     }
 
-    public static function httpPost($key, $data)
+
+
+    public static function encodeDecode($data)
+    {
+        $data = json_encode($data);
+        return json_decode($data);
+    }
+
+    public static function httpPost($key, $data, $param = null)
     {
         $config = self::buildConfig($key);
+
+        if ($param) {
+            // get params value
+            $config['fullApiUrl'] .= '/' . $param;
+        }
+
+        // dd($config['fullApiUrl'], $data);
 
         return Http::withHeaders([
             'Authorization' => self::$apiToken,

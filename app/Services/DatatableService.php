@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use Yajra\DataTables\Facades\DataTables;
+
 /**
  * Class DatatableService.
  */
@@ -16,15 +18,15 @@ class DatatableService
      */
     public static function buildDatatable($query, $actions = null)
     {
+        $datatable = DataTables::of($query)->addIndexColumn();
+
         if ($actions) {
-            return datatables($query)
-                ->addIndexColumn()
-                ->addColumn('action', $actions)
-                ->make(true);
+            $datatable->addColumn('action', function ($row) use ($actions) {
+                $row = (object) $row;
+                return view($actions, ['model' => $row])->render();
+            });
         }
-        return
-            datatables($query)
-            ->addIndexColumn()
-            ->make(true);
+
+        return $datatable->make(true);
     }
 }

@@ -2,10 +2,13 @@
 
 namespace App\Services;
 
+use APIHelper;
 use Ramsey\Uuid\Uuid;
 use App\Models\Campaign;
-use App\Models\Transaction;
 use App\Models\CampaignToken;
+use Illuminate\Support\Facades\Log;
+use App\Jobs\AddTransactionDetailProcess;
+use App\Models\Transaction;
 use App\Models\TransactionDetail;
 
 /**
@@ -13,6 +16,8 @@ use App\Models\TransactionDetail;
  */
 class TransactionService
 {
+
+    // this function need to convert to blockchain
     public static function payForSaleToken($transactionCode, $method, $proofOfPayment = null)
     {
         if ($method == 'wallet') {
@@ -29,74 +34,46 @@ class TransactionService
         }
     }
 
-    // this function need to convert to blockchain
-    public static function getPriceFromTransactionDetail($transaction_code)
-    {
-        $transaction = self::getTransactionByCode($transaction_code);
-        return $transaction->transactionDetails->first()->price;
-    }
-
-    // this function need to convert to blockchain
-    public static function getCountTransactionDetailByTransactionCode($transaction_code)
-    {
-        $transaction = self::getTransactionByCode($transaction_code);
-        return $transaction->transactionDetails->count();
-    }
-
-    // this function need to convert to blockchain
-    public static function getTransactionDetailByCode($transaction_code)
-    {
-        $transactionDetails = TransactionDetail::where('transaction_code', $transaction_code)->get();
-        return $transactionDetails;
-    }
-
-    // this function need to convert to blockchain
-    public static function sellToken($campaign_id, $data)
-    {
-        $relatedCampaign = CampaignService::getCampaignById($campaign_id);
-        $relatedPaymentMethodDetail = PaymentMethodService::getPaymentMethodDetailById($data['payment_method_detail_id']);
-
-        $prepareData = [
-            'campaign_id' => $relatedCampaign->id,
-            'campaign_name' => $relatedCampaign->project->title,
-            'from_to_user_id' => auth()->user()->id,
-            'from_to_user_name' => auth()->user()->name,
-            'order_type' => 'sell',
-            'payment_status' => 'unpaid',
-            'status' => 'pending',
-            'quantity' => $data['quantity'],
-            'payment_method_id' => $relatedPaymentMethodDetail->payment_method_id,
-            'payment_method' => $relatedPaymentMethodDetail->paymentMethod->name,
-            'payment_method_detail_id' => $relatedPaymentMethodDetail->id,
-            'payment_method_detail' => $relatedPaymentMethodDetail->name,
-            'total_price' => $relatedCampaign->price_per_unit * $data['quantity'],
-        ];
-
-        $transaction = Transaction::create($prepareData);
-
-        self::addTransactionDetail($relatedCampaign, $transaction, $data['quantity'], 'sell');
-    }
-
-    // this function need to convert to blockchain
+    // done integration with blockchain
     public static function changeTransactionStatus($code, $status, $paymentStatus)
     {
         $transaction = self::getTransactionByCode($code);
-
-
-        // if ($transaction->order_type == 'sell' && $status == 'success') {
-        //     CampaignTokenService::deleteTokenByTransactionCode($code);
-        // }
-
-        // this function need to convert to blockchain (update transaction status on blockchain)
-        $transaction->update([
-            'status' => $status,
-            'payment_status' => $paymentStatus ?? 'failed',
-        ]);
-
+        self::updateTransactionStatus($code, $status);
+        self::updateTransactionPaymentStatus($code, $paymentStatus ?? 'failed');
         self::changeCampaignStatus($transaction, $status);
     }
 
-    // this function need to convert to blockchain
+    // done integration with blockchain
+    private static function updateTransactionStatus($code, $status)
+    {
+        $res = APIHelper::httpPost('updateTransactionStatus', [
+            'status' => $status,
+            'transactionCode' => $code,
+        ]);
+        return $res;
+    }
+
+    // done integration with blockchain
+    private static function updateTransactionPaymentStatus($code, $paymentStatus)
+    {
+        $res = APIHelper::httpPost('updateTransactionPaymentStatus', [
+            'paymentStatus' => $paymentStatus,
+            'transactionCode' => $code,
+        ]);
+        return $res;
+    }
+
+    // done integration with blockchain
+    private static function updateTransactionPaymentProof($code, $proofOfPayment)
+    {
+        $res = APIHelper::httpPost('uploadTransactionPaymentProof', [
+            'paymentProof' => $proofOfPayment,
+            'transactionCode' => $code,
+        ]);
+        return $res;
+    }
+
+    // done integration with blockchain
     public static function uploadPaymentProof($transactionCode, $proofOfPayment, bool $paidBycampaignBalance = false)
     {
         $transaction = self::getTransactionByCode($transactionCode);
@@ -104,50 +81,96 @@ class TransactionService
         $proofOfPayment->storeAs('payment_proof', $filename, 'public');
         $path = 'storage/payment_proof/' . $filename;
 
-        // this function need to convert to blockchain (upload payment proof on blockchain)
-        $transaction->update([
-            'payment_proof' => $path,
-            'payment_status' => $paidBycampaignBalance == true ? 'paidByCampaignBalance' : 'paid',
-        ]);
+        self::updateTransactionPaymentProof($transactionCode, $path);
+        self::updateTransactionPaymentStatus($transactionCode, $paidBycampaignBalance == true ? 'paidByCampaignBalance' : 'paid');
 
         return $transaction;
     }
 
-    // this function need to convert to blockchain
-    public static function storeTransaction(array $data)
+    // done integration with blockchain
+    public static function sellToken($campaign_id, $data)
+    {
+        $relatedCampaign = CampaignService::getCampaignById($campaign_id);
+        $relatedPaymentMethodDetail = PaymentMethodService::getPaymentMethodDetailById($data['payment_method_detail_id']);
+        $transactionCode = self::generateTransactionCode('sell');
+
+        $postData = [
+            'transactionCode' => $transactionCode,
+            'campaignId' => $relatedCampaign->id,
+            'fromToUserId' => auth()->user()->id,
+            'orderType' => 'sell',
+            'paymentStatus' => 'unpaid',
+            'status' => 'pending',
+            'quantity' => $data['quantity'],
+            'totalPrice' => $relatedCampaign->price_per_unit * $data['quantity'],
+            'paymentMethodDetailId' => $relatedPaymentMethodDetail->id,
+            'paymentProof' => null,
+            'createdAt' => time(),
+        ];
+
+        self::postTransaction($postData);
+        AddTransactionDetailProcess::dispatch(
+            $relatedCampaign,
+            $transactionCode,
+            $data['quantity'],
+            auth()->user()->id,
+            'sell'
+        )->delay(now()->addSeconds(10));
+    }
+
+    // done integration with blockchain
+    public static function buyToken(array $data)
     {
         $relatedCampaign = CampaignService::getCampaignById($data['campaign_id']);
         $relatedPaymentMethodDetail = PaymentMethodService::getPaymentMethodDetailById($data['payment_method_detail_id']);
+        $transactionCode = self::generateTransactionCode('buy');
 
-        $prepareData = [
-            'campaign_id' => $relatedCampaign->id,
-            'campaign_name' => $relatedCampaign->project->title,
-            'from_to_user_id' => auth()->user()->id,
-            'from_to_user_name' => auth()->user()->name,
-            'order_type' => 'buy',
-            'payment_status' => 'unpaid',
+        $postData = [
+            'transactionCode' => $transactionCode,
+            'campaignId' => $relatedCampaign->id,
+            'fromToUserId' => auth()->user()->id,
+            'orderType' => 'buy',
+            'paymentStatus' => 'unpaid',
             'status' => 'pending',
             'quantity' => $data['quantity'],
-            'payment_method_id' => $relatedPaymentMethodDetail->payment_method_id,
-            'payment_method' => $relatedPaymentMethodDetail->paymentMethod->name,
-            'payment_method_detail_id' => $relatedPaymentMethodDetail->id,
-            'payment_method_detail' => $relatedPaymentMethodDetail->name,
-            'total_price' => $relatedCampaign->price_per_unit * $data['quantity'],
+            'totalPrice' => $relatedCampaign->price_per_unit * $data['quantity'],
+            'paymentMethodDetailId' => $relatedPaymentMethodDetail->id,
+            'paymentProof' => null,
+            'createdAt' => time(),
         ];
 
-        $transaction = Transaction::create($prepareData);
+        self::postTransaction($postData);
+        AddTransactionDetailProcess::dispatch(
+            $relatedCampaign,
+            $transactionCode,
+            $data['quantity'],
+            auth()->user()->id,
+            'buy'
+        )->delay(now()->addSeconds(10));
 
-        // dd($transaction);
-        self::addTransactionDetail($relatedCampaign, $transaction, $data['quantity']);
+        return $transactionCode;
+    }
 
-        return $transaction;
+    // done integration with blockchain
+    private static function postTransaction(array $data)
+    {
+        $data['totalPrice'] = (int) $data['totalPrice'];
+        $res =  APIHelper::httpPost('addTransaction', $data);
+        return $res;
+    }
+
+    // done integration with blockchain
+    private static function postTransactionDetail(array $data)
+    {
+        $data['price'] = (int) $data['price'];
+        $res = APIHelper::httpPost('addTransactionDetail', $data);
+        return $res;
     }
 
     // this function need to convert to blockchain
-    private static function addTransactionDetail(Campaign $campaign, Transaction $transaction, $quantity, $orderType = 'buy')
+    public static function addTransactionDetail(Campaign $campaign, string $transaction_code, $quantity, $orderType, $userId)
     {
         if ($orderType == 'buy') {
-
             // Generate token for each quantity
             for ($i = 1; $i <= $quantity; $i++) {
 
@@ -157,19 +180,18 @@ class TransactionService
                     $generatedToken = Uuid::uuid4()->toString();
                 } while (CampaignToken::where('token', $generatedToken)->exists());
 
-                // Create campaign token
                 $campaign->campaignTokens()->create([
                     'token' => $generatedToken,
                     'status' => 'pending',
-                    'sold_to' => auth()->user()->id,
-                    'transaction_code' => $transaction->transaction_code,
+                    'sold_to' => $userId,
+                    'transaction_code' => $transaction_code,
                 ]);
 
-                // Create transaction detail
-                // this function need to convert to blockchain (create transaction detail on blockchain)
-                $transaction->transactionDetails()->create([
+                self::postTransactionDetail([
+                    'transactionCode' => $transaction_code,
                     'price' => $campaign->price_per_unit,
                     'token' => $generatedToken,
+                    'createdAt' => time(),
                 ]);
             }
         }
@@ -177,29 +199,31 @@ class TransactionService
         // if order type is sell,
         else {
             // Get some token for sell
-            $campaignTokens = CampaignTokenService::getSomeTokenForSell($campaign->id, $quantity);
+            $campaignTokens = CampaignTokenService::getSomeTokenForSell($campaign->id, $quantity, $userId);
 
+            Log::channel('transactionservice')->info('Campaign Tokens: ' . $campaignTokens);
             // Create transaction detail
             foreach ($campaignTokens as $token) {
-                // Create transaction detail
-                // this function need to convert to blockchain (create transaction detail on blockchain)
-                $transaction->transactionDetails()->create([
+
+                self::postTransactionDetail([
+                    'transactionCode' => $transaction_code,
                     'price' => $campaign->price_per_unit,
                     'token' => $token->token,
+                    'createdAt' => time(),
                 ]);
 
                 // Update token status
-                $token->update([
+                $updateResult = $token->update([
                     'status' => 'pending',
-                    'transaction_code' => $transaction->transaction_code,
+                    'transaction_code' => $transaction_code,
                 ]);
-            }
 
-            // $campaignTokens->each->delete();
+                Log::channel('transactionservice')->info('Update Token Status: ' . $updateResult);
+            }
         }
     }
 
-    private static function changeCampaignStatus(Transaction $transaction, $status)
+    private static function changeCampaignStatus($transaction, $status)
     {
         // get campaign token by transaction code
         $campaignToken = CampaignToken::where('transaction_code', $transaction->transaction_code)->get();
@@ -237,46 +261,134 @@ class TransactionService
         return true;
     }
 
+    // done integration with blockchain
     public static function ajaxDatatableByAdmin()
     {
-        $query = Transaction::orderBy('created_at', 'desc');
+        $transactionsData = self::getAllTransaction();
         return DatatableService::buildDatatable(
-            $query,
-            'auth.admin.transaction.action'
+            $transactionsData,
+            'auth.admin.transaction.action',
         );
     }
 
-
+    // done integration with blockchain
     public static function ajaxDatatableTransactionInProjectManagementByUser($campaign_id)
     {
-        $query = Transaction::where('campaign_id', $campaign_id)->get()->sortByDesc('created_at');
+        $transactionData = self::getTransactionByCampaignId($campaign_id);
         return DatatableService::buildDatatable(
-            $query,
+            $transactionData,
             'auth.user.project_management.transactionAction'
         );
     }
 
-    // this function need to convert to blockchain
+    // done integration with blockchain
     public static function getTransactionByUserId()
     {
-        return Transaction::where('from_to_user_id', auth()->user()->id)->latest()->get();
+        $transactions = APIHelper::httpGet('getTransactionByFromToUserId', auth()->user()->id);
+        if (self::ifTransactionNotFound($transactions)) {
+            return [];
+        }
+        return self::mappingTransaction($transactions->data);
     }
 
-
-    // this function need to convert to blockchain
-    public static function getTransactionById($id)
+    // done integration with blockchain
+    public static function getAllTransaction()
     {
-        return Transaction::find($id);
+        $transactions = APIHelper::httpGet('getAllTransactions');
+        if (self::ifTransactionNotFound($transactions)) {
+            return [];
+        }
+
+        return self::mappingTransaction($transactions->data);
     }
 
+    // done integration with blockchain
     public static function getTransactionByCampaignId($campaign_id)
     {
-        return Transaction::where('campaign_id', $campaign_id)->get();
+        $transactions = APIHelper::httpGet('getTransactionByCampaignId', $campaign_id);
+        if (self::ifTransactionNotFound($transactions)) {
+            return [];
+        }
+
+        return self::mappingTransaction($transactions->data);
     }
 
-    // this function need to convert to blockchain
+    // done integration with blockchain
     public static function getTransactionByCode($code)
     {
-        return Transaction::where('transaction_code', $code)->first();
+        $transactions = APIHelper::httpGet('getTransactionByCode', $code);
+        return self::mappingTransaction($transactions->data, true);
+    }
+
+    // done integration with blockchain
+    public static function getPriceFromTransactionDetailByTransactionCode($transaction_code)
+    {
+        $res = APIHelper::httpGet('getPriceFromTransactionDetailByTransactionCode', $transaction_code);
+        return $res->data;
+    }
+
+    // done integration with blockchain
+    public static function getCountTransactionDetailByTransactionCode($transaction_code)
+    {
+        $res = APIHelper::httpGet('getCountTransactionDetailByTransactionCode', $transaction_code);
+        return $res->data;
+    }
+
+    // done integration with blockchain
+    public static function getTransactionDetailByCode($transaction_code)
+    {
+        return APIHelper::httpGet('getTransactionDetailByTransactionCode', $transaction_code);
+    }
+
+    // check if transaction not found
+    private static function ifTransactionNotFound($transactions)
+    {
+        if (isset($transactions->error) && $transactions->error == 'Transaction not found') {
+            return true;
+        }
+        return false;
+    }
+
+    // mapping transaction data from blockchain
+    private static function mappingTransaction($transactionsData, $isSingle = false)
+    {
+        $transactionMapped = [];
+
+        if (is_object($transactionsData)) {
+            $transactionsData = [$transactionsData];
+        }
+
+        foreach ($transactionsData as $transaction) {
+            $transactionMapped[] = [
+                'transaction_code' => $transaction->transactionCode,
+                'campaign_id' => $transaction->campaignId,
+                'campaign_name' => CampaignService::getCampaignById($transaction->campaignId)->project->title,
+                'from_to_user_id' => $transaction->fromToUserId,
+                'from_to_user_name' => UserService::getUserById($transaction->fromToUserId)->name,
+                'order_type' => $transaction->orderType,
+                'payment_status' => $transaction->paymentStatus,
+                'status' => $transaction->status,
+                'quantity' => $transaction->quantity,
+                'total_price' => $transaction->totalPrice,
+                'payment_method_detail_id' => $transaction->paymentMethodDetailId,
+                'payment_proof' => $transaction->paymentProof,
+                'created_at' => $transaction->createdAt,
+            ];
+        }
+        if ($isSingle) {
+            return APIHelper::encodeDecode($transactionMapped[0]);
+        }
+
+        // dd($transactionMapped);
+        return $transactionMapped;
+    }
+
+    // done integration with blockchain
+    public static function generateTransactionCode($orderType)
+    {
+        $prefix = $orderType === 'sell' ? 'TS' : 'TB';
+        $response = APIHelper::httpGet('getCountTransaction');
+        $countOfTransaction = $response->data;
+        return $prefix . date('Ymd') . '-' . ($countOfTransaction + 1);
     }
 }

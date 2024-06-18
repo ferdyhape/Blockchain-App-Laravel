@@ -73,7 +73,9 @@ class TransactionController extends Controller
     {
         $transaction = TransactionService::getTransactionByCode($code);
         $paymentMethodDetail = PaymentMethodService::getPaymentMethodDetailById($transaction->payment_method_detail_id);
-        return view('auth.admin.transaction.show', compact('transaction', 'paymentMethodDetail'));
+        $price = TransactionService::getPriceFromTransactionDetailByTransactionCode($code);
+        $count = TransactionService::getCountTransactionDetailByTransactionCode($code);
+        return view('auth.admin.transaction.show', compact('transaction', 'paymentMethodDetail', 'price', 'count'));
     }
 
     /**

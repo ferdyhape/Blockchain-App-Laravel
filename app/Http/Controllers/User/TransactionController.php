@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\User;
 
+use APIHelper;
 use Illuminate\Http\Request;
 use App\Services\CampaignService;
 use Illuminate\Support\Facades\DB;
@@ -29,7 +30,8 @@ class TransactionController extends Controller
 
     public function index()
     {
-        $transactions = TransactionService::getTransactionByUserId(auth()->id());
+        $data = TransactionService::getTransactionByUserId(auth()->id());
+        $transactions = APIHelper::encodeDecode($data);
         return view('auth.user.transaction.index', compact('transactions'));
     }
 
@@ -37,7 +39,9 @@ class TransactionController extends Controller
     {
         $transaction = TransactionService::getTransactionByCode($code);
         $paymentMethodDetail = PaymentMethodService::getPaymentMethodDetailById($transaction->payment_method_detail_id);
-        return view('auth.user.transaction.show', compact('transaction', 'paymentMethodDetail'));
+        $price = TransactionService::getPriceFromTransactionDetailByTransactionCode($code);
+        $count = TransactionService::getCountTransactionDetailByTransactionCode($code);
+        return view('auth.user.transaction.show', compact('transaction', 'paymentMethodDetail', 'price', 'count'));
     }
 
     public function changeStatus(Request $request, string $code)

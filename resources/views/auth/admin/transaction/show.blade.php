@@ -55,7 +55,7 @@
                                             Harga Per Token
                                         </td>
                                         <td class="text-end fw-semibold currency">
-                                            {{ $transaction->transactionDetails->first()->price }}
+                                            {{ $price }}
                                         </td>
                                     </tr>
                                     <tr>
@@ -63,7 +63,7 @@
                                             Total pembelian
                                         </td>
                                         <td class="text-end fw-semibold">
-                                            {{ $transaction->quantity }} Token
+                                            {{ $count }} Token
                                         </td>
                                     </tr>
                                     <tr>
@@ -71,7 +71,7 @@
                                             Metode Pembayaran
                                         </td>
                                         <td class="text-end fw-semibold">
-                                            {{ $transaction->payment_method_detail }}
+                                            {{ $paymentMethodDetail->name }}
                                         </td>
                                     </tr>
                                     <tr>
@@ -86,7 +86,7 @@
                             </div>
                         </div>
 
-                        @if ($transaction->payment_proof)
+                        @if ($transaction->payment_proof != 'null')
                             <div id="payment-proof">
                                 <h5 class="fw-semibold">Bukti Pembayaran</h5>
                                 <div class="card border-0 shadow-sm p-4 my-3">
@@ -99,7 +99,7 @@
                         @endif
 
                         @if ($transaction->order_type == 'buy')
-                            @if ($transaction->payment_proof != null)
+                            @if ($transaction->payment_proof != 'null')
                                 {{-- acc status --}}
                                 @if ($transaction->status == 'pending')
                                     <div class="mt-3">

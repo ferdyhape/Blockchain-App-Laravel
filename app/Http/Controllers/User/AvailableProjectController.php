@@ -22,12 +22,12 @@ class AvailableProjectController extends Controller
 
         try {
             DB::beginTransaction();
-            $transaction = TransactionService::storeTransaction($validated);
+            $transactionCode = TransactionService::buyToken($validated);
             DB::commit();
             return response()->json(
                 [
-                    'redirect' => route('dashboard.user.transaction.show', $transaction->transaction_code),
-                    'message' => 'Transaction success'
+                    'redirect' => route('dashboard.user.transaction.index', $transactionCode),
+                    'message' => 'Transaction on progress, please wait for transaction record to be updated.'
                 ],
                 200
             );
@@ -99,6 +99,7 @@ class AvailableProjectController extends Controller
     public function show(string $id)
     {
         $project = ProjectService::getProjectById($id);
+        $transactionCount = TransactionService::generateTransactionCode('buy');
         return view('auth.user.available_project.show', compact('project'));
     }
 

@@ -38,11 +38,12 @@ class ProjectManagementController extends Controller
 
     public function showTransaction(string $transactionCode)
     {
-        // dd($transactionCode);
         $transaction = TransactionService::getTransactionByCode($transactionCode);
         $paymentMethodDetail = PaymentMethodService::getPaymentMethodDetailById($transaction->payment_method_detail_id);
+        $price = TransactionService::getPriceFromTransactionDetailByTransactionCode($transactionCode);
+        $count = TransactionService::getCountTransactionDetailByTransactionCode($transactionCode);
         $walletBalance = CampaignService::getCampaignWalletBalanceFromTransaction($transactionCode);
-        return view('auth.user.project_management.showTransaction', compact('transaction', 'walletBalance', 'paymentMethodDetail'));
+        return view('auth.user.project_management.showTransaction', compact('transaction', 'walletBalance', 'paymentMethodDetail', 'price', 'count'));
     }
 
     public function checkTransaction(string $projectId)

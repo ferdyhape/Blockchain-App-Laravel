@@ -19,10 +19,10 @@ class CampaignTokenService
         return $campaign->save();
     }
 
-    public static function getSomeTokenForSell($campaign_id, $quantity, $userId = null)
+    public static function getSomeTokenForSell($campaign_id, $quantity, $userId)
     {
         return CampaignToken::where('campaign_id', $campaign_id)
-            ->where('sold_to', $userId ?? auth()->id())
+            ->where('sold_to', $userId)
             ->where('status', 'sold')
             ->limit($quantity)
             ->orderBy('created_at')

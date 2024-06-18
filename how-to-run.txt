@@ -1,0 +1,4 @@
+1. run server
+php artisan serve
+2. run queue
+php artisan queue:work
