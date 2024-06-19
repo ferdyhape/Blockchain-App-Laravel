@@ -8,7 +8,8 @@ This repository was created for the purposes of a final year project in terms of
 
 ## :link: Related Repository
 
--   [Blockchain Network](https://github.com/ferdyhape/Blockchain-Network-GETH)
+
+-   [Blockchain Network](https://github.com/ferdyhape/Blockchain-Network-GETH) (Using GETH)
 -   [Blockchain Backend](https://github.com/ferdyhape/Blockchain-Backend-Express) (Handling Interactions with Blockchain Network)
 
 ## :man: About Creator

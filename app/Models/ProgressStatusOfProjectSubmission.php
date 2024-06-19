@@ -17,4 +17,14 @@ class ProgressStatusOfProjectSubmission extends Model
     {
         return $this->belongsTo(Project::class, 'project_id', 'id');
     }
+
+    public function categoryProjectSubmissionStatus()
+    {
+        return $this->belongsTo(CategoryProjectSubmissionStatus::class, 'category_project_submission_status_id', 'id');
+    }
+
+    public function subCategoryProjectSubmission()
+    {
+        return $this->belongsTo(SubCategoryProjectSubmission::class, 'sub_category_project_submission_id', 'id');
+    }
 }

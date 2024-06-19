@@ -20,7 +20,7 @@ return new class extends Migration
                 ->constrained('category_project_submission_statuses')
                 ->index()
                 ->name('category_status_fk');
-            $table->mediumText('revision_note')->nullable();
+            $table->mediumText('note')->nullable();
             $table->timestamps();
         });
     }

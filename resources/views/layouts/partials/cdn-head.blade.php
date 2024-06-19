@@ -22,5 +22,16 @@
     integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
     crossorigin="anonymous" referrerpolicy="no-referrer" />
 
+
+{{-- cdn toastr --}}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+
+{{-- script ckeditor --}}
+<script src="https://cdn.ckeditor.com/ckeditor5/41.3.1/classic/ckeditor.js"></script>
+
+
 {{-- link to style.css --}}
 <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
+
+{{-- csrf token --}}
+<meta name="csrf-token" content="{{ csrf_token() }}">

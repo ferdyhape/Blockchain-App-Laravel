@@ -27,7 +27,6 @@ class ProgressStatusOfProjectSubmissionSeeder extends Seeder
                 'category_project_submission_status_id' => $categoryStatus->id,
                 'sub_category_project_submission_id' => $randomSubCategory->id,
                 'revision_note' => $randomSubCategory->name === 'need_revision' ? null : $faker->sentence(),
-
             ]);
         }
     }

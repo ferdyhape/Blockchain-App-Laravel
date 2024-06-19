@@ -57,6 +57,17 @@ return [
             'channels' => ['single'],
             'ignore_exceptions' => false,
         ],
+        'queue_logs' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/queue.log'),
+            'level' => 'info',
+        ],
+
+        'transactionservice' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/transactionservice.log'),
+            'level' => 'info',
+        ],
 
         'single' => [
             'driver' => 'single',
@@ -89,7 +100,7 @@ return [
             'handler_with' => [
                 'host' => env('PAPERTRAIL_URL'),
                 'port' => env('PAPERTRAIL_PORT'),
-                'connectionString' => 'tls://'.env('PAPERTRAIL_URL').':'.env('PAPERTRAIL_PORT'),
+                'connectionString' => 'tls://' . env('PAPERTRAIL_URL') . ':' . env('PAPERTRAIL_PORT'),
             ],
             'processors' => [PsrLogMessageProcessor::class],
         ],

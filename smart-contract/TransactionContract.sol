@@ -1,164 +1,165 @@
 //SPDX-License-Identifier: MIT
-
 pragma solidity 0.8.16;
 
 contract TransactionContract {
     struct Transaction {
-        uint transactionId;
         string transactionCode;
-        string buyer;
-        string buyerId;
-        string sellerCompany;
-        string sellerId;
-        uint sumOfProduct;
-        string totalPrice;
+        uint campaignId;
+        uint fromToUserId;
+        string orderType;
         string paymentStatus;
+        string status;
+        uint quantity;
+        uint256 totalPrice;
         uint createdAt;
     }
 
-    struct TransactionDetails {
-        string transactionCode;
-        string productName;
-        string productDescription;
-        string tokenOfProduct;
-        string price;
-        uint createdAt;
+    mapping(string => Transaction) public transactions; // Deklarasi mapping
+    string[] public transactionCodes; // Array untuk menyimpan kode transaksi
+
+    event TransactionAdded(
+        string transactionCode,
+        uint campaignId,
+        uint fromToUserId,
+        string orderType,
+        string paymentStatus,
+        string status,
+        uint quantity,
+        uint256 totalPrice,
+        uint createdAt
+    );
+
+    event StatusUpdated(string transactionCode, string newStatus);
+
+    event PaymentStatusUpdated(string transactionCode, string newPaymentStatus);
+
+    constructor() {
+        // Buat konstruktor
     }
 
-    mapping(uint => Transaction) public transactions;
-    mapping(uint => TransactionDetails) public transactionDetails;
-    uint public transactionCount;
-    uint public transactionDetailsCount;
-
-    // if transacttion created, add transaction details with data using array
-    function createTransaction(
+    function addTransaction(
         string memory _transactionCode,
-        string memory _buyer,
-        string memory _buyerId,
-        string memory _sellerCompany,
-        string memory _sellerId,
-        uint _sumOfProduct,
-        string memory _totalPrice,
+        uint _campaignId,
+        uint _fromToUserId,
+        string memory _orderType,
         string memory _paymentStatus,
-        uint _createdAt,
-        string[] memory _productNames,
-        string[] memory _productDescriptions,
-        string[] memory _tokenOfProducts,
-        string[] memory _prices
+        string memory _status,
+        uint _quantity,
+        uint256 _totalPrice,
+        uint _createdAt
     ) public {
-        transactionCount++;
-        transactions[transactionCount] = Transaction(
-            transactionCount,
+        transactions[_transactionCode] = Transaction(
             _transactionCode,
-            _buyer,
-            _buyerId,
-            _sellerCompany,
-            _sellerId,
-            _sumOfProduct,
-            _totalPrice,
+            _campaignId,
+            _fromToUserId,
+            _orderType,
             _paymentStatus,
+            _status,
+            _quantity,
+            _totalPrice,
             _createdAt
         );
 
-        for (uint i = 0; i < _productNames.length; i++) {
-            transactionDetailsCount++;
-            transactionDetails[transactionDetailsCount] = TransactionDetails(
-                _transactionCode,
-                _productNames[i],
-                _productDescriptions[i],
-                _tokenOfProducts[i],
-                _prices[i],
-                _createdAt
-            );
-        }
+        transactionCodes.push(_transactionCode); // Tambahkan kode transaksi ke dalam array
+
+        emit TransactionAdded(
+            _transactionCode,
+            _campaignId,
+            _fromToUserId,
+            _orderType,
+            _paymentStatus,
+            _status,
+            _quantity,
+            _totalPrice,
+            _createdAt
+        );
     }
 
-    function getTransaction(
-        uint _transactionId
-    ) public view returns (Transaction memory) {
-        return transactions[_transactionId];
+    function getAllTransactions() public view returns (Transaction[] memory) {
+        Transaction[] memory allTransactions = new Transaction[](
+            transactionCodes.length
+        );
+        for (uint i = 0; i < transactionCodes.length; i++) {
+            allTransactions[i] = transactions[transactionCodes[i]];
+        }
+        return allTransactions;
+    }
+
+    function updateStatus(
+        string memory _transactionCode,
+        string memory _newStatus
+    ) public {
+        require(
+            bytes(transactions[_transactionCode].transactionCode).length != 0,
+            "Transaction does not exist"
+        );
+        transactions[_transactionCode].status = _newStatus;
+        emit StatusUpdated(_transactionCode, _newStatus);
     }
 
     function updatePaymentStatus(
-        uint _transactionId,
-        string memory _paymentStatus,
-        uint _createdAt
+        string memory _transactionCode,
+        string memory _newPaymentStatus
     ) public {
-        Transaction memory originalTransaction = transactions[_transactionId];
-        transactionCount++;
-        transactions[transactionCount] = Transaction(
-            transactionCount,
-            originalTransaction.transactionCode,
-            originalTransaction.buyer,
-            originalTransaction.buyerId,
-            originalTransaction.sellerCompany,
-            originalTransaction.sellerId,
-            originalTransaction.sumOfProduct,
-            originalTransaction.totalPrice,
-            _paymentStatus,
-            _createdAt
+        require(
+            bytes(transactions[_transactionCode].transactionCode).length != 0,
+            "Transaction does not exist"
         );
+        transactions[_transactionCode].paymentStatus = _newPaymentStatus;
+        emit PaymentStatusUpdated(_transactionCode, _newPaymentStatus);
     }
 
-    function getAllTransaction() public view returns (Transaction[] memory) {
-        Transaction[] memory _transactions = new Transaction[](
-            transactionCount
-        );
-        for (uint i = 1; i <= transactionCount; i++) {
-            _transactions[i - 1] = transactions[i];
-        }
-        return _transactions;
-    }
-
-    function getTransactionByBuyerId(
-        string memory _buyerId
+    function getTransactionByFromToUserId(
+        uint _fromToUserId
     ) public view returns (Transaction[] memory) {
         uint count = 0;
-        for (uint i = 1; i <= transactionCount; i++) {
+        for (uint i = 0; i < transactionCodes.length; i++) {
             if (
-                keccak256(abi.encodePacked(transactions[i].buyerId)) ==
-                keccak256(abi.encodePacked(_buyerId))
+                transactions[transactionCodes[i]].fromToUserId == _fromToUserId
             ) {
                 count++;
             }
         }
-        Transaction[] memory _transactions = new Transaction[](count);
-        uint j = 0;
-        for (uint i = 1; i <= transactionCount; i++) {
+        Transaction[] memory result = new Transaction[](count);
+        uint index = 0;
+        for (uint i = 0; i < transactionCodes.length; i++) {
             if (
-                keccak256(abi.encodePacked(transactions[i].buyerId)) ==
-                keccak256(abi.encodePacked(_buyerId))
+                transactions[transactionCodes[i]].fromToUserId == _fromToUserId
             ) {
-                _transactions[j] = transactions[i];
-                j++;
+                result[index] = transactions[transactionCodes[i]];
+                index++;
             }
         }
-        return _transactions;
+        return result;
     }
 
-    function getTransactionBySellerId(
-        string memory _sellerId
+    function getTransactionByCode(
+        string memory _transactionCode
+    ) public view returns (Transaction memory) {
+        require(
+            bytes(transactions[_transactionCode].transactionCode).length != 0,
+            "Transaction does not exist"
+        );
+        return transactions[_transactionCode];
+    }
+
+    function getTransactionByCampaignId(
+        uint _campaignId
     ) public view returns (Transaction[] memory) {
         uint count = 0;
-        for (uint i = 1; i <= transactionCount; i++) {
-            if (
-                keccak256(abi.encodePacked(transactions[i].sellerId)) ==
-                keccak256(abi.encodePacked(_sellerId))
-            ) {
+        for (uint i = 0; i < transactionCodes.length; i++) {
+            if (transactions[transactionCodes[i]].campaignId == _campaignId) {
                 count++;
             }
         }
-        Transaction[] memory _transactions = new Transaction[](count);
-        uint j = 0;
-        for (uint i = 1; i <= transactionCount; i++) {
-            if (
-                keccak256(abi.encodePacked(transactions[i].sellerId)) ==
-                keccak256(abi.encodePacked(_sellerId))
-            ) {
-                _transactions[j] = transactions[i];
-                j++;
+        Transaction[] memory result = new Transaction[](count);
+        uint index = 0;
+        for (uint i = 0; i < transactionCodes.length; i++) {
+            if (transactions[transactionCodes[i]].campaignId == _campaignId) {
+                result[index] = transactions[transactionCodes[i]];
+                index++;
             }
         }
-        return _transactions;
+        return result;
     }
 }

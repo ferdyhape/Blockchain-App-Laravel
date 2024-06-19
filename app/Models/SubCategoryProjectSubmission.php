@@ -35,11 +35,18 @@ class SubCategoryProjectSubmission extends Model
                 return 'Proposal project Anda sedang dalam tahap persetujuan oleh Komite';
             case 'approved_by_committee':
                 return 'Proposal project Anda sudah disetujui oleh Komite';
+            case 'rejected_by_committee':
+                return 'Proposal project Anda ditolak oleh Komite';
                 // sub status dari 'Proses Tanda Tangan Kontrak',
             case 'on_contract_signing':
                 return 'Proposal project Anda sedang dalam tahap penandatanganan kontrak';
             case 'contract_signed':
                 return 'Kontrak project Anda sudah ditandatangani';
+                // sub status dari 'Proses Persetujuan Tanda Tangan Kontrak',
+            case 'contract_signed_accepted':
+                return 'Kontrak project Anda sudah ditandatangani dan disetujui';
+            case 'contract_signed_need_revision':
+                return 'Kontrak project Anda memerlukan revisi';
                 // sub status dari 'Proses Penggalangan Dana',
             case 'on_fundraising':
                 return 'Proposal project Anda sedang dalam tahap penggalangan dana';

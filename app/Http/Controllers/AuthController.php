@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\RegisterRequest;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Support\Str;
@@ -27,12 +28,10 @@ class AuthController extends Controller
 
         if (auth()->attempt($credentials)) {
             $request->session()->regenerate();
-            if (checkRoles(['Admin'])) {
+            if (auth()->user()->hasRole('Admin')) {
                 return redirect()->route('dashboard.admin.index');
-            } elseif (checkRoles(['Admin', 'Shareholder'])) {
-                return redirect()->route('dashboard.shareholder.index');
-            } elseif (checkRoles(['Admin', 'Owner'])) {
-                return redirect()->route('dashboard.owner.index');
+            } elseif (auth()->user()->hasRole('Platinum Member')) {
+                return redirect()->route('dashboard.user.index');
             }
         }
 
@@ -41,78 +40,31 @@ class AuthController extends Controller
         ]);
     }
 
-
-    public function postRegisterOwner(Request $request)
+    public function postRegister(RegisterRequest $request)
     {
         DB::beginTransaction();
-        $validatedData = $request->validate(
-            [
-                'name' => 'required',
-                'email' => 'required|email:rfc,dns|unique:users,email',
-                'password' => 'required|confirmed',
-                'company_name' => 'required',
-                'company_description' => 'required',
-                'company_address' => 'required',
-                'company_logo' => 'required',
-                'company_city' => 'required',
-                'company_country' => 'required',
-                'company_phone' => 'required',
-                'company_employee_count' => 'required',
-                'company_established_year' => 'required',
-                'legal_document' => 'required|mimes:pdf|max:2048',
-            ],
-        );
+        try {
+            $user = User::create($request->validated() + ['password' => bcrypt($request->password)]);
 
+            $role = Role::where('name', 'Platinum Member')->first();
+            $user->assignRole($role);
 
-        $createdUser = User::create([
-            'name' => $validatedData['name'],
-            'email' => $validatedData['email'],
-            'password' => bcrypt($validatedData['password']),
-            'role_id' => Role::where('name', 'Owner')->first()->id,
-        ]);
+            if ($request->hasFile('supporting_documents')) {
+                foreach ($request->file('supporting_documents') as $file) {
+                    $user->addMedia($file)->toMediaCollection('supporting_documents');
+                }
+            }
 
-        // store document to companies/owner_id/legal_document
-        $legalDocument = $request->file('legal_document');
-        $legalDocumentName = time() . '_' . Str::uuid() . '.' . 'pdf';
-        $legalDocument->storeAs('companies/legal_document/' . $createdUser->id, $legalDocumentName);
-
-        // store company data
-        $companyData = [
-            'owner_id' => $createdUser->id,
-            'name' => $validatedData['company_name'],
-            'description' => $validatedData['company_description'],
-            'address' => $validatedData['company_address'],
-            'logo' => $validatedData['company_logo'],
-            'city' => $validatedData['company_city'],
-            'country' => $validatedData['company_country'],
-            'phone' => $validatedData['company_phone'],
-            'employee_count' => $validatedData['company_employee_count'],
-            'established_year' => $validatedData['company_established_year'],
-            'legal_document' => $legalDocumentName,
-        ];
-
-        DB::commit();
-
-        return view('auth.credentials.on_confirmation');
+            DB::commit();
+            return redirect()->route('login')->with('success', 'Register success');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error($e->getMessage());
+            return back()->withErrors([
+                'credentials' => 'The provided credentials do not match our records.',
+            ]);
+        }
     }
-
-
-    public function postRegisterShareholder(Request $request)
-    {
-        $validatedData = $request->validate(
-            [
-                'name' => 'required',
-                'email' => 'required|email:rfc,dns|unique:users,email',
-                'password' => 'required|confirmed',
-            ],
-        );
-        dd($validatedData);
-
-        // $credentials['password'] = bcrypt($validatedData['password']);
-
-        // $user = User::create($credentials);
-    }
-
 
 
     public function logout(Request $request)

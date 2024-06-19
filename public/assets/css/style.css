@@ -1,4 +1,47 @@
-@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap");
+
+.timeline-with-icons {
+    border-left: 1px solid hsl(0, 0%, 90%);
+    position: relative;
+    list-style: none;
+}
+
+.timeline-with-icons .timeline-item {
+    position: relative;
+}
+
+.timeline-with-icons .timeline-item:after {
+    position: absolute;
+    display: block;
+    top: 0;
+}
+
+.timeline-with-icons .timeline-icon {
+    position: absolute;
+    left: -48px;
+    background-color: hsl(217, 88.2%, 90%);
+    color: hsl(217, 88.8%, 35.1%);
+    border-radius: 50%;
+    height: 31px;
+    width: 31px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+    content: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4IiBoZWlnaHQ9IjgiPjxwYXRoIGQ9Ik0yLjUgMEwxIDEuNSAzLjUgNCAxIDYuNSAyLjUgOGw0LTQtNC00eiIgZmlsbD0iY3VycmVudENvbG9yIi8+PC9zdmc+);
+}
+
+.dotted-border {
+    border-style: dotted !important;
+}
+
+.dashed-border {
+    border-style: dashed !important;
+    /* space of dashed */
+    border-width: 2px !important;
+}
 
 :root {
     --header-height: 3rem;
@@ -6,7 +49,7 @@
     --first-color: #4723d9;
     --first-color-light: #afa5d9;
     --white-color: #f7f6fb;
-    --body-font: "Nunito", sans-serif;
+    --body-font: "Poppins", sans-serif;
     --normal-font-size: 1rem;
     --z-fixed: 100;
 }
@@ -76,7 +119,7 @@ a {
     z-index: var(--z-fixed);
 }
 
-.nav {
+.nav-template {
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -130,7 +173,7 @@ a {
     padding-left: calc(var(--nav-width) + 1rem);
 }
 
-.active {
+.nav_link.active {
     color: var(--white-color);
 }
 
