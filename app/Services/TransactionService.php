@@ -8,8 +8,6 @@ use App\Models\Campaign;
 use App\Models\CampaignToken;
 use Illuminate\Support\Facades\Log;
 use App\Jobs\AddTransactionDetailProcess;
-use App\Models\Transaction;
-use App\Models\TransactionDetail;
 
 /**
  * Class TransactionService.
@@ -41,36 +39,6 @@ class TransactionService
         self::updateTransactionStatus($code, $status);
         self::updateTransactionPaymentStatus($code, $paymentStatus ?? 'failed');
         self::changeCampaignStatus($transaction, $status);
-    }
-
-    // done integration with blockchain
-    private static function updateTransactionStatus($code, $status)
-    {
-        $res = APIHelper::httpPost('updateTransactionStatus', [
-            'status' => $status,
-            'transactionCode' => $code,
-        ]);
-        return $res;
-    }
-
-    // done integration with blockchain
-    private static function updateTransactionPaymentStatus($code, $paymentStatus)
-    {
-        $res = APIHelper::httpPost('updateTransactionPaymentStatus', [
-            'paymentStatus' => $paymentStatus,
-            'transactionCode' => $code,
-        ]);
-        return $res;
-    }
-
-    // done integration with blockchain
-    private static function updateTransactionPaymentProof($code, $proofOfPayment)
-    {
-        $res = APIHelper::httpPost('uploadTransactionPaymentProof', [
-            'paymentProof' => $proofOfPayment,
-            'transactionCode' => $code,
-        ]);
-        return $res;
     }
 
     // done integration with blockchain
@@ -149,22 +117,6 @@ class TransactionService
         )->delay(now()->addSeconds(10));
 
         return $transactionCode;
-    }
-
-    // done integration with blockchain
-    private static function postTransaction(array $data)
-    {
-        $data['totalPrice'] = (int) $data['totalPrice'];
-        $res =  APIHelper::httpPost('addTransaction', $data);
-        return $res;
-    }
-
-    // done integration with blockchain
-    private static function postTransactionDetail(array $data)
-    {
-        $data['price'] = (int) $data['price'];
-        $res = APIHelper::httpPost('addTransactionDetail', $data);
-        return $res;
     }
 
     // this function need to convert to blockchain
@@ -247,6 +199,52 @@ class TransactionService
                 CampaignTokenService::deleteTokenByTransactionCode($transaction->transaction_code);
             }
         }
+    }
+
+    // done integration with blockchain
+    private static function postTransaction(array $data)
+    {
+        $data['totalPrice'] = (int) $data['totalPrice'];
+        $res =  APIHelper::httpPost('addTransaction', $data);
+        return $res;
+    }
+
+    // done integration with blockchain
+    private static function postTransactionDetail(array $data)
+    {
+        $data['price'] = (int) $data['price'];
+        $res = APIHelper::httpPost('addTransactionDetail', $data);
+        return $res;
+    }
+
+    // done integration with blockchain
+    private static function updateTransactionStatus($code, $status)
+    {
+        $res = APIHelper::httpPost('updateTransactionStatus', [
+            'status' => $status,
+            'transactionCode' => $code,
+        ]);
+        return $res;
+    }
+
+    // done integration with blockchain
+    private static function updateTransactionPaymentStatus($code, $paymentStatus)
+    {
+        $res = APIHelper::httpPost('updateTransactionPaymentStatus', [
+            'paymentStatus' => $paymentStatus,
+            'transactionCode' => $code,
+        ]);
+        return $res;
+    }
+
+    // done integration with blockchain
+    private static function updateTransactionPaymentProof($code, $proofOfPayment)
+    {
+        $res = APIHelper::httpPost('uploadTransactionPaymentProof', [
+            'paymentProof' => $proofOfPayment,
+            'transactionCode' => $code,
+        ]);
+        return $res;
     }
 
     public static function checkIfMaximumPurchased($campaign_id, $quantity)
