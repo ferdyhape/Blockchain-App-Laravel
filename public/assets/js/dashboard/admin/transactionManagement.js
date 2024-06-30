@@ -54,7 +54,7 @@ columnsDatatable = [
         data: "payment_proof",
         name: "payment_proof",
         render: function (data) {
-            if (data == null) {
+            if (data == "null") {
                 return '<div class="btn btn-sm btn-danger">No Proof</div>';
             }
 

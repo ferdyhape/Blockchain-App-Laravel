@@ -27,16 +27,16 @@ class PaymentMethodSeeder extends Seeder
                     ],
                 ],
             ],
-            [
-                'name' => 'Wallet Saldo',
-                'description' => 'Pay using your wallet saldo',
-                'details' => [
-                    [
-                        'name' => 'Your Wallet Saldo',
-                        'description' => 'Pay using your wallet saldo',
-                    ],
-                ],
-            ],
+            // [
+            //     'name' => 'Wallet Saldo',
+            //     'description' => 'Pay using your wallet saldo',
+            //     'details' => [
+            //         [
+            //             'name' => 'Your Wallet Saldo',
+            //             'description' => 'Pay using your wallet saldo',
+            //         ],
+            //     ],
+            // ],
         ];
 
         foreach ($paymentMethods as $paymentMethod) {
