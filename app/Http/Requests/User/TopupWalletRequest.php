@@ -4,7 +4,7 @@ namespace App\Http\Requests\User;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class SellTokenRequest extends FormRequest
+class TopupWalletRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,8 +22,8 @@ class SellTokenRequest extends FormRequest
     public function rules(): array
     {
         return [
-            // 'payment_method_detail_id' => 'required|exists:payment_method_details,id',
-            'quantity' => 'required|numeric|min:1',
+            'amount' => 'required|numeric',
+            'payment_method_detail_id' => 'required|exists:payment_method_details,id',
         ];
     }
 
@@ -31,11 +31,10 @@ class SellTokenRequest extends FormRequest
     public function messages(): array
     {
         return [
+            'amount.required' => 'Kolom jumlah harus diisi',
+            'amount.numeric' => 'Kolom jumlah harus berupa angka',
             'payment_method_detail_id.required' => 'Pilih metode pembayaran terlebih dahulu',
             'payment_method_detail_id.exists' => 'Metode pembayaran tidak ditemukan',
-            // 'quantity.required' => 'Masukkan jumlah token yang ingin dibeli',
-            // 'quantity.numeric' => 'Jumlah token harus berupa angka',
-            // 'quantity.min' => 'Jumlah token minimal 1',
         ];
     }
 }

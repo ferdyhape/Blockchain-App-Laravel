@@ -37,7 +37,6 @@ class AvailableProjectController extends Controller
         }
     }
 
-    // previewTransaction
     public function previewTransaction(PreviewTransactionRequest $request, string $id)
     {
         $validated = $request->validated();
@@ -49,14 +48,16 @@ class AvailableProjectController extends Controller
                 return redirect()->back()->with('error', 'Maximum purchase exceeded');
             }
 
+            if (!TransactionService::checkIfWalletBalanceEnough($project->campaign->price_per_unit * $validated['quantity'])) {
+                return redirect()->back()->with('error', 'Insufficient balance');
+            }
+
             $totalPrice = $project->campaign->price_per_unit * $validated['quantity'];
-            $paymentMethods = PaymentMethodService::getPaymentMethodForBuyToken();
 
             return view('auth.user.available_project.preview_transaction', [
                 'project' => $project,
                 'quantityBuy' => $validated['quantity'],
                 'totalPrice' => $totalPrice,
-                'paymentMethods' => $paymentMethods
             ]);
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Something went wrong');

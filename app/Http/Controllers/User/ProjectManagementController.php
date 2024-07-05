@@ -7,6 +7,7 @@ use App\Models\ProjectCategory;
 use App\Services\ProjectService;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\StoreBankRequest;
 use App\Http\Requests\User\PayForSaleTokenRequest;
 use App\Services\TransactionService;
 use App\Services\PaymentMethodService;
@@ -19,6 +20,30 @@ use App\Services\CategoryProjectSubmissionStatusService;
 
 class ProjectManagementController extends Controller
 {
+
+    public function postBankAccount($id, StoreBankRequest $request)
+    {
+        $validated = $request->validated();
+
+        try {
+            DB::beginTransaction();
+            $validated['payment_method_category_id'] = PaymentMethodService::getPaymentMethodByName('Bank Transfer')->id;
+            $validated['user_id'] = auth()->id();
+            $validated['description'] = 'Nomor Rekening: ' . $validated['account_number'] . ' a/n ' . $validated['account_name'];
+            PaymentMethodService::storePaymentMethodDetail($validated);
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Terjadi kesalahan');
+        }
+
+        return redirect()->route('dashboard.user.project-management.check-transaction', $id)->with('success', 'Nomor rekening berhasil ditambahkan');
+    }
+
+    public function addBankAccount($id)
+    {
+        return view('auth.user.project_management.addBankAccount', compact('id'));
+    }
 
     public function payForSaleToken($transactionCode, PayForSaleTokenRequest $request)
     {
@@ -39,11 +64,9 @@ class ProjectManagementController extends Controller
     public function showTransaction(string $transactionCode)
     {
         $transaction = TransactionService::getTransactionByCode($transactionCode);
-        $paymentMethodDetail = PaymentMethodService::getPaymentMethodDetailById($transaction->payment_method_detail_id);
-        $price = TransactionService::getPriceFromTransactionDetailByTransactionCode($transactionCode);
-        $count = TransactionService::getCountTransactionDetailByTransactionCode($transactionCode);
+        $campaign = CampaignService::getCampaignById($transaction->campaign_id);
         $walletBalance = CampaignService::getCampaignWalletBalanceFromTransaction($transactionCode);
-        return view('auth.user.project_management.showTransaction', compact('transaction', 'walletBalance', 'paymentMethodDetail', 'price', 'count'));
+        return view('auth.user.project_management.showTransaction', compact('transaction', 'walletBalance', 'campaign'));
     }
 
     public function checkTransaction(string $projectId)
@@ -55,10 +78,9 @@ class ProjectManagementController extends Controller
             return $transactions;
         }
 
+        $wallets = PaymentMethodService::getUserWalletPaymentMethodDetailForUser();
         $transactions = TransactionService::getTransactionByCampaignId($project->campaign->id);
-        // dd($transactions->toArray());
-
-        return view('auth.user.project_management.checkTransaction', compact('project', 'transactions'));
+        return view('auth.user.project_management.checkTransaction', compact('project', 'transactions', 'wallets'));
     }
 
     public function postUploadSignedContract(string $id, SignedContractRequest $request)

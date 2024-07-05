@@ -36,27 +36,10 @@
                     </div>
                 </div>
 
-                <div class="my-5" id="payment-methods">
-                    <h5 class="fw-semibold">Pilih Metode Pembayaran</h5>
-                    <div class="d-flex my-3 gap-2">
-                        @foreach ($paymentMethods as $paymentMethod)
-                            <div class="col-md-4 col-lg-3 col-sm-6">
-                                <label>
-                                    <input type="radio" name="paymentMethod" value="{{ $paymentMethod->id }}"
-                                        class="card-input-element" />
-                                    <div class="card card-default text-center p-2 card-input dashed-border border">
-                                        {{ $paymentMethod->name }}
-                                    </div>
-                                </label>
-                            </div>
-                        @endforeach
-                    </div>
 
-                    {{-- this div will deisplay detail if detail exist on paymentMethod->details --}}
-                    <div class="accordion my-3" id="paymentMethodDetailAccordion">
-                        <!-- Accordion content will be injected here -->
-                    </div>
-                </div>
+                <button id="next-button-buy" class="btn btn-primary w-100">
+                    Lanjutkan Pembayaran
+                </button>
 
                 <style>
                     label {

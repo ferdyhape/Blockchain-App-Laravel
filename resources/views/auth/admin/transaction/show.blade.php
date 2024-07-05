@@ -42,14 +42,14 @@
                                             {{ $transaction->status }}
                                         </td>
                                     </tr>
-                                    <tr>
+                                    {{-- <tr>
                                         <td class="text-start text-secondary">
                                             Status Pembayaran
                                         </td>
                                         <td class="text-end fw-semibold text-uppercase">
                                             {{ $transaction->payment_status }}
                                         </td>
-                                    </tr>
+                                    </tr> --}}
                                     <tr>
                                         <td class="text-start text-secondary">
                                             Harga Per Token
@@ -64,14 +64,6 @@
                                         </td>
                                         <td class="text-end fw-semibold">
                                             {{ $count }} Token
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="text-start text-secondary">
-                                            Metode Pembayaran
-                                        </td>
-                                        <td class="text-end fw-semibold">
-                                            {{ $paymentMethodDetail->name }}
                                         </td>
                                     </tr>
                                     <tr>

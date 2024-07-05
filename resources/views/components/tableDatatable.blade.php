@@ -1,13 +1,15 @@
 @props([
-    'header' => 'headerTable',
+    'header' => null,
     'tableId' => '',
     'oneRowThArray' => null,
     'theadContent' => '',
 ])
 
 <div class="col-md-12">
-    <h5 class="fw-semibold">{{ $header }}</h5>
-    <div class="table-responsive mt-5">
+    @if ($header)
+        <h5 class="fw-semibold mb-4">{{ $header }}</h5>
+    @endif
+    <div class="table-responsive ">
         <table id="{{ $tableId }}" class="display w-100 nowrap">
             <thead class="text-center">
                 @if ($oneRowThArray)

@@ -4,17 +4,7 @@
 
         <x-contentSection>
             <x-slot name="contentOfContentSection">
-                <x-tableDatatable header="Transaction Management" tableId="transactionManagementTable" :oneRowThArray="[
-                    'No.',
-                    'Code',
-                    'Campaign Name',
-                    'User',
-                    'Order Type',
-                    'Status',
-                    'Payment Proof',
-                    'Price Total',
-                    'Action',
-                ]" />
+                <x-tableDatatable header="Transaction Management" tableId="transactionManagementTable" :oneRowThArray="['No.', 'Code', 'Campaign Name', 'User', 'Order Type', 'Status', 'Price Total', 'Action']" />
             </x-slot>
         </x-contentSection>
 

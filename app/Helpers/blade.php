@@ -1,5 +1,6 @@
 <?php
 
+use Carbon\Carbon;
 use Illuminate\Routing\Route;
 
 
@@ -52,7 +53,13 @@ function getSidebarData()
             'role' => 'Admin', // Add this line
             'route' => 'dashboard.admin.transaction.index',
             'icon' => 'bx-transfer',
-            'name' => 'Transaction',
+            'name' => 'Token Transaction',
+        ],
+        [
+            'role' => 'Admin', // Add this line
+            'route' => 'dashboard.admin.wallet-transaction.index',
+            'icon' => 'bx-wallet',
+            'name' => 'Wallet Topup',
         ],
         [
             'role' => 'Admin', // Add this line
@@ -99,6 +106,12 @@ function getSidebarData()
     ];
 
     return $sidebarData;
+}
+
+function diffForHumansFromString($datetime)
+{
+    $date = Carbon::parse($datetime);
+    return $date->diffForHumans();
 }
 
 

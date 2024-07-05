@@ -10,7 +10,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 
-class AddTransactionDetailProcess implements ShouldQueue
+class AddTokenProcess implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -38,7 +38,7 @@ class AddTransactionDetailProcess implements ShouldQueue
 
         // Lakukan pekerjaan antrian Anda di sini
         try {
-            TransactionService::addTransactionDetail($this->relatedCampaign, $this->transactionCode, $this->quantity, $this->orderType, $this->userId);
+            TransactionService::addToken($this->relatedCampaign, $this->transactionCode, $this->quantity, $this->orderType, $this->userId);
         } catch (\Exception $e) {
             Log::channel('queue_logs')->error('Error executing addTransactionDetail: ' . $e->getMessage());
         }

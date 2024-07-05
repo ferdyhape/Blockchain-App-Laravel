@@ -7,7 +7,8 @@ use Ramsey\Uuid\Uuid;
 use App\Models\Campaign;
 use App\Models\CampaignToken;
 use Illuminate\Support\Facades\Log;
-use App\Jobs\AddTransactionDetailProcess;
+use App\Jobs\AddTokenProcess;
+use App\Jobs\TokenManagementQueue;
 
 /**
  * Class TransactionService.
@@ -59,56 +60,64 @@ class TransactionService
     public static function sellToken($campaign_id, $data)
     {
         $relatedCampaign = CampaignService::getCampaignById($campaign_id);
-        $relatedPaymentMethodDetail = PaymentMethodService::getPaymentMethodDetailById($data['payment_method_detail_id']);
         $transactionCode = self::generateTransactionCode('sell');
+        $totalPrice = $relatedCampaign->price_per_unit * $data['quantity'];
 
         $postData = [
             'transactionCode' => $transactionCode,
             'campaignId' => $relatedCampaign->id,
             'fromToUserId' => auth()->user()->id,
             'orderType' => 'sell',
-            'paymentStatus' => 'unpaid',
-            'status' => 'pending',
+            'paymentStatus' => 'paid',
+            'status' => 'success',
             'quantity' => $data['quantity'],
-            'totalPrice' => $relatedCampaign->price_per_unit * $data['quantity'],
-            'paymentMethodDetailId' => $relatedPaymentMethodDetail->id,
+            'totalPrice' => $totalPrice,
+            'paymentMethodDetailId' => "null",
             'paymentProof' => null,
-            'createdAt' => time(),
+            'createdAt' => date('c'),
         ];
 
         self::postTransaction($postData);
-        AddTransactionDetailProcess::dispatch(
+        AddTokenProcess::dispatch(
             $relatedCampaign,
             $transactionCode,
             $data['quantity'],
             auth()->user()->id,
             'sell'
         )->delay(now()->addSeconds(10));
+
+        self::updateUserBallance(auth()->user()->id, $totalPrice, 'sell');
+        self::updateSoldTokenAmount($relatedCampaign, $data['quantity'], "decrement");
+        CampaignService::updateWalletBalanceCampaign($relatedCampaign->id, $totalPrice, 'reduce');
+        // CampaignTokenService::deleteTokenByTransactionCode($transactionCode);
+
+        return $transactionCode;
     }
 
     // done integration with blockchain
     public static function buyToken(array $data)
     {
         $relatedCampaign = CampaignService::getCampaignById($data['campaign_id']);
-        $relatedPaymentMethodDetail = PaymentMethodService::getPaymentMethodDetailById($data['payment_method_detail_id']);
         $transactionCode = self::generateTransactionCode('buy');
+        $totalPrice = $relatedCampaign->price_per_unit * $data['quantity'];
 
         $postData = [
             'transactionCode' => $transactionCode,
             'campaignId' => $relatedCampaign->id,
             'fromToUserId' => auth()->user()->id,
             'orderType' => 'buy',
-            'paymentStatus' => 'unpaid',
-            'status' => 'pending',
+            'paymentStatus' => 'paid',
+            'status' => 'success',
             'quantity' => $data['quantity'],
-            'totalPrice' => $relatedCampaign->price_per_unit * $data['quantity'],
-            'paymentMethodDetailId' => $relatedPaymentMethodDetail->id,
+            'totalPrice' => $totalPrice,
+            'paymentMethodDetailId' => "null",
             'paymentProof' => null,
-            'createdAt' => time(),
+            // 'createdAt' => time(),
+            'createdAt' => date('c')
         ];
 
         self::postTransaction($postData);
-        AddTransactionDetailProcess::dispatch(
+        AddTokenProcess::dispatch(
             $relatedCampaign,
             $transactionCode,
             $data['quantity'],
@@ -116,89 +125,88 @@ class TransactionService
             'buy'
         )->delay(now()->addSeconds(10));
 
+        self::updateUserBallance(auth()->user()->id, $totalPrice, 'buy');
+        self::updateSoldTokenAmount($relatedCampaign, $data['quantity'], "increment");
+        CampaignService::updateWalletBalanceCampaign($relatedCampaign->id, $totalPrice, 'increase');
+
         return $transactionCode;
     }
 
     // this function need to convert to blockchain
-    public static function addTransactionDetail(Campaign $campaign, string $transaction_code, $quantity, $orderType, $userId)
+    public static function addToken(Campaign $campaign, string $transaction_code, $quantity, $orderType, $userId)
     {
         if ($orderType == 'buy') {
             // Generate token for each quantity
             for ($i = 1; $i <= $quantity; $i++) {
 
-                // Generate token
                 $generatedToken = null;
-                do {
-                    $generatedToken = Uuid::uuid4()->toString();
-                } while (CampaignToken::where('token', $generatedToken)->exists());
+                $generatedToken = Uuid::uuid4()->toString();
+                $microtime = microtime(true);
+                $timestamp = number_format($microtime, 6, '', '');
+                $formattedToken = $generatedToken . '-' . $timestamp;
 
-                $campaign->campaignTokens()->create([
-                    'token' => $generatedToken,
-                    'status' => 'pending',
-                    'sold_to' => $userId,
-                    'transaction_code' => $transaction_code,
-                ]);
-
-                self::postTransactionDetail([
+                self::postToken([
+                    'token' => $formattedToken,
+                    'status' => 'sold',
+                    'soldTo' => $userId,
                     'transactionCode' => $transaction_code,
-                    'price' => $campaign->price_per_unit,
-                    'token' => $generatedToken,
-                    'createdAt' => time(),
+                    'campaignId' => $campaign->id,
                 ]);
             }
         }
 
         // if order type is sell,
         else {
-            // Get some token for sell
-            $campaignTokens = CampaignTokenService::getSomeTokenForSell($campaign->id, $quantity, $userId);
-
-            Log::channel('transactionservice')->info('Campaign Tokens: ' . $campaignTokens);
-            // Create transaction detail
-            foreach ($campaignTokens as $token) {
-
-                self::postTransactionDetail([
-                    'transactionCode' => $transaction_code,
-                    'price' => $campaign->price_per_unit,
-                    'token' => $token->token,
-                    'createdAt' => time(),
-                ]);
-
-                // Update token status
-                $updateResult = $token->update([
-                    'status' => 'pending',
-                    'transaction_code' => $transaction_code,
-                ]);
-
-                Log::channel('transactionservice')->info('Update Token Status: ' . $updateResult);
-            }
+            CampaignTokenService::deleteTokenByCampaignIdAndSoldTo($campaign->id, $quantity, $userId);
         }
     }
 
     private static function changeCampaignStatus($transaction, $status)
     {
-        // get campaign token by transaction code
-        $campaignToken = CampaignToken::where('transaction_code', $transaction->transaction_code)->get();
-
-        // update token status on transaction success
-        foreach ($campaignToken as $token) {
-            $token->update([
-                'status' => $status == 'success' ? 'sold' : 'available',
-                'sold_to' => $status == 'success' ? $token->sold_to : null,
-            ]);
-        }
+        CampaignTokenService::updateTokenStatus($transaction->transaction_code, $status);
+        $campaign = CampaignService::getCampaignById($transaction->campaign_id);
+        $campaignToken = CampaignTokenService::getCampaignTokensByTransactionCode($transaction->transaction_code);
 
         if ($status == 'success') {
             if ($transaction->order_type == 'buy') {
-                $campaignToken->first()->campaign()->first()->wallet->deposit($transaction->total_price, ['description' => 'Buy token from campaign']);
-                // update campaign sold token amount on transaction success
-                $campaignToken->first()->campaign()->update([
-                    'sold_token_amount' => $status == 'success' ? $campaignToken->first()->campaign->sold_token_amount + $campaignToken->count() : $campaignToken->first()->campaign->sold_token_amount,
-                ]);
+                $campaign->wallet->deposit($transaction->total_price, ['description' => 'Buy token from campaign']);
+                $campaign->sold_token_amount = $campaign->sold_token_amount + count($campaignToken);
+                $campaign->save();
             } elseif ($transaction->order_type == 'sell') {
                 CampaignTokenService::deleteTokenByTransactionCode($transaction->transaction_code);
             }
         }
+    }
+
+    private static function updateUserBallance($userId, $totalPrice, $orderType)
+    {
+        $user = UserService::getUserById($userId);
+        if ($orderType == 'buy') {
+            $user->wallet->withdraw($totalPrice, ['description' => 'Buy token for campaign']);
+        } else {
+            $user->wallet->deposit($totalPrice, ['description' => 'Sell token from campaign']);
+        }
+    }
+
+    private static function updateSoldTokenAmount($campaign, $quantity, $type)
+    {
+        // type increment or decrement
+        if ($type == "increment") {
+            $campaign->sold_token_amount = $campaign->sold_token_amount + $quantity;
+            $campaign->save();
+        } else {
+            $campaign->sold_token_amount = $campaign->sold_token_amount - $quantity;
+            $campaign->save();
+        }
+    }
+
+
+    // -- START FUNC FOR GET TO EXPRESS JS, MAPPING DATA, AND POST TO BLOCKCHAIN -- //
+
+    public static function postToken(array $data)
+    {
+        $res = APIHelper::httpPost('addToken', $data);
+        return $res;
     }
 
     // done integration with blockchain
@@ -250,10 +258,20 @@ class TransactionService
     public static function checkIfMaximumPurchased($campaign_id, $quantity)
     {
         $relatedCampaign = CampaignService::getCampaignById($campaign_id);
-        $countBuyerTokenInThisCampaign = CampaignToken::where('sold_to', auth()->user()->id)->where('campaign_id', $campaign_id)->count();
+        // $countBuyerTokenInThisCampaign = CampaignToken::where('sold_to', auth()->user()->id)->where('campaign_id', $campaign_id)->count();
+        $countBuyerTokenInThisCampaign = count(CampaignTokenService::getSoldTokenByCampaignId($campaign_id, auth()->user()->id));
         $totalMaximumPurchased = $relatedCampaign->maximum_purchase;
 
         if ($countBuyerTokenInThisCampaign + $quantity > $totalMaximumPurchased) {
+            return false;
+        }
+        return true;
+    }
+
+    public static function checkIfWalletBalanceEnough($totalPrice)
+    {
+        $user = UserService::getUserById(auth()->user()->id);
+        if ($user->wallet->balance < $totalPrice) {
             return false;
         }
         return true;
@@ -263,6 +281,9 @@ class TransactionService
     public static function ajaxDatatableByAdmin()
     {
         $transactionsData = self::getAllTransaction();
+        usort($transactionsData, function ($a, $b) {
+            return $b['created_at'] <=> $a['created_at'];
+        });
         return DatatableService::buildDatatable(
             $transactionsData,
             'auth.admin.transaction.action',
@@ -272,9 +293,12 @@ class TransactionService
     // done integration with blockchain
     public static function ajaxDatatableTransactionInProjectManagementByUser($campaign_id)
     {
-        $transactionData = self::getTransactionByCampaignId($campaign_id);
+        $transactionsData = self::getTransactionByCampaignId($campaign_id);
+        usort($transactionsData, function ($a, $b) {
+            return $b['created_at'] <=> $a['created_at'];
+        });
         return DatatableService::buildDatatable(
-            $transactionData,
+            $transactionsData,
             'auth.user.project_management.transactionAction'
         );
     }
@@ -283,9 +307,14 @@ class TransactionService
     public static function getTransactionByUserId()
     {
         $transactions = APIHelper::httpGet('getTransactionByFromToUserId', auth()->user()->id);
+
         if (self::ifTransactionNotFound($transactions)) {
             return [];
         }
+        $transactionData = (array) $transactions->data;
+        usort($transactionData, function ($a, $b) {
+            return $b->createdAt <=> $a->createdAt;
+        });
         return self::mappingTransaction($transactions->data);
     }
 
@@ -368,7 +397,6 @@ class TransactionService
                 'status' => $transaction->status,
                 'quantity' => $transaction->quantity,
                 'total_price' => $transaction->totalPrice,
-                'payment_method_detail_id' => $transaction->paymentMethodDetailId,
                 'payment_proof' => $transaction->paymentProof,
                 'created_at' => $transaction->createdAt,
             ];

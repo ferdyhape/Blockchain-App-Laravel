@@ -63,7 +63,9 @@
                         </div>
                     </div>
                 @else
-                    <h1>Masuk Else</h1>
+                    {{-- <h1>Masuk Else</h1> --}}
+                    {{-- add no action needed --}}
+                    <div class="btn btn-sm btn-success w-100">No Action Needed</div>
                 @endif
 
             </div>

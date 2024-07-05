@@ -24,7 +24,7 @@ class BuyProjectRequest extends FormRequest
         return [
             'quantity' => 'required|numeric',
             'campaign_id' => 'required|string|exists:campaigns,id',
-            'payment_method_detail_id' => 'required|string|exists:payment_method_details,id',
+            // 'payment_method_detail_id' => 'required|string|exists:payment_method_details,id',
         ];
     }
 
@@ -36,9 +36,9 @@ class BuyProjectRequest extends FormRequest
             'campaign_id.required' => 'Kolom campaign id harus diisi',
             'campaign_id.string' => 'Kolom campaign id harus berupa string',
             'campaign_id.exists' => 'Campaign id tidak ditemukan',
-            'payment_method_detail_id.required' => 'Kolom payment method detail id harus diisi',
-            'payment_method_detail_id.string' => 'Kolom payment method detail id harus berupa string',
-            'payment_method_detail_id.exists' => 'Payment method detail id tidak ditemukan',
+            // 'payment_method_detail_id.required' => 'Kolom payment method detail id harus diisi',
+            // 'payment_method_detail_id.string' => 'Kolom payment method detail id harus berupa string',
+            // 'payment_method_detail_id.exists' => 'Payment method detail id tidak ditemukan',
         ];
     }
 }

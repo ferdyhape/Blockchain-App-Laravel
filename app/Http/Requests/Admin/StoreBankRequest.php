@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\User;
+namespace App\Http\Requests\Admin;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreWalletRequest extends FormRequest
+class StoreBankRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

@@ -41,6 +41,7 @@ class ReviseProjectRequest extends FormRequest
             'projected_monthly_expenses' => ['required', 'string'],
             'income_statement_upload_every' => ['required', 'integer'],
             'description_of_profit_sharing' => ['required', 'string'],
+            'profit_sharing_percentage' => ['required', 'numeric', 'min:0', 'max:100'],
         ];
     }
 
@@ -82,6 +83,10 @@ class ReviseProjectRequest extends FormRequest
             'income_statement_upload_every.integer' => 'Laporan laba rugi harus berupa angka',
             'description_of_profit_sharing.required' => 'Deskripsi bagi hasil wajib diisi',
             'description_of_profit_sharing.string' => 'Deskripsi bagi hasil harus berupa teks',
+            'profit_sharing_percentage.required' => 'Persentase bagi hasil wajib diisi',
+            'profit_sharing_percentage.numeric' => 'Persentase bagi hasil harus berupa angka',
+            'profit_sharing_percentage.min' => 'Persentase bagi hasil minimal 0',
+            'profit_sharing_percentage.max' => 'Persentase bagi hasil maksimal 100',
         ];
     }
 }

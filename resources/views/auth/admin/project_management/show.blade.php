@@ -287,6 +287,10 @@
                     <x-input label="Periode Penggalangan Berakhir" name="fundraising_period_end"
                         id="fundraising_period_end" type="date" placeholder="Isi Periode Penggalangan Berakhir"
                         required="true" />
+                    <x-input label="Periode Berlangsung Dimulai" name="on_going_period_start" id="on_going_period_start"
+                        type="date" placeholder="Isi Periode Project Berlangsung Dimulai" required="true" />
+                    <x-input label="Periode Berlangsung Berakhir" name="on_going_period_end" id="on_going_period_end"
+                        type="date" placeholder="Isi Periode Project Berlangsung Berakhir" required="true" />
                 </x-slot>
             </x-inputModal>
         @endif

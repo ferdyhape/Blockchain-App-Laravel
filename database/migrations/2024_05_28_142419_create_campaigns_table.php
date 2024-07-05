@@ -23,6 +23,8 @@ return new class extends Migration
             $table->decimal('maximum_purchase', 20, 0); // pembelian maksimum
             $table->date('fundraising_period_start')->nullable(); // Fundraising period start
             $table->date('fundraising_period_end')->nullable(); // Fundraising period end
+            $table->date('on_going_period_start')->nullable(); // On going period start
+            $table->date('on_going_period_end')->nullable(); // On going period end
             $table->decimal('sold_token_amount', 20, 0)->default(0);
             $table->string('status')->default('pending'); // status proses penggalangan dana
             // dokumen prospektus akan di handle media library

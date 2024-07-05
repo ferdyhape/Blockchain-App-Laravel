@@ -6,6 +6,7 @@ class APIHelper
 {
     private static $baseApiUrl;
     private static $apiToken;
+
     private static $arraySegmentApi = [
         // get transaction
         'getAllTransactions' => '/transactions',
@@ -28,6 +29,20 @@ class APIHelper
 
         // post transaction details
         'addTransactionDetail' => '/transaction-details',
+
+        // get token
+        'getAllTokens' => '/tokens',
+        'getTokensByCampaignId' => '/tokens/campaign',
+        'getSoldTokensByCampaignId' => '/tokens/sold',
+        'getTokensBySoldTo' => '/tokens/soldTo',
+        'getTokensByCampaignIdAndSoldTo' => '/tokens/campaignSoldTo',
+        'getTokensByTransactionCode' => '/tokens/transaction',
+
+        // post token
+        'addToken' => '/tokens',
+        'changeStatusByTransactionCode' => '/tokens/changeStatusByTransactionCode',
+        'deleteTokenByTransactionCode' => '/tokens/deleteTokenByTransactionCode',
+        'deleteTokenByCampaignIdAndSoldTo' => '/tokens/deleteTokenByCampaignIdAndSoldTo',
     ];
 
 
@@ -47,6 +62,7 @@ class APIHelper
             $url .= '/' . $param;
         }
 
+        // dd($url);
         $response = Http::withHeaders([
             'Authorization' => self::$apiToken,
         ])->get($url)->json();
