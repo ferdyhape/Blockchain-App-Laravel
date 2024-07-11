@@ -55,6 +55,18 @@ class Project extends Model implements HasMedia
         return $this->category_project_submission_status_id === $categoryProjectSubmissionStatus->id;
     }
 
+    public function isClosed()
+    {
+        $categoryProjectSubmissionStatus = CategoryProjectSubmissionStatus::where('name', 'Selesai')->first();
+        return $this->category_project_submission_status_id === $categoryProjectSubmissionStatus->id;
+    }
+
+    public function isOnGoing()
+    {
+        $categoryProjectSubmissionStatus = CategoryProjectSubmissionStatus::where('name', 'Proses Penjalanan Projek')->first();
+        return $this->category_project_submission_status_id === $categoryProjectSubmissionStatus->id;
+    }
+
     public function category()
     {
         return $this->belongsTo(ProjectCategory::class, 'project_category_id', 'id');

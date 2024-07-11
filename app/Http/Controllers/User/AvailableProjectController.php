@@ -37,7 +37,6 @@ class AvailableProjectController extends Controller
         }
     }
 
-    // previewTransaction
     public function previewTransaction(PreviewTransactionRequest $request, string $id)
     {
         $validated = $request->validated();
@@ -46,17 +45,19 @@ class AvailableProjectController extends Controller
             $project = ProjectService::getProjectById($id);
 
             if (!TransactionService::checkIfMaximumPurchased($project->campaign->id, $validated['quantity'])) {
-                return redirect()->back()->with('error', 'Maximum purchase exceeded');
+                return redirect()->back()->with('error', 'Anda melebihi batas pembelian');
+            }
+
+            if (!TransactionService::checkIfWalletBalanceEnough($project->campaign->price_per_unit * $validated['quantity'])) {
+                return redirect()->back()->with('error', 'Saldo Wallet tidak mencukupi');
             }
 
             $totalPrice = $project->campaign->price_per_unit * $validated['quantity'];
-            $paymentMethods = PaymentMethodService::getPaymentMethodForBuyToken();
 
             return view('auth.user.available_project.preview_transaction', [
                 'project' => $project,
                 'quantityBuy' => $validated['quantity'],
                 'totalPrice' => $totalPrice,
-                'paymentMethods' => $paymentMethods
             ]);
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Something went wrong');

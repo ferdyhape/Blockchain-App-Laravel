@@ -32,7 +32,7 @@
                                                 Jumlah Token Dimiliki
                                             </td>
                                             <td class="text-end">
-                                                {{ $campaign->user_token_count }}
+                                                {{ count($campaign->tokens) }}
                                             </td>
                                         </tr>
                                         <tr>
@@ -40,7 +40,7 @@
                                                 Nilai Rupiah
                                             </td>
                                             <td class="text-end currency">
-                                                {{ $campaign->user_token_count * $campaign->price_per_unit }}
+                                                {{ count($campaign->tokens) * $campaign->price_per_unit }}
                                             </td>
                                         </tr>
                                     </table>

@@ -1,20 +1,20 @@
-<x-containerTemplate pageTitle="Transaction">
+<x-containerTemplate pageTitle="Campaign Transaction">
     @slot('contentOfContainer')
-        <x-headerSection :breadcrumbMenu="['Transaction Management']" />
+        <x-headerSection :breadcrumbMenu="['Campaign Transaction']" />
 
         <x-contentSection>
             <x-slot name="contentOfContentSection">
-                <x-tableDatatable header="Transaction Management" tableId="transactionManagementTable" :oneRowThArray="[
-                    'No.',
-                    'Code',
-                    'Campaign Name',
-                    'User',
-                    'Order Type',
-                    'Status',
-                    'Payment Proof',
-                    'Price Total',
-                    'Action',
-                ]" />
+                <x-tableDatatable header="Campaign Transaction Management" tableId="transactionManagementTable"
+                    :oneRowThArray="[
+                        'No.',
+                        'Code',
+                        'Campaign Name',
+                        'User',
+                        'Order Type',
+                        'Status',
+                        'Price Total',
+                        'Action',
+                    ]" />
             </x-slot>
         </x-contentSection>
 

@@ -3,27 +3,71 @@
     <x-slot name="contentOfContainer">
 
         <x-headerSection :breadcrumbMenu="['My Wallet']">
-            @slot('headerContent')
-                <div class="d-flex gap-2 align-items-center">
-                    <a href="{{ route('dashboard.user.my-wallet.create') }}" class="btn btn-sm btn-primary">Add Wallet</a>
-                    <div class="my-auto">
-                        <select class="form-select my-auto form-select-sm" aria-label="Default select example">
-                            <option value="1">All</option>
-                            <option value="2">Two</option>
-                            <option value="3">Three</option>
-                        </select>
-                    </div>
-                </div>
-            @endslot
         </x-headerSection>
 
         <x-contentSection>
             @slot('contentOfContentSection')
-                <div class="row">
-                    {{ $wallets }}
+                <div class="row gap-4">
+                    <div class="col-md-12 col-lg-12">
+                        <div class="card shadow-sm border-0">
+                            <div class="card-header fw-semibold">
+                                My Wallet
+                            </div>
+                            <div class="card-body">
+                                <table class="w-100">
+                                    <tr>
+                                        <td class="text-start text-secondary">
+                                            Nama
+                                        </td>
+                                        <td class="text-end">
+                                            {{ auth()->user()->name }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-start text-secondary">
+                                            Saldo
+                                        </td>
+                                        <td class="text-end currency">
+                                            {{ auth()->user()->wallet->balance }}
+                                        </td>
+                                    </tr>
+                                </table>
+
+                                <div class="d-flex justify-content-end gap-2 mt-3">
+                                    <a href="{{ route('dashboard.user.my-wallet.create') }}"
+                                        class="btn btn-primary btn-sm ">Topup</a>
+                                    <a href="{{ route('dashboard.user.my-wallet.withdraw') }}"
+                                        class="btn btn-primary btn-sm ">Withdraw</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <x-tableDatatable tableId="walletTransactionTable" :oneRowThArray="['No', 'Code', 'Jumlah', 'Description', 'Status', 'Bukti Pembayaran', 'Action']" />
                 </div>
             @endslot
         </x-contentSection>
+
+        @include('auth.user.my_wallet.upload_proof')
+
+        @push('custom-scripts')
+            <script src="{{ asset('assets/js/base/datatable/datatableSettings.js') }}"></script>
+            <script src="{{ asset('assets/js/dashboard/user/my_wallet/my_wallet.js') }}"></script>
+            <script src="{{ asset('assets/js/base/datatable/datatableInitializer.js') }}"></script>
+            <script>
+                $(document).ready(function() {
+                    // initDatatable('#walletTransactionTable', 'user.my-wallet.transaction');
+                });
+
+                function swalShowDescription(description) {
+                    Swal.fire({
+                        title: 'Description',
+                        text: description,
+                        icon: 'info',
+                        confirmButtonText: 'Close'
+                    });
+                }
+            </script>
+        @endpush
 
         <x-errorAlertValidation />
         <x-ifSuccessAlert />

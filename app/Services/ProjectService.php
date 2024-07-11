@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use Carbon\Carbon;
 use App\Models\Project;
 use Illuminate\Support\Facades\DB;
 
@@ -10,6 +11,92 @@ use Illuminate\Support\Facades\DB;
  */
 class ProjectService
 {
+
+    // profitSharingPayment
+    public static function profitSharingPayment($id, $paymentMethodDetailId)
+    {
+        $project = ProjectService::getProjectById($id);
+        $amount = $project->campaign->price_per_unit * $project->campaign->sold_token_amount +
+            ($project->campaign->price_per_unit * $project->campaign->sold_token_amount * $project->profit_sharing_percentage) /
+            100 -
+            $project->campaign->wallet->balance;
+        $data = [
+            'walletable_id' => $project->campaign->id,
+            'amount' => $amount,
+            'payment_method_detail_id' => $paymentMethodDetailId,
+        ];
+        WalletService::storeWalletTransaction($data, 'profit_sharing_payment');
+    }
+
+    // withdrawCampaign
+    public static function withdrawCampaign($projectId, $paymentMethodDetailId, $amount)
+    {
+        $project = ProjectService::getProjectById($projectId);
+        $data = [
+            'walletable_id' => $project->campaign->id,
+            'amount' => $amount,
+            'payment_method_detail_id' => $paymentMethodDetailId,
+        ];
+        WalletService::storeWalletTransaction($data, 'withdraw_campaign');
+    }
+
+    // untuk mengecek apakah campaign sudah berakhir atau masih berjalan (soon on cronjob)
+    public static function checkCampaignDateClosedOrOnGoing()
+    {
+        $projectOnGoing = Project::whereHas('campaign', function ($query) {
+            $query->where('on_going_period_start', '<=', Carbon::now())->where('on_going_period_end', '>=', Carbon::now());
+        })->with('campaign')->get();
+
+        $projectClosed = Project::whereHas('campaign', function ($query) {
+            $query->where('on_going_period_end', '<=', Carbon::now());
+        })->with('campaign')->get();
+
+        foreach ($projectOnGoing as $project) {
+            self::onGoingProject($project->id);
+        }
+
+        foreach ($projectClosed as $project) {
+            self::closedProject($project->id);
+        }
+    }
+
+    public static function closedProject($projectId)
+    {
+        $project = ProjectService::getProjectById($projectId);
+        $categoryProjectSubmissionStatus = CategoryProjectSubmissionStatusService::getCategoryByName('Selesai');
+        $subCategoryProjectSubmission = SubCategoryProjectSubmissionService::getSubCategoryByName('closed');
+
+        if ($project->isClosed() && $project->campaign->status === 'closed') {
+            return;
+        }
+
+        CampaignService::updateCampaignStatus($project->campaign, 'closed');
+        self::updateProjectStatus($project, $categoryProjectSubmissionStatus);
+
+        $project->progressStatusOfProjectSubmission()->create([
+            'category_project_submission_status_id' => $categoryProjectSubmissionStatus->id,
+            'sub_category_project_submission_id' => $subCategoryProjectSubmission->id,
+        ]);
+    }
+    public static function onGoingProject($projectId)
+    {
+        $project = ProjectService::getProjectById($projectId);
+        $categoryProjectSubmissionStatus = CategoryProjectSubmissionStatusService::getCategoryByName('Proses Penjalanan Projek');
+        $subCategoryProjectSubmission = SubCategoryProjectSubmissionService::getSubCategoryByName('on_going');
+
+        if ($project->isOnGoing() && $project->campaign->status === 'on_going') {
+            return;
+        }
+
+        CampaignService::updateCampaignStatus($project->campaign, 'on_going');
+        self::updateProjectStatus($project, $categoryProjectSubmissionStatus);
+
+        $project->progressStatusOfProjectSubmission()->create([
+            'category_project_submission_status_id' => $categoryProjectSubmissionStatus->id,
+            'sub_category_project_submission_id' => $subCategoryProjectSubmission->id,
+        ]);
+    }
+
     private static function startFundraising($projectId, $fundraisingPeriodData)
     {
         $project = ProjectService::getProjectById($projectId);
@@ -104,10 +191,12 @@ class ProjectService
             'sub_category_project_submission_id' => $subCategoryProjectSubmission->id,
         ]);
 
+        $tempPricePerUnit = getPriceToken();
+
         $initiateCampaignData = [
             'approved_amount' => $approvalData['approved_amount'],
-            'offered_token_amount' => $approvalData['offered_token_amount'],
-            'price_per_unit' => self::calculatePricePerUnit($approvalData['offered_token_amount'], $approvalData['approved_amount']),
+            'offered_token_amount' => $approvalData['approved_amount'] / $tempPricePerUnit,
+            'price_per_unit' => $tempPricePerUnit,
             'minimum_purchase' => $approvalData['minimum_purchase'],
             'maximum_purchase' => $approvalData['maximum_purchase'],
         ];

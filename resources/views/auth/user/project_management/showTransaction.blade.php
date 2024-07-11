@@ -39,7 +39,7 @@
                                             Harga Per Token
                                         </td>
                                         <td class="text-end fw-semibold currency">
-                                            {{ $price }}
+                                            {{ $campaign->price_per_unit }}
                                         </td>
                                     </tr>
                                     <tr>
@@ -47,7 +47,7 @@
                                             Total pembelian
                                         </td>
                                         <td class="text-end fw-semibold">
-                                            {{ $count }} Token
+                                            {{ $transaction->quantity }} Token
                                         </td>
                                     </tr>
                                     <tr>
@@ -62,122 +62,6 @@
                             </div>
                         </div>
                     </div>
-
-                    <div id="account-number">
-                        <h5 class="fw-semibold">Tujuan</h5>
-                        <div class="card border-0 shadow-sm p-4 my-3">
-                            <div class="card-content rounded">
-                                @if ($transaction->order_type == 'sell')
-                                    <div class="">
-                                        Nama Bank: <span class="fw-semibold">{{ $paymentMethodDetail->name }}</span>
-                                    </div>
-                                    <div class="">
-                                        <span class="fw-semibold">{!! $paymentMethodDetail->description !!}</span>
-                                    </div>
-                                @else
-                                    <div class="">
-                                        <span class="fw-semibold">{!! $paymentMethodDetail->description !!}</span>
-                                    </div>
-                                @endif
-                            </div>
-                        </div>
-                    </div>
-
-                    @if ($transaction->payment_proof)
-                        <div id="payment-proof">
-                            <h5 class="fw-semibold">Bukti Pembayaran</h5>
-
-                            <div class="card border-0 shadow-sm p-4 my-3">
-                                <div class="card-content rounded">
-                                    @if ($transaction->status == 'pending')
-                                        <div class="mb-3">
-                                            Note: <span class="text-danger">Pembayaran akan diverifikasi oleh penjual</span>
-                                        </div>
-                                    @endif
-                                    <img src="{{ asset($transaction->payment_proof) }}" alt="Payment Proof" class="img-fluid">
-                                </div>
-                            </div>
-                        </div>
-                    @endif
-
-                    @if ($transaction->order_type == 'sell')
-                        @if ($transaction->status == 'pending' && $transaction->payment_status == 'unpaid')
-                            <div id="transaction-action">
-                                <h5 class="fw-semibold">Bayar</h5>
-                                {{-- input select bayar using exist wallet or transfer --}}
-
-                                <div class="card border-0 shadow-sm p-4 my-3">
-                                    <div class="card-content rounded">
-                                        <div class="mb-3">
-                                            Pilih metode pembayaran yang anda inginkan
-                                        </div>
-                                        <form
-                                            action="{{ route('dashboard.user.project-management.pay-for-sale-token', $transaction->transaction_code) }}"
-                                            method="POST" class="mb-3" enctype="multipart/form-data">
-                                            @csrf
-                                            @method('POST')
-                                            <x-input type="select" label="Metode Pembayaran" name="payment_method"
-                                                required="true" id="payment_method">
-                                                <option selected disabled>-- Pilih Metode Pembayaran --</option>
-                                                <option value="wallet">Gunakan Saldo</option>
-                                                <option value="transfer">Transfer Bank</option>
-                                            </x-input>
-
-
-                                            <div id="wallet-balance-id" style="display: none">
-                                                <p class="fw-semibold">Saldo Wallet Campaign Ini adalah <span class="currency">
-                                                        {{ $walletBalance }}</span>
-                                                </p>
-                                            </div>
-
-
-                                            <div id="bank-transfer-id" style="display: none">
-                                                <p class="fw-semibold">Silahkan upload bukti pembayaran</p>
-                                                <x-input type="file" name="payment_proof" id="payment_proof"
-                                                    placeholder="Bukti Pembayaran" />
-                                            </div>
-
-                                            <button type="submit" class="btn btn-primary">Bayar</button>
-                                        </form>
-
-                                    </div>
-                                </div>
-                            </div>
-                        @elseif($transaction->status == 'pending' && $transaction->payment_status == 'paid')
-                            <div id="transaction-action">
-                                <h5 class="fw-semibold">Konfirmasi Pembayaran</h5>
-                                <div class="card border-0 shadow-sm p-4 my-3">
-                                    <div class="card-content rounded">
-                                        <div class="mb-3">
-                                            <p class="fw-semibold">Pembayaran menunggu dikonfirmasi oleh penjual token</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        @elseif ($transaction->status == 'success' && $transaction->payment_status == 'paid')
-                            <div id="transaction-action">
-                                <h5 class="fw-semibold">Konfirmasi Pembayaran</h5>
-                                <div class="card border-0 shadow-sm p-4 my-3">
-                                    <div class="card-content rounded">
-                                        <div class="mb-3">
-                                            <p class="fw-semibold">Pembayaran telah dikonfirmasi oleh penjual token</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        @elseif($transaction->status == 'pending' && $transaction->payment_status == 'needAdminAction')
-                            <div id="transaction-action">
-                                <h5 class="fw-semibold">Konfirmasi Pembayaran</h5>
-                                <div class="card border-0 shadow-sm p-4 my-3">
-                                    <div class="card-content rounded">
-                                        <div class="mb-3">
-                                            <p class="fw-semibold">Menunggu admin menyelesaikan pembayaran</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        @endif
-                    @endif
 
                 </div>
             @endslot

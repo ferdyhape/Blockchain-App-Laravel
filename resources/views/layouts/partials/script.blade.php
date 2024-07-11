@@ -14,6 +14,9 @@
 {{-- base script --}}
 <script src="{{ asset('assets/js/base/script.js') }}"></script>
 
+{{-- moment.js in App-Laravel/public/assets/js/base/vendor --}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+
 <script>
     let currentUrl = '{{ url()->current() }}';
     let baseUrl = '{{ url('/') }}';

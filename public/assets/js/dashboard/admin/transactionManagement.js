@@ -50,23 +50,23 @@ columnsDatatable = [
             }
         },
     },
-    {
-        data: "payment_proof",
-        name: "payment_proof",
-        render: function (data) {
-            if (data == null) {
-                return '<div class="btn btn-sm btn-danger">No Proof</div>';
-            }
+    // {
+    //     data: "payment_proof",
+    //     name: "payment_proof",
+    //     render: function (data) {
+    //         if (data == "null") {
+    //             return '<div class="btn btn-sm btn-danger">No Proof</div>';
+    //         }
 
-            return (
-                '<a href="' +
-                baseUrl +
-                "/" +
-                data +
-                '" target="_blank">Lihat Bukti Pembayaran</a>'
-            );
-        },
-    },
+    //         return (
+    //             '<a href="' +
+    //             baseUrl +
+    //             "/" +
+    //             data +
+    //             '" target="_blank">Lihat Bukti Pembayaran</a>'
+    //         );
+    //     },
+    // },
     {
         data: "total_price",
         name: "total_price",

@@ -22,7 +22,7 @@ class SellTokenRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'payment_method_detail_id' => 'required|exists:payment_method_details,id',
+            // 'payment_method_detail_id' => 'required|exists:payment_method_details,id',
             'quantity' => 'required|numeric|min:1',
         ];
     }
@@ -33,9 +33,9 @@ class SellTokenRequest extends FormRequest
         return [
             'payment_method_detail_id.required' => 'Pilih metode pembayaran terlebih dahulu',
             'payment_method_detail_id.exists' => 'Metode pembayaran tidak ditemukan',
-            'quantity.required' => 'Masukkan jumlah token yang ingin dibeli',
-            'quantity.numeric' => 'Jumlah token harus berupa angka',
-            'quantity.min' => 'Jumlah token minimal 1',
+            // 'quantity.required' => 'Masukkan jumlah token yang ingin dibeli',
+            // 'quantity.numeric' => 'Jumlah token harus berupa angka',
+            // 'quantity.min' => 'Jumlah token minimal 1',
         ];
     }
 }

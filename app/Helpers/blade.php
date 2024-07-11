@@ -1,5 +1,6 @@
 <?php
 
+use Carbon\Carbon;
 use Illuminate\Routing\Route;
 
 
@@ -8,6 +9,10 @@ function toRp($money)
     return 'Rp ' . number_format($money, 0, ',', '.');
 }
 
+function getPriceToken()
+{
+    return 100000;
+}
 
 
 function checkClassIsActive($routeNames, $class = 'active')
@@ -30,12 +35,12 @@ function checkClassIsActive($routeNames, $class = 'active')
 function getSidebarData()
 {
     $sidebarData = [
-        [
-            'role' => 'Admin', // Add this line
-            'route' => 'dashboard.admin.index',
-            'icon' => 'bx-home',
-            'name' => 'Dashboard',
-        ],
+        // [
+        //     'role' => 'Admin', // Add this line
+        //     'route' => 'dashboard.admin.index',
+        //     'icon' => 'bx-home',
+        //     'name' => 'Dashboard',
+        // ],
         [
             'role' => 'Admin', // Add this line
             'route' => 'dashboard.admin.user-management.index',
@@ -52,7 +57,13 @@ function getSidebarData()
             'role' => 'Admin', // Add this line
             'route' => 'dashboard.admin.transaction.index',
             'icon' => 'bx-transfer',
-            'name' => 'Transaction',
+            'name' => 'Token Transaction',
+        ],
+        [
+            'role' => 'Admin', // Add this line
+            'route' => 'dashboard.admin.wallet-transaction.index',
+            'icon' => 'bx-wallet',
+            'name' => 'Wallet Topup',
         ],
         [
             'role' => 'Admin', // Add this line
@@ -60,12 +71,12 @@ function getSidebarData()
             'icon' => 'bx-credit-card',
             'name' => 'Payment Method',
         ],
-        [
-            'role' => 'Platinum Member', // Add this line
-            'route' => 'dashboard.user.index',
-            'icon' => 'bx-home',
-            'name' => 'Dashboard',
-        ],
+        // [
+        //     'role' => 'Platinum Member', // Add this line
+        //     'route' => 'dashboard.user.index',
+        //     'icon' => 'bx-home',
+        //     'name' => 'Dashboard',
+        // ],
         [
             'role' => 'Platinum Member', // Add this line
             'route' => 'dashboard.user.project-management.index',
@@ -99,6 +110,12 @@ function getSidebarData()
     ];
 
     return $sidebarData;
+}
+
+function diffForHumansFromString($datetime)
+{
+    $date = Carbon::parse($datetime);
+    return $date->diffForHumans();
 }
 
 

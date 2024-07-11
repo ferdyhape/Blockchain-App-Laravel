@@ -18,6 +18,8 @@ class IconCategoryProjectSubmissionSeeder extends Seeder
             'Proses Approval Komitee' => 'fa-check',
             'Proses Tanda Tangan Kontrak' => 'fa-signature',
             'Proses Penggalangan Dana' => 'fa-hand-holding-usd',
+            'Proses Penjalanan Projek' => 'fa-running',
+            'Selesai' => 'fa-check-circle',
             'Ditolak' => 'fa-circle-xmark'
         ];
 

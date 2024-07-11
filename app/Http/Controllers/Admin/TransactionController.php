@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
+use App\Services\CampaignService;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Services\TransactionService;
@@ -24,6 +25,7 @@ class TransactionController extends Controller
             return redirect()->back()->with('error', 'Something went wrong');
         }
     }
+
     public function changeStatus(Request $request, string $code)
     {
         $request->validate([
@@ -72,10 +74,10 @@ class TransactionController extends Controller
     public function show(string $code)
     {
         $transaction = TransactionService::getTransactionByCode($code);
-        $paymentMethodDetail = PaymentMethodService::getPaymentMethodDetailById($transaction->payment_method_detail_id);
-        $price = TransactionService::getPriceFromTransactionDetailByTransactionCode($code);
-        $count = TransactionService::getCountTransactionDetailByTransactionCode($code);
-        return view('auth.admin.transaction.show', compact('transaction', 'paymentMethodDetail', 'price', 'count'));
+        // $paymentMethodDetail = PaymentMethodService::getPaymentMethodDetailById($transaction->payment_method_detail_id);
+        $price = CampaignService::getTokenPriceByCampaignId($transaction->campaign_id);
+        $count = $transaction->quantity;
+        return view('auth.admin.transaction.show', compact('transaction', 'price', 'count'));
     }
 
     /**

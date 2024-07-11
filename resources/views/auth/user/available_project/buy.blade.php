@@ -6,6 +6,8 @@
             @slot('contentOfContentSection')
                 <div class="d-flex flex-column gap-3">
                     <div class="col-12">
+
+
                         <h5>Preview Project</h5>
                         <div class="card border-0 shadow-sm p-4 my-3">
                             <div class="card-content rounded ">
@@ -83,8 +85,15 @@
 
                     <div class="col-12">
                         <h5>Buy Action</h5>
-                        <div class="card border-0 shadow-sm p-4 my-3">
 
+                        <div class="card border-0 shadow-sm p-4 my-3">
+                            <div class="d-flex gap-1 mb-2">
+                                Saldo E-Wallet Anda:
+
+                                <div class="currency fw-bold">
+                                    {{ auth()->user()->wallet->balance }}
+                                </div>
+                            </div>
                             <form action="{{ route('dashboard.user.available-project.preview-transaction', $project->id) }}"
                                 method="POST">
                                 @method('POST')
@@ -111,8 +120,7 @@
             @endslot
         </x-contentSection>
 
-        @include('components.errorAlertValidation')
-        @include('components.ifSuccessAlert')
+
 
         @push('custom-scripts')
             <script>
@@ -159,5 +167,16 @@
             </script>
         @endpush
 
+
+        <x-errorAlertValidation />
+        <x-ifSuccessAlert />
+
+        @if (session('error'))
+            @push('custom-scripts')
+                <script>
+                    showAlert('{{ session('error') }}', "error");
+                </script>
+            @endpush
+        @endif
     @endslot
 </x-containerTemplate>

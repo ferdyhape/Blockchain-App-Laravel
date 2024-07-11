@@ -1,5 +1,5 @@
 @component('components.containerTemplate', [
-    'pageTitle' => 'Add Wallet',
+    'pageTitle' => 'Add Bank Account',
 ])
 
     @php
@@ -7,12 +7,12 @@
     @endphp
 
     @slot('contentOfContainer')
-        <x-headerSection :breadcrumbMenu="['Project', 'Add Wallet']" />
+        <x-headerSection :breadcrumbMenu="['Add Bank Account']" />
 
         {{-- content --}}
         @component('components.contentSection')
             @slot('contentOfContentSection')
-                <form action="{{ route('dashboard.user.my-wallet.store') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('dashboard.user.my-wallet.add-bank-account.post') }}" method="POST">
                     @csrf
                     @method('POST')
 

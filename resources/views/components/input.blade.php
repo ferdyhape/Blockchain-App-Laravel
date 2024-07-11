@@ -22,7 +22,7 @@
                     'id' => $id ?? $name,
                     'name' => $name,
                     'rows' => 3,
-                    'required' => $required,
+                    // 'required' => $required,
                     'placeholder' => $placeholder ?? '',
                 ]) }}>{{ $value ?? '' }}</textarea>
             @error($name)
@@ -31,15 +31,6 @@
                 </div>
             @enderror
 
-            {{-- <script>
-                ClassicEditor
-                    .create(document.querySelector('#{{ $id ?? $name }}'), {
-                        removePlugins: ['Resize']
-                    })
-                    .catch(error => {
-                        console.error(error);
-                    });
-            </script> --}}
             @if ($usingScript)
                 <script>
                     ClassicEditor

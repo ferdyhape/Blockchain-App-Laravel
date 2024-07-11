@@ -39,6 +39,7 @@ return new class extends Migration
 
             $table->integer('income_statement_upload_every'); // upload laporan keuangan setiap (bulan)
             $table->longText('description_of_profit_sharing'); // deskripsi bagi hasil
+            $table->double('profit_sharing_percentage'); // persentase bagi hasil
 
             $table->timestamps();
         });

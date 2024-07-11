@@ -12,7 +12,7 @@ class UpdatePaymentMethodRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|unique:payment_method_details,name,' . $this->route('payment_method'),
+            'name' => 'required',
             'editDescription' => 'required',
             'payment_method_category_id' => 'required|exists:payment_methods,id',
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
@@ -22,8 +22,7 @@ class UpdatePaymentMethodRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'name.required' => 'Nama metode pembayaran wajib diisi',
-            'name.unique' => 'Nama metode pembayaran sudah ada',
+            'name.required' => 'Nama Bank wajib diisi',
             'editDescription.required' => 'Deskripsi metode pembayaran wajib diisi',
             'payment_method_category_id.required' => 'Kategori metode pembayaran wajib diisi',
             'payment_method_category_id.exists' => 'Kategori metode pembayaran tidak ditemukan',

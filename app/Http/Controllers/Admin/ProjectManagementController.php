@@ -2,15 +2,17 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Carbon\Carbon;
+use App\Models\Project;
 use Illuminate\Http\Request;
 use App\Services\ProjectService;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Admin\AcceptContractRequest;
-use App\Http\Requests\Admin\AddRevisionProjectRequest;
-use App\Http\Requests\Admin\ApproveComitteeRequest;
-use App\Http\Requests\Admin\RejectComitteeRequest;
 use App\Http\Requests\Admin\RejectProjectRequest;
+use App\Http\Requests\Admin\AcceptContractRequest;
+use App\Http\Requests\Admin\RejectComitteeRequest;
+use App\Http\Requests\Admin\ApproveComitteeRequest;
+use App\Http\Requests\Admin\AddRevisionProjectRequest;
 use App\Services\CategoryProjectSubmissionStatusService;
 
 class ProjectManagementController extends Controller
@@ -119,6 +121,9 @@ class ProjectManagementController extends Controller
      */
     public function index()
     {
+        // this action soon will be convert to cronjob
+        $check = ProjectService::checkCampaignDateClosedOrOnGoing();
+
         if (request()->ajax()) {
             return ProjectService::ajaxDatatableByAdmin();
         }

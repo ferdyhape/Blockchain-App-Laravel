@@ -8,8 +8,6 @@ use App\Services\CampaignService;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Services\TransactionService;
-use App\Services\CampaignTokenService;
-use App\Services\PaymentMethodService;
 use App\Http\Requests\Admin\UploadPaymentProofRequest;
 
 class TransactionController extends Controller
@@ -38,30 +36,29 @@ class TransactionController extends Controller
     public function show(string $code)
     {
         $transaction = TransactionService::getTransactionByCode($code);
-        $paymentMethodDetail = PaymentMethodService::getPaymentMethodDetailById($transaction->payment_method_detail_id);
-        $price = TransactionService::getPriceFromTransactionDetailByTransactionCode($code);
-        $count = TransactionService::getCountTransactionDetailByTransactionCode($code);
-        return view('auth.user.transaction.show', compact('transaction', 'paymentMethodDetail', 'price', 'count'));
+        $price = CampaignService::getTokenPriceByCampaignId($transaction->campaign_id);
+        $count = $transaction->quantity;
+        return view('auth.user.transaction.show', compact('transaction', 'price', 'count'));
     }
 
-    public function changeStatus(Request $request, string $code)
-    {
-        $request->validate([
-            'status' => 'required|in:success,failed'
-        ]);
+    // public function changeStatus(Request $request, string $code)
+    // {
+    //     $request->validate([
+    //         'status' => 'required|in:success,failed'
+    //     ]);
 
-        try {
-            DB::beginTransaction();
-            $transaction = TransactionService::getTransactionByCode($code);
-            if ($transaction->payment_status == 'paidByCampaignBalance') {
-                CampaignService::reduceWalletBalanceCampaign($code);
-            }
-            TransactionService::changeTransactionStatus($code, $request->status, $request->status == 'success' ? 'paid' : 'failed');
-            DB::commit();
-            return redirect()->back()->with('success', 'Transaction status has been changed');
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return redirect()->back()->with('error', 'Something went wrong');
-        }
-    }
+    //     try {
+    //         DB::beginTransaction();
+    //         $transaction = TransactionService::getTransactionByCode($code);
+    //         if ($transaction->payment_status == 'paidByCampaignBalance') {
+    //             CampaignService::reduceWalletBalanceCampaign($code);
+    //         }
+    //         TransactionService::changeTransactionStatus($code, $request->status, $request->status == 'success' ? 'paid' : 'failed');
+    //         DB::commit();
+    //         return redirect()->back()->with('success', 'Transaction status has been changed');
+    //     } catch (\Exception $e) {
+    //         DB::rollBack();
+    //         return redirect()->back()->with('error', 'Something went wrong');
+    //     }
+    // }
 }

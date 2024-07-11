@@ -50,9 +50,10 @@ class SubCategoryProjectSubmission extends Model
                 // sub status dari 'Proses Penggalangan Dana',
             case 'on_fundraising':
                 return 'Proposal project Anda sedang dalam tahap penggalangan dana';
-            case 'fundraised':
-                return 'Dana project Anda sudah terkumpul';
-                // sub status dari 'Dibatalkan',
+            case 'on_going':
+                return 'Projek Sedang Berjalan';
+            case 'closed':
+                return 'Projek Selesai';
             case 'cancelled':
                 return 'Proposal project Anda dibatalkan';
                 // default

@@ -4,7 +4,7 @@ namespace App\Http\Requests\User;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreWalletRequest extends FormRequest
+class TopupWalletRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,9 +22,8 @@ class StoreWalletRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'bank_name' => 'required|string',
-            'account_number' => 'required|numeric',
-            'account_name' => 'required|string',
+            'amount' => 'required|numeric|min:100000',
+            'payment_method_detail_id' => 'required|exists:payment_method_details,id',
         ];
     }
 
@@ -32,11 +31,11 @@ class StoreWalletRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'bank_name.required' => 'Nama Bank wajib dipilih',
-            'account_number.required' => 'Nomor Rekening wajib diisi',
-            'account_number.numeric' => 'Nomor Rekening harus berupa angka',
-            'account_name.required' => 'Nama Pemilik Rekening wajib diisi',
-            'account_name.string' => 'Nama Pemilik Rekening harus berupa huruf',
+            'amount.required' => 'Kolom jumlah harus diisi',
+            'amount.numeric' => 'Kolom jumlah harus berupa angka',
+            'payment_method_detail_id.required' => 'Pilih metode pembayaran terlebih dahulu',
+            'payment_method_detail_id.exists' => 'Metode pembayaran tidak ditemukan',
+            'amount.min' => 'Minimal top up Rp 100.000',
         ];
     }
 }

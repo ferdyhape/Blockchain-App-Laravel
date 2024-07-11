@@ -14,6 +14,7 @@ use App\Http\Controllers\User\TransactionController as UserTransactionController
 use App\Http\Controllers\Admin\TransactionController as AdminTransactionController;
 use App\Http\Controllers\User\TokenController as UserTokenController;
 use App\Http\Controllers\User\WalletController as UserWalletController;
+use App\Http\Controllers\Admin\WalletTransactionUserController as AdminWalletTransactionUser;
 
 /*
 |--------------------------------------------------------------------------
@@ -49,9 +50,13 @@ Route::middleware('auth')->group(function () {
         Route::prefix('admin')->name('admin.')->middleware('role:Admin')->group(function () {
             Route::get('/', [AdminDashboardController::class, 'index'])->name('index');
             Route::get('test-post', [AdminDashboardController::class, 'testPost'])->name('test-post');
-            Route::resource('user-management', UserManagementController::class)->names('user-management');
             Route::resource('payment-method', PaymentMethodController::class)->names('payment-method');
-
+            Route::prefix('user-management')->name('user-management.')->group(function () {
+                Route::post('verify-email', [UserManagementController::class, 'verifyEmail'])->name('verify-email');
+                Route::post('reject-email', [UserManagementController::class, 'rejectEmail'])->name('reject-email');
+                Route::resource('/', UserManagementController::class)->parameter('', 'user_management');
+            });
+            // Route::resource('user-management', UserManagementController::class)->names('user-management');
 
             // prefix project-management on admin
             Route::prefix('project-management')->name('project-management.')->group(function () {
@@ -71,6 +76,13 @@ Route::middleware('auth')->group(function () {
                 Route::post('{code}/upload-proof', [AdminTransactionController::class, 'uploadProof'])->name('upload-proof');
                 Route::put('{code}/change-status', [AdminTransactionController::class, 'changeStatus'])->name('change-status');
             });
+
+            Route::prefix('wallet-transaction')->name('wallet-transaction.')->group(function () {
+                Route::resource('/', AdminWalletTransactionUser::class)->parameter('', 'wallet_transaction');
+                Route::post('accept', [AdminWalletTransactionUser::class, 'accept'])->name('accept');
+                Route::post('reject', [AdminWalletTransactionUser::class, 'reject'])->name('reject');
+                Route::patch('{id}/upload-proof', [AdminWalletTransactionUser::class, 'uploadProof'])->name('upload-proof');
+            });
         });
 
         Route::name('user.')->middleware(['role:Platinum Member|Admin'])->group(function () {
@@ -86,9 +98,16 @@ Route::middleware('auth')->group(function () {
                 Route::get('{projectId}/check-transaction', [UserProjectManagementController::class, 'checkTransaction'])->name('check-transaction');
                 Route::get('{transactionCode}/show', [UserProjectManagementController::class, 'showTransaction'])->name('show-transaction');
                 Route::post('{transactionCode}/pay-for-sale-token', [UserProjectManagementController::class, 'payForSaleToken'])->name('pay-for-sale-token');
+                Route::get('{id}/add-bank-account', [UserProjectManagementController::class, 'addBankAccount'])->name('add-bank-account');
+                Route::post('{id}/add-bank-account', [UserProjectManagementController::class, 'postBankAccount'])->name('add-bank-account.post');
+                Route::post('{id}/withdraw-campaign', [UserProjectManagementController::class, 'withdrawCampaign'])->name('withdraw-campaign');
+                // route for get and post profit sharing payment
+                Route::get('{id}/profit-sharing-payment', [UserProjectManagementController::class, 'profitSharingPayment'])->name('profit-sharing-payment');
+                Route::post('{id}/profit-sharing-payment', [UserProjectManagementController::class, 'postProfitSharingPayment'])->name('profit-sharing-payment.post');
+                // upload proof of payment for profit sharing
+                Route::post('{transactionId}/profit-sharing-payment/upload-proof', [UserProjectManagementController::class, 'uploadProofProfitSharing'])->name('profit-sharing-payment.upload-proof');
             });
 
-            // Route::get('available-projects', [UserAvailableProjectController::class, 'index'])->name('available-projects');
             Route::prefix('available-project')->name('available-project.')->group(function () {
                 Route::resource('/', UserAvailableProjectController::class)->parameter('', 'available_projects');
                 Route::get('buy/{id}/', [UserAvailableProjectController::class, 'buyProject'])->name('buy');
@@ -111,7 +130,13 @@ Route::middleware('auth')->group(function () {
 
 
             Route::prefix('my-walllet')->name('my-wallet.')->group(function () {
+                Route::get('withdraw', [UserWalletController::class, 'withdraw'])->name('withdraw');
+                Route::get('add-bank-account', [UserWalletController::class, 'addBankAccount'])->name('add-bank-account');
+                Route::post('add-bank-account', [UserWalletController::class, 'postBankAccount'])->name('add-bank-account.post');
+                Route::post('withdraw', [UserWalletController::class, 'postWithdraw'])->name('withdraw.post');
                 Route::resource('/', UserWalletController::class)->parameter('', 'my_wallet');
+                Route::post('topup', [UserWalletController::class, 'store'])->name('topup');
+                Route::patch('{id}/upload-proof', [UserWalletController::class, 'uploadProof'])->name('upload-proof');
             });
         });
     });

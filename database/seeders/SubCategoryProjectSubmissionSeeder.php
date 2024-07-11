@@ -36,7 +36,12 @@ class SubCategoryProjectSubmissionSeeder extends Seeder
             ],
             'Proses Penggalangan Dana' => [
                 'on_fundraising',
-                'fundraised'
+            ],
+            'Proses Penjalanan Projek' => [
+                'on_going',
+            ],
+            'Selesai' => [
+                'closed'
             ],
             'Ditolak' => [
                 'rejected'

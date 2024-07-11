@@ -1,6 +1,6 @@
-<x-containerTemplate pageTitle="Show Transaction">
+<x-containerTemplate pageTitle="Show Campaign Transaction">
     @slot('contentOfContainer')
-        <x-headerSection :breadcrumbMenu="['Transaction', 'Show Transaction']" />
+        <x-headerSection :breadcrumbMenu="['Campaign Transaction', 'Show Campaign Transaction']" />
 
         <x-contentSection>
             @slot('contentOfContentSection')
@@ -42,14 +42,14 @@
                                             {{ $transaction->status }}
                                         </td>
                                     </tr>
-                                    <tr>
+                                    {{-- <tr>
                                         <td class="text-start text-secondary">
                                             Status Pembayaran
                                         </td>
                                         <td class="text-end fw-semibold text-uppercase">
                                             {{ $transaction->payment_status }}
                                         </td>
-                                    </tr>
+                                    </tr> --}}
                                     <tr>
                                         <td class="text-start text-secondary">
                                             Harga Per Token
@@ -68,15 +68,7 @@
                                     </tr>
                                     <tr>
                                         <td class="text-start text-secondary">
-                                            Metode Pembayaran
-                                        </td>
-                                        <td class="text-end fw-semibold">
-                                            {{ $paymentMethodDetail->name }}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="text-start text-secondary">
-                                            Total yang harus dibayar
+                                            Total Harga
                                         </td>
                                         <td class="text-end fw-semibold currency">
                                             {{ $transaction->total_price }}

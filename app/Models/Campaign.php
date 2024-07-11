@@ -55,4 +55,9 @@ class Campaign extends Model
     {
         return $this->hasMany(CampaignToken::class);
     }
+
+    public function walletTransactions()
+    {
+        return $this->morphMany(WalletTransactionUser::class, 'walletable');
+    }
 }

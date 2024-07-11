@@ -10,16 +10,37 @@ use App\Models\Campaign;
 class CampaignService
 {
 
+    public static function clearCampaignWalletBalance(Campaign $campaign)
+    {
+        $campaign->wallet->balance = 0;
+        $campaign->wallet->save();
+    }
+
+    public static function updateCampaignStatus(Campaign $campaign, $status)
+    {
+        $campaign->status = $status;
+        $campaign->save();
+    }
+    public static function getTokenPriceByCampaignId(string $campaignId)
+    {
+        $campaign = Campaign::findOrFail($campaignId);
+        return $campaign->price_per_unit;
+    }
+
     public static function getCampaigns()
     {
         return Campaign::where('status', 'on_fundraising')->latest()->get();
     }
     // reduce wallet balance
-    public static function reduceWalletBalanceCampaign(string $transactionCode)
+    public static function updateWalletBalanceCampaign($campaignId, $totalPrice, $type)
     {
-        $transaction = TransactionService::getTransactionByCode($transactionCode);
-        $campaign = CampaignService::getCampaignById($transaction->campaign_id);
-        $campaign->wallet->balance -= $transaction->total_price;
+        // type reduce or increase
+        $campaign = CampaignService::getCampaignById($campaignId);
+        if ($type == 'increase') {
+            $campaign->wallet->balance += $totalPrice;
+        } else {
+            $campaign->wallet->balance -= $totalPrice;
+        }
         $campaign->wallet->save();
     }
 
@@ -39,7 +60,7 @@ class CampaignService
 
     public static function getCampaignById(string $id)
     {
-        return Campaign::findOrFail($id);
+        return Campaign::findOrFail($id)->load('project');
     }
 
     public static function getCampaignByIds(array $ids)

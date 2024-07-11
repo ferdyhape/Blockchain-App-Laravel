@@ -41,12 +41,13 @@ class PaymentMethodController extends Controller
         $validated = $request->validated();
 
         try {
+            $validated['bank_name'] = $validated['name'];
             DB::beginTransaction();
             PaymentMethodService::storePaymentMethodDetail($validated);
             DB::commit();
-            return JsonService::response(['message' => 'Data created successfully']);
+            return JsonService::response(['message' => 'Data berhasil disimpan']);
         } catch (\Exception $e) {
-            return JsonService::response(['message' => 'Data not found'], 404);
+            return JsonService::response(['message' => 'Data Tidak Ditemukan'], 404);
         }
     }
 
@@ -67,7 +68,7 @@ class PaymentMethodController extends Controller
             $data = PaymentMethodService::getPaymentMethodById($id);
             return JsonService::editData($data);
         } catch (\Exception $e) {
-            return JsonService::response(['message' => 'Data not found'], 404);
+            return JsonService::response(['message' => 'Data Tidak Ditemukan'], 404);
         }
     }
 
@@ -81,9 +82,9 @@ class PaymentMethodController extends Controller
         try {
             $paymentMethodDetail = PaymentMethodService::updatePaymentMethodDetail($id, $validated);
             $paymentMethodDetail->update($validated);
-            return JsonService::response(['message' => 'Data updated successfully']);
+            return JsonService::response(['message' => 'Data berhasil diupdate']);
         } catch (\Exception $e) {
-            return JsonService::response(['message' => 'Data not found'], 404);
+            return JsonService::response(['message' => 'Data Tidak Ditemukan'], 404);
         }
     }
 
@@ -98,7 +99,7 @@ class PaymentMethodController extends Controller
             $data->delete();
             return JsonService::response(['message' => 'Data deleted successfully']);
         } catch (\Exception $e) {
-            return JsonService::response(['message' => 'Data not found'], 404);
+            return JsonService::response(['message' => 'Data Tidak Ditemukan'], 404);
         }
     }
 }

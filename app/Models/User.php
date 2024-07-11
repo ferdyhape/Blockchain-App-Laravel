@@ -56,4 +56,9 @@ class User extends Authenticatable implements HasMedia
     {
         return $this->hasMany(CampaignToken::class, 'sold_to', 'id');
     }
+
+    public function walletTransactions()
+    {
+        return $this->morphMany(WalletTransactionUser::class, 'walletable');
+    }
 }

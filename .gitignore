@@ -17,3 +17,9 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
+log_script/laravel_serve.log
+log_script/laravel_queue_work.log
+log_script/laravel_queue_work.log
+log_script/laravel_serve.log
+log_script/laravel_queue_work.log
+log_script/laravel_serve.log

@@ -24,10 +24,25 @@ class TokenController extends Controller
 
     public function index()
     {
-        $campaigns = CampaignTokenService::getSoldTokenGroupByCampaign();
-        // dd($campaigns);
+        // Mendapatkan token yang terjual dan mengelompokkan berdasarkan campaign_id
+        $grouppedByCampaign = CampaignTokenService::getSoldTokenGroupByCampaign();
+
+        if (count($grouppedByCampaign) == 0) {
+            return view('auth.user.token.index', [
+                'campaigns' => []
+            ]);
+        }
+
+        $campaigns = CampaignService::getCampaignByIds($grouppedByCampaign->keys()->toArray());
+        $campaigns = $campaigns->map(function ($campaign) use ($grouppedByCampaign) {
+            $campaign->tokens = $grouppedByCampaign[$campaign->id];
+            return $campaign;
+        });
+
         return view('auth.user.token.index', compact('campaigns'));
     }
+
+
 
 
     public function show($id)

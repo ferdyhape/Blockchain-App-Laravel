@@ -3,6 +3,7 @@
         <div class="card-body">
             <div class="card-content mt-4">
                 <h5 class="card-title fw-semibold fs-5 mb-4">Actions</h5>
+
                 @if ($project->isOnReview())
                     <div class="d-flex flex-column justify-content-center gap-2">
                         <div class="col-12">
@@ -63,7 +64,9 @@
                         </div>
                     </div>
                 @else
-                    <h1>Masuk Else</h1>
+                    {{-- <h1>Masuk Else</h1> --}}
+                    {{-- add no action needed --}}
+                    <div class="btn btn-sm btn-success w-100">No Action Needed</div>
                 @endif
 
             </div>

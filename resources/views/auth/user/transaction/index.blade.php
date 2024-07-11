@@ -29,9 +29,9 @@
                                         {{ $transaction->order_type }}
                                     </div>
                                     <div class="text-secondary">
-                                        {{-- sample created at : 1718716825 --}}
-                                        {{-- convert created at to date time --}}
-                                        {{ date('d M Y', $transaction->created_at) }}
+                                        {{ diffForHumansFromString(date('Y-m-d H:i:s', strtotime($transaction->created_at))) }}
+                                        {{-- create manual diffForHumans --}}
+
                                     </div>
                                 </div>
                                 <div class="card-body">
@@ -79,7 +79,7 @@
                                         </tr>
                                         <tr>
                                             <td class="text-start text-secondary">
-                                                Total yang harus dibayar
+                                                Total Harga
                                             </td>
                                             <td class="text-end currency">
                                                 {{ $transaction->total_price }}

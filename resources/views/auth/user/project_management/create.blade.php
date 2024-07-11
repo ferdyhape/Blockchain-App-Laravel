@@ -90,6 +90,11 @@
                     <x-input label="Deskripsi Bagi Hasil" name="description_of_profit_sharing" id="description_of_profit_sharing"
                         type="textarea" placeholder="Deskripsi Bagi Hasil" />
 
+
+                    {{-- input for profit_sharing_percentage  --}}
+                    <x-input type="number" label="Persentase Bagi Hasil" name="profit_sharing_percentage" required="true"
+                        id="profit_sharing_percentage" placeholder="Persentase Bagi Hasil (Dalam Persen)" />
+
                     <x-input type="file" label="Katalog Produk" name="product_catalog[]" required="true" id="product_catalog"
                         placeholder="Katalog Produk" multiple />
 
