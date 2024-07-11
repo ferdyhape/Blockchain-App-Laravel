@@ -23,7 +23,7 @@ class ApproveComitteeRequest extends FormRequest
     {
         return [
             'approved_amount' => 'required|numeric',
-            'offered_token_amount' => 'required|numeric',
+            // 'offered_token_amount' => 'required|numeric',
             // 'price_per_unit' => 'required|numeric',
             'minimum_purchase' => 'required|numeric',
             'maximum_purchase' => 'required|numeric'

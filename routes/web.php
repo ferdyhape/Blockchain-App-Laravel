@@ -50,9 +50,13 @@ Route::middleware('auth')->group(function () {
         Route::prefix('admin')->name('admin.')->middleware('role:Admin')->group(function () {
             Route::get('/', [AdminDashboardController::class, 'index'])->name('index');
             Route::get('test-post', [AdminDashboardController::class, 'testPost'])->name('test-post');
-            Route::resource('user-management', UserManagementController::class)->names('user-management');
             Route::resource('payment-method', PaymentMethodController::class)->names('payment-method');
-
+            Route::prefix('user-management')->name('user-management.')->group(function () {
+                Route::post('verify-email', [UserManagementController::class, 'verifyEmail'])->name('verify-email');
+                Route::post('reject-email', [UserManagementController::class, 'rejectEmail'])->name('reject-email');
+                Route::resource('/', UserManagementController::class)->parameter('', 'user_management');
+            });
+            // Route::resource('user-management', UserManagementController::class)->names('user-management');
 
             // prefix project-management on admin
             Route::prefix('project-management')->name('project-management.')->group(function () {
@@ -75,8 +79,9 @@ Route::middleware('auth')->group(function () {
 
             Route::prefix('wallet-transaction')->name('wallet-transaction.')->group(function () {
                 Route::resource('/', AdminWalletTransactionUser::class)->parameter('', 'wallet_transaction');
-                Route::post('accept', [AdminWalletTransactionUser::class, 'acceptTopup'])->name('accept');
-                Route::post('reject', [AdminWalletTransactionUser::class, 'rejectTopup'])->name('reject');
+                Route::post('accept', [AdminWalletTransactionUser::class, 'accept'])->name('accept');
+                Route::post('reject', [AdminWalletTransactionUser::class, 'reject'])->name('reject');
+                Route::patch('{id}/upload-proof', [AdminWalletTransactionUser::class, 'uploadProof'])->name('upload-proof');
             });
         });
 
@@ -95,6 +100,12 @@ Route::middleware('auth')->group(function () {
                 Route::post('{transactionCode}/pay-for-sale-token', [UserProjectManagementController::class, 'payForSaleToken'])->name('pay-for-sale-token');
                 Route::get('{id}/add-bank-account', [UserProjectManagementController::class, 'addBankAccount'])->name('add-bank-account');
                 Route::post('{id}/add-bank-account', [UserProjectManagementController::class, 'postBankAccount'])->name('add-bank-account.post');
+                Route::post('{id}/withdraw-campaign', [UserProjectManagementController::class, 'withdrawCampaign'])->name('withdraw-campaign');
+                // route for get and post profit sharing payment
+                Route::get('{id}/profit-sharing-payment', [UserProjectManagementController::class, 'profitSharingPayment'])->name('profit-sharing-payment');
+                Route::post('{id}/profit-sharing-payment', [UserProjectManagementController::class, 'postProfitSharingPayment'])->name('profit-sharing-payment.post');
+                // upload proof of payment for profit sharing
+                Route::post('{transactionId}/profit-sharing-payment/upload-proof', [UserProjectManagementController::class, 'uploadProofProfitSharing'])->name('profit-sharing-payment.upload-proof');
             });
 
             Route::prefix('available-project')->name('available-project.')->group(function () {
@@ -119,6 +130,10 @@ Route::middleware('auth')->group(function () {
 
 
             Route::prefix('my-walllet')->name('my-wallet.')->group(function () {
+                Route::get('withdraw', [UserWalletController::class, 'withdraw'])->name('withdraw');
+                Route::get('add-bank-account', [UserWalletController::class, 'addBankAccount'])->name('add-bank-account');
+                Route::post('add-bank-account', [UserWalletController::class, 'postBankAccount'])->name('add-bank-account.post');
+                Route::post('withdraw', [UserWalletController::class, 'postWithdraw'])->name('withdraw.post');
                 Route::resource('/', UserWalletController::class)->parameter('', 'my_wallet');
                 Route::post('topup', [UserWalletController::class, 'store'])->name('topup');
                 Route::patch('{id}/upload-proof', [UserWalletController::class, 'uploadProof'])->name('upload-proof');

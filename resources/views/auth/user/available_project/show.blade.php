@@ -13,17 +13,34 @@
                                 <h5 class="fw-semibold">Project Description </h5>
                                 <p class="text-muted">{!! $project->description !!}</p>
                             </div>
+                            <hr>
+                            <div class="projected-revenue-per-month">
+                                <h5 class="fw-semibold">Proyeksi Pendapatan per Bulan</h5>
+                                <p class="text-muted">{!! $project->projected_revenue_per_month !!}</p>
+                            </div>
+                            <hr>
+                            <div class="projected-monthly-expenses">
+                                <h5 class="fw-semibold">Proyeksi Pengeluaran per Bulan</h5>
+                                <p class="text-muted">{!! $project->projected_monthly_expenses !!}</p>
+                            </div>
+                            <hr>
                             <div class="profit-sharing">
                                 <h5 class="fw-semibold">Profit Sharing</h5>
                                 <p class="text-muted">{!! $project->description_of_profit_sharing !!}</p>
                             </div>
+                            <hr>
                             <div class="income-statement-upload-every d-flex">
                                 <h5>Income Statement Upload Every: <span
                                         class="text-success fw-bold">{{ $project->income_statement_upload_every }}
                                         Bulan</span>
                                 </h5>
                             </div>
-                            <div class="supporting-documents">
+                            <div class="profit-sharing-percentage d-flex">
+                                <h5>Profit Sharing Percentage: <span
+                                        class="text-success fw-bold">{{ $project->profit_sharing_percentage }}%</span>
+                                </h5>
+                            </div>
+                            {{-- <div class="supporting-documents">
                                 <h5 class="fw-semibold">Supporting Documents</h5>
                                 <div class="row">
                                     @foreach ($project->getMedia('project_supporting_documents') as $media)
@@ -34,7 +51,7 @@
                                         </div>
                                     @endforeach
                                 </div>
-                            </div>
+                            </div> --}}
 
                             {{-- make for product catalog --}}
                             <div class="product-catalog">

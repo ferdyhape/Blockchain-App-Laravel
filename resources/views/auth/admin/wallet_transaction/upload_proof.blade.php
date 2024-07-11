@@ -2,7 +2,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="editModalLabel">Upload Bukti Pembayaran</h5>
+                <h5 class="modal-title" id="editModalLabel">Upload Proof</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
@@ -17,7 +17,7 @@
                     </div>
 
                     <button type="button" class="btn btn-primary"
-                        onclick="handleEditFormSubmitUseFile('{{ route('dashboard.user.my-wallet.upload-proof', 'defaultId') }}')">Save
+                        onclick="handleEditFormSubmitUseFile('{{ route('dashboard.admin.wallet-transaction.upload-proof', 'defaultId') }}')">Save
                         changes</button>
                 </form>
             </div>

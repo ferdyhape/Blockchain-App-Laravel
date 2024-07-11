@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('campaigns', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->foreignUuid('project_id')
-                ->constrained('projects');
+                ->constrained('projects')->onDelete('cascade');
             $table->string('campaign_code')->unique();
             $table->decimal('approved_amount', 20, 2); // nominal disetujui
             $table->decimal('offered_token_amount', 20, 0); // jumlah token yang ditawarkan

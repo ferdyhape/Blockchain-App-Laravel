@@ -43,8 +43,7 @@ columnsDatatable = [
                     documents +=
                         '<a href="' +
                         document.original_url +
-                        '" target="_blank">' +
-                        document.name +
+                        '" target="_blank"> Lihat Dokumen ' +
                         "</a><br>";
                 });
             }

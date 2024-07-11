@@ -2,6 +2,9 @@
     @slot('contentOfContainer')
         <x-headerSection :breadcrumbMenu="['Project', 'Show Project']" />
 
+        @php
+            $pricePerUnit = getPriceToken();
+        @endphp
 
         <x-contentSection>
             @slot('contentOfContentSection')
@@ -18,6 +21,7 @@
                     <x-pillTabContent active="true" id="pills-info-tab">
 
                         <div class="d-flex flex-column flex-lg-row gap-4">
+
                             {{-- card left project info --}}
                             <div class="card col-12 col-md-12 col-lg-8 border-0 shadow-sm p-4 my-3">
                                 <div class="row gy-4">
@@ -25,14 +29,31 @@
                                         <h5 class="fw-semibold">Project Description </h5>
                                         <p class="text-muted">{!! $project->description !!}</p>
                                     </div>
+                                    <hr>
+                                    <div class="projected-revenue-per-month">
+                                        <h5 class="fw-semibold">Proyeksi Pendapatan per Bulan</h5>
+                                        <p class="text-muted">{!! $project->projected_revenue_per_month !!}</p>
+                                    </div>
+                                    <hr>
+                                    <div class="projected-monthly-expenses">
+                                        <h5 class="fw-semibold">Proyeksi Pengeluaran per Bulan</h5>
+                                        <p class="text-muted">{!! $project->projected_monthly_expenses !!}</p>
+                                    </div>
+                                    <hr>
                                     <div class="profit-sharing">
                                         <h5 class="fw-semibold">Profit Sharing</h5>
                                         <p class="text-muted">{!! $project->description_of_profit_sharing !!}</p>
                                     </div>
+                                    <hr>
                                     <div class="income-statement-upload-every d-flex">
                                         <h5>Income Statement Upload Every: <span
                                                 class="text-success fw-bold">{{ $project->income_statement_upload_every }}
                                                 Bulan</span>
+                                        </h5>
+                                    </div>
+                                    <div class="profit-sharing-percentage d-flex">
+                                        <h5>Profit Sharing Percentage: <span
+                                                class="text-success fw-bold">{{ $project->profit_sharing_percentage }}%</span>
                                         </h5>
                                     </div>
                                     <div class="supporting-documents">
@@ -184,9 +205,9 @@
                 <x-input label="Nominal Disetujui" name="approved_amount" id="approved_amount" type="number"
                     placeholder="Isi Nominal Disetujui" />
                 <x-input label="Jumlah Token yang Ditawarkan" name="offered_token_amount" id="offered_token_amount"
-                    type="number" placeholder="Isi Jumlah Token yang Ditawarkan" />
-                <x-input label="Harga Per Unit" name="price_per_unit" id="price_per_unit" type="number"
-                    placeholder="Harga Per Unit" disabled />
+                    type="number" placeholder="Isi Jumlah Token yang Ditawarkan" disabled />
+                <x-input label="Harga Per Unit" name="price_per_unit" id="price_per_unit" type="text"
+                    placeholder="Harga Per Unit" disabled value="{{ toRp($pricePerUnit) }}" />
                 <x-input label="Pembelian Minimum" name="minimum_purchase" id="minimum_purchase" type="number"
                     placeholder="Isi Pembelian Minimum" />
                 <x-input label="Pembelian Maksimum" name="maximum_purchase" id="maximum_purchase" type="number"
@@ -300,17 +321,16 @@
         @push('custom-scripts')
             <script>
                 $(document).ready(function() {
-                    $('#approved_amount, #offered_token_amount').on('input', function() {
+                    $('#approved_amount').on('input', function() {
                         let approvedAmount = parseFloat($('#approved_amount').val());
-                        let offeredTokenAmount = parseFloat($('#offered_token_amount').val());
-                        let pricePerUnit = '';
+                        let pricePerUnit = '{{ $pricePerUnit }}';
 
-                        if (!isNaN(approvedAmount) && !isNaN(offeredTokenAmount) && approvedAmount > 0 &&
-                            offeredTokenAmount > 0) {
-                            pricePerUnit = (approvedAmount / offeredTokenAmount).toFixed(2);
+                        if (!isNaN(approvedAmount) && approvedAmount > 0) {
+                            let offeredTokenAmount = approvedAmount / pricePerUnit;
+                            $('#offered_token_amount').val(offeredTokenAmount);
+                        } else {
+                            $('#offered_token_amount').val('');
                         }
-
-                        $('#price_per_unit').val(pricePerUnit);
                     });
                 });
             </script>

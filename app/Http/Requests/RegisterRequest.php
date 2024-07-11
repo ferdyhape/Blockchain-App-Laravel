@@ -35,4 +35,29 @@ class RegisterRequest extends FormRequest
             'password' => 'required|confirmed',
         ];
     }
+
+    // add validation message using bahasa indonesia
+    public function messages(): array
+    {
+        return [
+            'name.required' => 'Nama harus diisi',
+            'email.required' => 'Email harus diisi',
+            'email.email' => 'Email tidak valid',
+            'email.unique' => 'Email sudah terdaftar',
+            'phone.required' => 'Nomor telepon harus diisi',
+            'phone.unique' => 'Nomor telepon sudah terdaftar',
+            'date_of_birth.required' => 'Tanggal lahir harus diisi',
+            'date_of_birth.date' => 'Tanggal lahir tidak valid',
+            'place_of_birth.required' => 'Tempat lahir harus diisi',
+            'province_id.required' => 'Provinsi harus diisi',
+            'city_id.required' => 'Kota harus diisi',
+            'subdistrict_id.required' => 'Kecamatan harus diisi',
+            'address_detail.required' => 'Alamat harus diisi',
+            'number_id.required' => 'Nomor identitas harus diisi',
+            'number_id.max' => 'Nomor identitas tidak valid',
+            'number_id.unique' => 'Nomor identitas sudah terdaftar',
+            'password.required' => 'Password harus diisi',
+            'password.confirmed' => 'Konfirmasi password tidak sesuai',
+        ];
+    }
 }

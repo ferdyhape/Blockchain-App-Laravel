@@ -8,144 +8,39 @@
         <div class="card-body">
             <form action="{{ route('register.process') }}" method="post" enctype="multipart/form-data">
                 @csrf
-                <div class="form-group mb-3">
-                    <label for="name">Name</label>
-                    <input type="text" class="form-control" id="name" name="name" placeholder="Name">
-                    @error('name')
-                        <div class="alert alert-danger mt-2">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </div>
-                <div class="form-group mb-3">
-                    <label for="email">Email</label>
-                    <input type="text" class="form-control" id="email" name="email" placeholder="Email">
-                    @error('email')
-                        <div class="alert alert-danger mt-2">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </div>
-                <div class="form-group mb-3">
-                    <label for="phone">Phone</label>
-                    <input type="text" class="form-control" id="phone" name="phone" placeholder="Phone">
-                    @error('phone')
-                        <div class="alert alert-danger mt-2">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </div>
-                <div class="form-group mb-3">
-                    <label for="date_of_birth">Date of Birth</label>
-                    <input type="date" class="form-control" id="date_of_birth" name="date_of_birth"
-                        placeholder="Date of Birth">
-                    @error('date_of_birth')
-                        <div class="alert alert-danger mt-2">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </div>
-                <div class="form-group mb-3">
-                    <label for="place_of_birth">Place of Birth</label>
-                    <input type="text" class="form-control" id="place_of_birth" name="place_of_birth"
-                        placeholder="Place of Birth">
-                    @error('place_of_birth')
-                        <div class="alert alert-danger mt-2">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </div>
 
-                <div class="form-group mb-3">
-                    <label for="province_id">Province</label>
-                    <input type="text" class="form-control" id="province_id" name="province_id" placeholder="Province">
-                    @error('province_id')
-                        <div class="alert alert-danger mt-2">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </div>
+                <x-input type="text" label="Nama" name="name" required="true" id="name" placeholder="Nama" />
+                <x-input type="email" label="Email" name="email" required="true" id="email" placeholder="Email" />
+                <x-input type="text" label="Telepon" name="phone" required="true" id="phone"
+                    placeholder="Telepon" />
+                <x-input type="date" label="Tanggal Lahir" name="date_of_birth" required="true" id="date_of_birth"
+                    placeholder="Tanggal Lahir" />
+                <x-input type="text" label="Tempat Lahir" name="place_of_birth" required="true" id="place_of_birth"
+                    placeholder="Tempat Lahir" />
+                <x-input type="text" label="Provinsi" name="province_id" required="true" id="province_id"
+                    placeholder="Provinsi" />
+                <x-input type="text" label="Kota" name="city_id" required="true" id="city_id" placeholder="Kota" />
+                <x-input type="text" label="Kecamatan" name="subdistrict_id" required="true" id="subdistrict_id"
+                    placeholder="Kecamatan" />
+                <x-input type="text" label="Detail Alamat" name="address_detail" required="true" id="address_detail"
+                    placeholder="Detail Alamat" />
+                <x-input type="text" label="Nomor Identitas" name="number_id" required="true" id="number_id"
+                    placeholder="Nomor Identitas" />
+                <x-input type="password" label="Kata Sandi" name="password" required="true" id="password"
+                    placeholder="Kata Sandi" />
+                <x-input type="password" label="Konfirmasi Kata Sandi" name="password_confirmation" required="true"
+                    id="password_confirmation" placeholder="Konfirmasi Kata Sandi" />
+                <x-input type="file" label="Dokumen Pendukung (Foto KTP)" name="supporting_documents[]" required="true"
+                    id="supporting_documents" placeholder="Dokumen Pendukung" multiple />
 
-                <div class="form-group mb-3">
-                    <label for="city_id">City</label>
-                    <input type="text" class="form-control" id="city_id" name="city_id" placeholder="City">
-                    @error('city_id')
-                        <div class="alert alert-danger mt-2">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </div>
-
-                <div class="form-group mb-3">
-                    <label for="subdistrict_id">Subdistrict</label>
-                    <input type="text" class="form-control" id="subdistrict_id" name="subdistrict_id"
-                        placeholder="Subdistrict">
-                    @error('subdistrict_id')
-                        <div class="alert alert-danger mt-2">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </div>
-
-                <div class="form-group mb-3">
-                    <label for="address_detail">Address Detail</label>
-                    <input type="text" class="form-control" id="address_detail" name="address_detail"
-                        placeholder="Address Detail">
-                    @error('address_detail')
-                        <div class="alert alert-danger mt-2">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </div>
-
-                <div class="form-group mb-3">
-                    <label for="password">Password</label>
-                    <input type="password" class="form-control" id="password" name="password" placeholder="Password">
-                    @error('password')
-                        <div class="alert alert-danger mt-2">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </div>
-
-                <div class="form-group mb-3">
-                    <label for="number_id">Number ID</label>
-                    <input type="text" class="form-control" id="number_id" name="number_id" placeholder="Number ID">
-                    @error('number_id')
-                        <div class="alert alert-danger mt-2">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </div>
-
-                <div class="form-group mb-3">
-                    <label for="password_confirmation">Confirm Password</label>
-                    <input type="password" class="form-control" id="password_confirmation" name="password_confirmation"
-                        placeholder="Confirm Password">
-                    @error('password_confirmation')
-                        <div class="alert alert-danger mt-2">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </div>
-
-                {{-- make for supporting document (multiple input file) --}}
-                <div class="form-group mb-3">
-                    <label for="supporting_documents">Supporting Document</label>
-                    <input type="file" class="form-control" id="supporting_documents" name="supporting_documents[]"
-                        placeholder="Supporting Document" multiple>
-                    @error('supporting_documents')
-                        <div class="alert alert-danger mt-2">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </div>
-                <button type="submit" class="btn btn-primary w-100">Register</button>
+                <button type="submit" class="btn btn-primary w-100">Daftar</button>
             </form>
         </div>
+
         <p class="text-center">
             Already have an account? <a href="{{ route('login') }}">Login</a>
         </p>
     </div>
-    <script></script>
+    <x-errorAlertValidation />
+    <x-ifSuccessAlert />
 @endsection

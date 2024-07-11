@@ -22,7 +22,7 @@ class TopupWalletRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'amount' => 'required|numeric',
+            'amount' => 'required|numeric|min:100000',
             'payment_method_detail_id' => 'required|exists:payment_method_details,id',
         ];
     }
@@ -35,6 +35,7 @@ class TopupWalletRequest extends FormRequest
             'amount.numeric' => 'Kolom jumlah harus berupa angka',
             'payment_method_detail_id.required' => 'Pilih metode pembayaran terlebih dahulu',
             'payment_method_detail_id.exists' => 'Metode pembayaran tidak ditemukan',
+            'amount.min' => 'Minimal top up Rp 100.000',
         ];
     }
 }

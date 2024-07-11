@@ -1,6 +1,6 @@
-<x-containerTemplate pageTitle="Show Transaction">
+<x-containerTemplate pageTitle="Show Campaign Transaction">
     @slot('contentOfContainer')
-        <x-headerSection :breadcrumbMenu="['Transaction', 'Show Transaction']" />
+        <x-headerSection :breadcrumbMenu="['Campaign Transaction', 'Show Campaign Transaction']" />
 
         <x-contentSection>
             @slot('contentOfContentSection')
@@ -68,7 +68,7 @@
                                     </tr>
                                     <tr>
                                         <td class="text-start text-secondary">
-                                            Total yang harus dibayar
+                                            Total Harga
                                         </td>
                                         <td class="text-end fw-semibold currency">
                                             {{ $transaction->total_price }}

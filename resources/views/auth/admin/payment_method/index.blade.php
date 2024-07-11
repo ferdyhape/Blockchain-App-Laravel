@@ -11,7 +11,7 @@
 
         <x-contentSection>
             @slot('contentOfContentSection')
-                <x-tableDatatable header="Payment Method" tableId="paymentMethodTable" :oneRowThArray="['No', 'Name', 'Kategori', 'Logo', 'Action']" />
+                <x-tableDatatable header="Payment Method Management" tableId="paymentMethodTable" :oneRowThArray="['No', 'Name', 'Kategori', 'Logo', 'Action']" />
             @endslot
         </x-contentSection>
 
@@ -23,8 +23,8 @@
             <script src="{{ asset('assets/js/dashboard/admin/paymentMethod.js') }}"></script>
             <script src="{{ asset('assets/js/base/datatable/datatableInitializer.js') }}"></script>
         @endpush
+        @include('components.errorAlertValidation')
+        @include('components.ifSuccessAlert')
     @endslot
 
-    @include('components.errorAlertValidation')
-    @include('components.ifSuccessAlert')
 </x-containerTemplate>

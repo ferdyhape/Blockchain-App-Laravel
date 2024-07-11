@@ -9,6 +9,10 @@ function toRp($money)
     return 'Rp ' . number_format($money, 0, ',', '.');
 }
 
+function getPriceToken()
+{
+    return 100000;
+}
 
 
 function checkClassIsActive($routeNames, $class = 'active')
@@ -31,12 +35,12 @@ function checkClassIsActive($routeNames, $class = 'active')
 function getSidebarData()
 {
     $sidebarData = [
-        [
-            'role' => 'Admin', // Add this line
-            'route' => 'dashboard.admin.index',
-            'icon' => 'bx-home',
-            'name' => 'Dashboard',
-        ],
+        // [
+        //     'role' => 'Admin', // Add this line
+        //     'route' => 'dashboard.admin.index',
+        //     'icon' => 'bx-home',
+        //     'name' => 'Dashboard',
+        // ],
         [
             'role' => 'Admin', // Add this line
             'route' => 'dashboard.admin.user-management.index',
@@ -67,12 +71,12 @@ function getSidebarData()
             'icon' => 'bx-credit-card',
             'name' => 'Payment Method',
         ],
-        [
-            'role' => 'Platinum Member', // Add this line
-            'route' => 'dashboard.user.index',
-            'icon' => 'bx-home',
-            'name' => 'Dashboard',
-        ],
+        // [
+        //     'role' => 'Platinum Member', // Add this line
+        //     'route' => 'dashboard.user.index',
+        //     'icon' => 'bx-home',
+        //     'name' => 'Dashboard',
+        // ],
         [
             'role' => 'Platinum Member', // Add this line
             'route' => 'dashboard.user.project-management.index',

@@ -43,6 +43,7 @@ class APIHelper
         'changeStatusByTransactionCode' => '/tokens/changeStatusByTransactionCode',
         'deleteTokenByTransactionCode' => '/tokens/deleteTokenByTransactionCode',
         'deleteTokenByCampaignIdAndSoldTo' => '/tokens/deleteTokenByCampaignIdAndSoldTo',
+        'deleteTokenByCampaignId' => '/tokens/deleteTokenByCampaignId',
     ];
 
 

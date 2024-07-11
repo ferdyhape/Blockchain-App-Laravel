@@ -4,22 +4,92 @@ namespace App\Http\Controllers\User;
 
 use Illuminate\Http\Request;
 use App\Models\ProjectCategory;
+use App\Services\WalletService;
 use App\Services\ProjectService;
+use App\Services\CampaignService;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Admin\StoreBankRequest;
-use App\Http\Requests\User\PayForSaleTokenRequest;
 use App\Services\TransactionService;
 use App\Services\PaymentMethodService;
 use App\Services\ProjectCategoryService;
+use App\Http\Requests\Admin\StoreBankRequest;
 use App\Http\Requests\User\StoreProjectRequest;
 use App\Http\Requests\User\ReviseProjectRequest;
 use App\Http\Requests\User\SignedContractRequest;
-use App\Services\CampaignService;
+use App\Http\Requests\User\PayForSaleTokenRequest;
+use App\Http\Requests\User\WithdrawCampaignRequest;
+use App\Models\Campaign;
 use App\Services\CategoryProjectSubmissionStatusService;
 
 class ProjectManagementController extends Controller
 {
+
+    // uploadProofProfitSharing
+    public function uploadProofProfitSharing($id, Request $request)
+    {
+        $validated = $request->validate([
+            'payment_proof' => 'required|image|mimes:jpeg,png,jpg,svg|max:2048',
+        ]);
+        // dd($id);
+
+        try {
+            DB::beginTransaction();
+            $wallet = WalletService::uploadPaymentProof($id, $validated['payment_proof']);
+            DB::commit();
+            $campaign = CampaignService::getCampaignById($wallet->walletable_id);
+            return redirect()->route('dashboard.user.project-management.check-transaction', $campaign->project->id)->with('success', 'Upload payment proof successfully');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Something went wrong');
+        }
+    }
+
+    // postProfitSharingPayment
+
+    public function postProfitSharingPayment($id, Request $request)
+    {
+        $validated = $request->validate([
+            'payment_method_detail_id' => 'required',
+        ]);
+
+        try {
+            DB::beginTransaction();
+            ProjectService::profitSharingPayment($id, $validated['payment_method_detail_id']);
+            DB::commit();
+            return response()->json(
+                [
+                    'redirect' => route('dashboard.user.project-management.check-transaction', $id),
+                    'message' => 'Profit sharing payment sent successfully'
+                ],
+                200
+            );
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Something went wrong');
+        }
+    }
+    // profitSharingPayment
+    public function profitSharingPayment($id)
+    {
+        $project = ProjectService::getProjectById($id);
+        $paymentMethods = PaymentMethodService::getPaymentMethodForBuyToken();
+        return view('auth.user.project_management.profitSharingPayment', compact('project', 'paymentMethods'));
+    }
+    // withdrawCampaign
+    public function withdrawCampaign($projectId, WithdrawCampaignRequest $request)
+    {
+        $validated = $request->validated();
+
+        try {
+            DB::beginTransaction();
+            ProjectService::withdrawCampaign($projectId, $validated['payment_method_detail_id'], $validated['amount']);
+            DB::commit();
+            return redirect()->route('dashboard.user.project-management.check-transaction', $projectId)->with('success', 'Withdrawal request sent successfully');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Something went wrong');
+        }
+    }
 
     public function postBankAccount($id, StoreBankRequest $request)
     {
@@ -80,7 +150,8 @@ class ProjectManagementController extends Controller
 
         $wallets = PaymentMethodService::getUserWalletPaymentMethodDetailForUser();
         $transactions = TransactionService::getTransactionByCampaignId($project->campaign->id);
-        return view('auth.user.project_management.checkTransaction', compact('project', 'transactions', 'wallets'));
+        $walletTransaction = WalletService::walletTransactionByCampaign($project->campaign->id);
+        return view('auth.user.project_management.checkTransaction', compact('project', 'transactions', 'wallets', 'walletTransaction'));
     }
 
     public function postUploadSignedContract(string $id, SignedContractRequest $request)

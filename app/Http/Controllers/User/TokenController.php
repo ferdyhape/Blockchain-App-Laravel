@@ -16,7 +16,6 @@ class TokenController extends Controller
     public function sell($campaign_id, SellTokenRequest $request)
     {
         $validated = $request->validated();
-        // dd($validated);
         DB::beginTransaction();
         TransactionService::sellToken($campaign_id, $validated);
         DB::commit();
@@ -27,7 +26,6 @@ class TokenController extends Controller
     {
         // Mendapatkan token yang terjual dan mengelompokkan berdasarkan campaign_id
         $grouppedByCampaign = CampaignTokenService::getSoldTokenGroupByCampaign();
-        // dd($grouppedByCampaign);
 
         if (count($grouppedByCampaign) == 0) {
             return view('auth.user.token.index', [

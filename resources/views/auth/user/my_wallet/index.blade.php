@@ -36,13 +36,13 @@
                                 <div class="d-flex justify-content-end gap-2 mt-3">
                                     <a href="{{ route('dashboard.user.my-wallet.create') }}"
                                         class="btn btn-primary btn-sm ">Topup</a>
-                                    {{-- anchor for withdraw balance --}}
-                                    <a href="#" class="btn btn-primary btn-sm ">Withdraw</a>
+                                    <a href="{{ route('dashboard.user.my-wallet.withdraw') }}"
+                                        class="btn btn-primary btn-sm ">Withdraw</a>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <x-tableDatatable tableId="walletTransactionTable" :oneRowThArray="['No', 'Code', 'Jumlah', 'Status', 'Bukti Pembayaran', 'Action']" />
+                    <x-tableDatatable tableId="walletTransactionTable" :oneRowThArray="['No', 'Code', 'Jumlah', 'Description', 'Status', 'Bukti Pembayaran', 'Action']" />
                 </div>
             @endslot
         </x-contentSection>
@@ -53,6 +53,20 @@
             <script src="{{ asset('assets/js/base/datatable/datatableSettings.js') }}"></script>
             <script src="{{ asset('assets/js/dashboard/user/my_wallet/my_wallet.js') }}"></script>
             <script src="{{ asset('assets/js/base/datatable/datatableInitializer.js') }}"></script>
+            <script>
+                $(document).ready(function() {
+                    // initDatatable('#walletTransactionTable', 'user.my-wallet.transaction');
+                });
+
+                function swalShowDescription(description) {
+                    Swal.fire({
+                        title: 'Description',
+                        text: description,
+                        icon: 'info',
+                        confirmButtonText: 'Close'
+                    });
+                }
+            </script>
         @endpush
 
         <x-errorAlertValidation />

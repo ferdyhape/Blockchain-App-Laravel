@@ -36,6 +36,15 @@ class CampaignTokenService
         return $tokenMapped;
     }
 
+    public static function getAllTokens()
+    {
+        $tokens = APIHelper::httpGet('getAllTokens');
+        if (self::ifTokenNotFound($tokens)) {
+            return [];
+        }
+        return self::mappingToken($tokens->data);
+    }
+
 
     private static function ifTokenNotFound($tokens)
     {
@@ -129,12 +138,23 @@ class CampaignTokenService
     }
 
 
-    // public static function getTokenByCampaignId($campaignId, $userId = null)
-    // {
-    //     return CampaignToken::where('campaign_id', $campaignId)
-    //         ->where('sold_to', $userId ?? auth()->id())
-    //         ->get();
-    // }
+    public static function deleteTokenByCampaignId($campaignId)
+    {
+        $res = APIHelper::httpPost('deleteTokenByCampaignId', [
+            'campaignId' => $campaignId,
+        ]);
+        return $res;
+    }
+
+    public static function getTokenByCampaignId($campaignId, $userId = null)
+    {
+        $tokens = APIHelper::httpGet('getTokensByCampaignId', $campaignId);
+        if (self::ifTokenNotFound($tokens)) {
+            return [];
+        }
+
+        return self::mappingToken($tokens->data);
+    }
 
     public static function getSoldTokenByCampaignId($campaignId, $userId = null)
     {

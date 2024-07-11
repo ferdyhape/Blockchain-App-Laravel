@@ -21,6 +21,27 @@ columnsDatatable = [
         },
     },
     {
+        data: "description",
+        name: "description",
+        render: function (data) {
+            // Check if data is null or undefined
+            if (data) {
+                // return data.length > 50 ? data.substr(0, 10) + "..." : data;
+                // append to div and add eye icon, and execute swalShowDescription(data) function
+                return (
+                    "<div onclick='swalShowDescription(`" +
+                    data +
+                    "`)' class='cursor-pointer'>" +
+                    (data.length > 50 ? data.substr(0, 20) + "..." : data) +
+                    "</div>"
+                );
+            } else {
+                return "";
+            }
+        },
+    },
+
+    {
         data: "status",
         name: "status",
         render: function (data) {
@@ -40,6 +61,9 @@ columnsDatatable = [
         render: function (data) {
             if (data == null) {
                 return '<div class="btn btn-sm btn-danger">Proof Not Uploaded</div>';
+            }
+            if (data == "-") {
+                return "-";
             }
 
             return (

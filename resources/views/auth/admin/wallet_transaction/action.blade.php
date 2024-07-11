@@ -8,6 +8,13 @@
             data-id="{{ $model->id }}">
             <i class="fa fa-times mx-auto my-auto"></i>
         </button>
+    @elseif(
+        $model->status == 'pending' &&
+            $model->payment_proof == null &&
+            ($model->type == 'withdraw_campaign' || $model->type == 'withdraw'))
+        <button type="button" class="btn btn-sm btn-warning edit-modal" data-id="{{ $model->id }}">
+            Upload Proof
+        </button>
     @else
         <div class="btn btn-sm btn-success">No Action Needed</div>
     @endif

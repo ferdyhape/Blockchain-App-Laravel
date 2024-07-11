@@ -11,9 +11,10 @@ class WalletTransactionUser extends Model
     use HasFactory, HasUuids;
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
-    public function user()
+
+    public function walletable()
     {
-        return $this->belongsTo(User::class);
+        return $this->morphTo();
     }
 
 

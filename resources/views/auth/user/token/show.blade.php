@@ -7,7 +7,7 @@
                 <div class="d-flex flex-column gap-3">
 
                     <div id="campaign-detail">
-                        <h5 class="fw-semibold">Project Detail</h5>
+                        <h5 class="fw-semibold">Token Detail</h5>
                         <div class="card border-0 shadow-sm p-4 my-3">
                             <div class="card-content rounded">
                                 <table class="w-100" style="">

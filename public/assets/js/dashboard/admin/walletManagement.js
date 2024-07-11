@@ -33,10 +33,20 @@ columnsDatatable = [
             }
         },
     },
-
     {
-        data: "user.name",
-        name: "user.name",
+        data: null,
+        name: "walletable.name",
+        render: function (data, type, row) {
+            if (row.walletable_type === "App\\Models\\Campaign") {
+                return row.walletable.project
+                    ? row.walletable.project.title
+                    : "-";
+            } else if (row.walletable_type === "App\\Models\\User") {
+                return row.walletable.name;
+            } else {
+                return "-";
+            }
+        },
     },
     {
         data: "payment_proof",
@@ -45,7 +55,6 @@ columnsDatatable = [
             if (data == null) {
                 return '<div class="btn btn-sm btn-danger">Proof Not Uploaded</div>';
             }
-
             return (
                 '<a href="' +
                 baseUrl +
@@ -53,6 +62,32 @@ columnsDatatable = [
                 data +
                 '" target="_blank">Lihat Bukti Pembayaran</a>'
             );
+        },
+    },
+    {
+        data: "type",
+        name: "type",
+        render: function (data) {
+            if (data == "topup") {
+                return "Top Up";
+            } else if (data == "withdraw") {
+                return "Withdraw";
+            } else if (data == "withdraw_campaign") {
+                return "Withdraw Campaign";
+            } else if (data == "donation") {
+                return "Donation";
+            } else if (data == "profit_sharing_payment") {
+                return "Profit Sharing & Refund";
+            } else {
+                return "-";
+            }
+        },
+    },
+    {
+        data: "created_at",
+        name: "created_at",
+        render: function (data) {
+            return moment(data).format("DD/MM/YYYY HH:mm:ss");
         },
     },
 ];

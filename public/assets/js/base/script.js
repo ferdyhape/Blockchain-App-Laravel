@@ -123,8 +123,19 @@ function handleEditFormSubmit(route) {
             reinitTable();
         },
         error: function (xhr, status, error) {
+            // var err = JSON.parse(xhr.responseText);
+            // toastr.error(err.message);
             var err = JSON.parse(xhr.responseText);
-            toastr.error(err.message);
+            // toastr.error(err.message); // Menampilkan pesan umum
+
+            // Loop melalui setiap error dan tampilkan dalam toastr
+            for (var key in err.errors) {
+                if (err.errors.hasOwnProperty(key)) {
+                    err.errors[key].forEach(function (message) {
+                        toastr.error(message);
+                    });
+                }
+            }
         },
     });
 }
@@ -153,8 +164,20 @@ function handleEditFormSubmitUseFile(route) {
             reinitTable();
         },
         error: function (xhr, status, error) {
+            // var err = JSON.parse(xhr.responseText);
+            // toastr.error(err.message);
+
             var err = JSON.parse(xhr.responseText);
-            toastr.error(err.message);
+            // toastr.error(err.message); // Menampilkan pesan umum
+
+            // Loop melalui setiap error dan tampilkan dalam toastr
+            for (var key in err.errors) {
+                if (err.errors.hasOwnProperty(key)) {
+                    err.errors[key].forEach(function (message) {
+                        toastr.error(message);
+                    });
+                }
+            }
         },
     });
 }
@@ -183,8 +206,25 @@ function handleStoreFormSubmitUseFile(route) {
             reinitTable();
         },
         error: function (xhr, status, error) {
+            console.log([
+                xhr,
+                status,
+                error,
+                xhr.responseText,
+                JSON.parse(xhr.responseText),
+            ]);
+
             var err = JSON.parse(xhr.responseText);
-            toastr.error(err.message);
+            // toastr.error(err.message); // Menampilkan pesan umum
+
+            // Loop melalui setiap error dan tampilkan dalam toastr
+            for (var key in err.errors) {
+                if (err.errors.hasOwnProperty(key)) {
+                    err.errors[key].forEach(function (message) {
+                        toastr.error(message);
+                    });
+                }
+            }
         },
     });
 }
@@ -213,7 +253,18 @@ function handleStoreFormSubmit(route) {
         },
         error: function (xhr, status, error) {
             var err = JSON.parse(xhr.responseText);
-            toastr.error(err.message);
+
+            // Menampilkan pesan umum kesalahan
+            // toastr.error(err.message);
+
+            // Loop melalui setiap error dan tampilkan dalam toastr
+            for (var key in err.errors) {
+                if (err.errors.hasOwnProperty(key)) {
+                    err.errors[key].forEach(function (message) {
+                        toastr.error(message);
+                    });
+                }
+            }
         },
     });
 }

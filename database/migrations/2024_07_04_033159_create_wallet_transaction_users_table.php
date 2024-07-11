@@ -13,9 +13,8 @@ return new class extends Migration
     {
         Schema::create('wallet_transaction_users', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignUuid('user_id')
-                ->constrained('users')
-                ->cascadeOnDelete();
+            $table->uuid('walletable_id');
+            $table->string('walletable_type');
             $table->foreignUuid('payment_method_detail_id');
             $table->string('code');
             $table->string('status');

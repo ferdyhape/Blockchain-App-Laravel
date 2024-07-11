@@ -4,7 +4,18 @@
 
         <x-contentSection>
             @slot('contentOfContentSection')
-                <x-tableDatatable header="Wallet Transaction" tableId="walletTransactionTable" :oneRowThArray="['No', 'Code', 'Jumlah', 'Status', 'User', 'Bukti Pembayaran', 'Action']" />
+                <x-tableDatatable header="Wallet Transaction Management" tableId="walletTransactionTable" :oneRowThArray="[
+                    'No',
+                    'Code',
+                    'Jumlah',
+                    'Status',
+                    'User/Campaign',
+                    'Bukti Pembayaran',
+                    'Jenis',
+                    'Waktu',
+                    'Action',
+                ]" />
+                @include('auth.admin.wallet_transaction.upload_proof')
             @endslot
         </x-contentSection>
 

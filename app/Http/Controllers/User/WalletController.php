@@ -10,13 +10,61 @@ use App\Http\Controllers\Controller;
 use App\Models\WalletTransactionUser;
 use App\Services\PaymentMethodService;
 use App\Http\Requests\User\TopupWalletRequest;
+use App\Http\Requests\Admin\StoreBankRequest;
+use App\Http\Requests\User\WithdrawWalletTransactionUserRequest;
 
 class WalletController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
+    // postWithdraw
+    public function postWithdraw(WithdrawWalletTransactionUserRequest $request)
+    {
+        $validated = $request->validated();
+        // dd($validated);
 
+        try {
+            DB::beginTransaction();
+            WalletService::storeWalletTransaction($validated, 'withdraw');
+            DB::commit();
+            return redirect()->route('dashboard.user.my-wallet.index')->with('success', 'Withdraw request sent successfully');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Something went wrong');
+        }
+    }
+
+    public function postBankAccount(StoreBankRequest $request)
+    {
+        $validated = $request->validated();
+        // dd($validated);
+
+        try {
+            DB::beginTransaction();
+            $validated['payment_method_category_id'] = PaymentMethodService::getPaymentMethodByName('Bank Transfer')->id;
+            $validated['user_id'] = auth()->id();
+            $validated['description'] = 'Nomor Rekening: ' . $validated['account_number'] . ' a/n ' . $validated['account_name'];
+            PaymentMethodService::storePaymentMethodDetail($validated);
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Terjadi kesalahan');
+        }
+
+        return redirect()->route('dashboard.user.my-wallet.withdraw')->with('success', 'Bank account added successfully');
+    }
+
+    public function addBankAccount()
+    {
+        return view('auth.user.my_wallet.addBankAccount');
+    }
+
+    public function withdraw()
+    {
+        $wallets = PaymentMethodService::getUserWalletPaymentMethodDetailForUser();
+        return view('auth.user.my_wallet.withdraw', compact('wallets'));
+    }
     // uploadProof
     public function uploadProof($id, Request $request)
     {
@@ -55,7 +103,6 @@ class WalletController extends Controller
      */
     public function store(TopupWalletRequest $request)
     {
-
         $validated = $request->validated();
         try {
             DB::beginTransaction();

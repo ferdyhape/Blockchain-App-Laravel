@@ -2,10 +2,7 @@
     <div class="card-body">
         <div class="card-content ">
             <div class="d-flex flex-column justify-content-center gap-2">
-                @if (
-                    $project->campaign->status == 'on_fundraising' &&
-                        now() >= $project->campaign->fundraising_period_start &&
-                        now() <= $project->campaign->fundraising_period_end)
+                @if ($project->campaign->status == 'on_fundraising')
                     <div class="col-12">
                         <a href="{{ route('dashboard.user.available-project.buy', $project->id) }}"
                             class="btn btn-success w-100">Beli</a>

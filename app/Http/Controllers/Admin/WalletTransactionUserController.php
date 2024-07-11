@@ -6,10 +6,26 @@ use Illuminate\Http\Request;
 use App\Services\WalletService;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Services\JsonService;
 
 class WalletTransactionUserController extends Controller
 {
-    public function acceptTopup(Request $request)
+
+    public function uploadProof($id, Request $request)
+    {
+        $validated = $request->validate([
+            'payment_proof' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+        ]);
+
+        try {
+            WalletService::uploadPaymentProof($id, $validated['payment_proof']);
+            return JsonService::response(['message' => 'Proof of payment uploaded successfully']);
+        } catch (\Exception $e) {
+            return JsonService::response(['message' => 'Failed to upload proof of payment'], 500);
+        }
+    }
+
+    public function accept(Request $request)
     {
         $validated = $request->validate([
             'id' => 'required|uuid|exists:wallet_transaction_users,id',
@@ -26,7 +42,7 @@ class WalletTransactionUserController extends Controller
         }
     }
 
-    public function rejectTopup(Request $request)
+    public function reject(Request $request)
     {
         $validated = $request->validate([
             'id' => 'required|uuid|exists:wallet_transaction_users,id',

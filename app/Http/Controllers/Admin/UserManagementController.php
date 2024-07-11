@@ -16,6 +16,40 @@ class UserManagementController extends Controller
     /**
      * Display a listing of the resource.
      */
+
+    // verifyEmail
+    public function verifyEmail(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|exists:users,id',
+        ]);
+
+        try {
+            $user = User::findOrFail($request->id);
+            $user->update(['email_verified_at' => now()]);
+            return JsonService::response(['message' => 'Akun berhasil diverifikasi']);
+        } catch (\Exception $e) {
+            return JsonService::response(['message' => 'Verifikasi akun gagal'], 500);
+        }
+    }
+
+    // rejectEmail
+    public function rejectEmail(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|exists:users,id',
+        ]);
+
+        try {
+            $user = User::findOrFail($request->id);
+            $user->delete();
+            return JsonService::response(['message' => 'Akun berhasil ditolak']);
+        } catch (\Exception $e) {
+            return JsonService::response(['message' => 'Penolakan akun gagal'], 500);
+        }
+    }
+
+
     public function index()
     {
         if (request()->ajax()) {
@@ -70,12 +104,11 @@ class UserManagementController extends Controller
         try {
             $user = UserManagementService::getUserData($id);
             $user->update($request->all());
-            return JsonService::response(['message' => 'Data updated successfully']);
+            return JsonService::response(['message' => 'Data berhasil diperbarui']);
         } catch (\Exception $e) {
-            return JsonService::response(['message' => 'Data failed to update'], 500);
+            return JsonService::response(['message' => 'Data gagal diperbarui'], 500);
         }
     }
-
 
     /**
      * Remove the specified resource from storage.
@@ -85,9 +118,9 @@ class UserManagementController extends Controller
         $data = UserManagementService::getUserData($id);
         try {
             $data->delete();
-            return JsonService::response(['message' => 'Data deleted successfully']);
+            return JsonService::response(['message' => 'Data berhasil dihapus']);
         } catch (\Exception $e) {
-            return JsonService::response(['message' => 'Data failed to delete'], 500);
+            return JsonService::response(['message' => 'Data gagal dihapus'], 500);
         }
     }
 }

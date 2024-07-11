@@ -1,5 +1,5 @@
 <div class="d-flex justify-content-center gap-2">
-    @if ($model->status == 'pending' && $model->payment_proof == null)
+    @if ($model->status == 'pending' && $model->payment_proof == null && $model->type == 'topup')
         <button type="button" class="btn btn-sm btn-warning edit-modal" data-id="{{ $model->id }}">
             Upload Proof
         </button>

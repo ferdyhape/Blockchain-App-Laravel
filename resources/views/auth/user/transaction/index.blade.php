@@ -79,7 +79,7 @@
                                         </tr>
                                         <tr>
                                             <td class="text-start text-secondary">
-                                                Total yang harus dibayar
+                                                Total Harga
                                             </td>
                                             <td class="text-end currency">
                                                 {{ $transaction->total_price }}

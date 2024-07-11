@@ -3,6 +3,7 @@
         <div class="card-body">
             <div class="card-content mt-4">
                 <h5 class="card-title fw-semibold fs-5 mb-4">Actions</h5>
+
                 @if ($project->isOnReview())
                     <div class="d-flex flex-column justify-content-center gap-2">
                         <div class="col-12">

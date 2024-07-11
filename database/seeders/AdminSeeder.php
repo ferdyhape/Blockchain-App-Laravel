@@ -32,6 +32,7 @@ class AdminSeeder extends Seeder
             'address_detail' => $faker->address,
             'number_id' => $faker->unique()->randomNumber(),
             'password' => Hash::make('password'),
+            'email_verified_at' => now(),
         ]);
         // Assign role
         $adminUser->assignRole($adminRole);

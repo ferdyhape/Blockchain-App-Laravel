@@ -22,7 +22,7 @@ class StorePaymentMethodRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|unique:payment_method_details,name',
+            'name' => 'required',
             'description' => 'required',
             'payment_method_category_id' => 'required|exists:payment_methods,id',
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
@@ -33,8 +33,7 @@ class StorePaymentMethodRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'name.required' => 'Nama tidak boleh kosong',
-            'name.unique' => 'Nama sudah digunakan',
+            'name.required' => 'Nama Bank harus diisi',
             'description.required' => 'Deskripsi tidak boleh kosong',
             'payment_method_category_id.required' => 'Kategori tidak boleh kosong',
             'payment_method_category_id.exists' => 'Kategori tidak ditemukan',

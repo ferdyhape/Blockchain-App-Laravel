@@ -311,12 +311,21 @@ class TransactionService
         if (self::ifTransactionNotFound($transactions)) {
             return [];
         }
-        $transactionData = (array) $transactions->data;
+
+        // Ubah objek stdClass menjadi array
+        $transactionData = json_decode(json_encode($transactions->data), true);
+
+        // Sort by createdAt
         usort($transactionData, function ($a, $b) {
-            return $b->createdAt <=> $a->createdAt;
+            return $b['createdAt'] <=> $a['createdAt'];
         });
+
+        // Ubah kembali array menjadi objek stdClass sebelum memetakan transaksi
+        $transactions->data = json_decode(json_encode($transactionData));
+
         return self::mappingTransaction($transactions->data);
     }
+
 
     // done integration with blockchain
     public static function getAllTransaction()

@@ -125,6 +125,7 @@
                         let paymentMethodId = $(this).data("payment-method-id");
                         let amount = $("#amount").val();
 
+                        console.log("Selected payment method detail ID:", paymentMethodId);
                         $.ajax({
                             url: routeTopup,
                             type: "POST",
@@ -148,6 +149,4 @@
         <x-errorAlertValidation />
         <x-ifSuccessAlert />
     @endslot
-
-
 @endcomponent
