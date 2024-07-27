@@ -20,7 +20,8 @@ class IconCategoryProjectSubmissionSeeder extends Seeder
             'Proses Penggalangan Dana' => 'fa-hand-holding-usd',
             'Proses Penjalanan Projek' => 'fa-running',
             'Selesai' => 'fa-check-circle',
-            'Ditolak' => 'fa-circle-xmark'
+            'Ditolak' => 'fa-circle-xmark',
+            'Dibatalkan' => 'fa-times-circle'
         ];
 
         foreach ($iconDataWithKeyNameForCategory as $categoryName => $icon) {

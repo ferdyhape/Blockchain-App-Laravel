@@ -151,10 +151,7 @@
             </div>
         </div>
         @include('auth.admin.project_management.actionCard')
-    @elseif(
-        $project->campaign &&
-            $project->user->id == auth()->user()->id &&
-            $project->categoryProjectSubmissionStatus->name != 'Proses Penggalangan Dana')
+    @elseif($project->campaign && $project->user->id == auth()->user()->id)
         @include('auth.user.project_management.actionCard')
         {{-- @if ($project->campaign->status == 'on_fundraising')
         @endif --}}

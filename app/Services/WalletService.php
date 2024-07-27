@@ -10,6 +10,43 @@ use App\Models\WalletTransactionUser;
  */
 class WalletService
 {
+
+    // refundWalletTransaction
+    public static function refundWalletTransaction($campaignId)
+    {
+        $campaign = CampaignService::getCampaignById($campaignId);
+        $allToken = CampaignTokenService::getTokenByCampaignId($campaignId);
+        $grouppedTokenOwner = [];
+
+        foreach ($allToken as $token) {
+            $soldTo = $token['sold_to'];
+            if (isset($grouppedTokenOwner[$soldTo])) {
+                $grouppedTokenOwner[$soldTo]['total'] += 1;
+            } else {
+                $grouppedTokenOwner[$soldTo] = [
+                    'sold_to' => $soldTo,
+                    'total' => 1
+                ];
+            }
+        }
+
+        foreach ($grouppedTokenOwner as $owner) {
+            $totalAmount = $owner['total'] * $campaign->price_per_unit;
+            $buildDescription = 'Refund payment for campaign "' . $campaign->project->title . '" (' . $owner['total'] . ' tokens x ' . self::toRupiahCurrency($campaign->price_per_unit) . ' = ' . self::toRupiahCurrency($totalAmount) . ')';
+            $data = [
+                'amount' => $totalAmount,
+                'payment_method_detail_id' => 1,
+                'description' => $buildDescription,
+                'user_id' => $owner['sold_to'],
+            ];
+            $ownerWallet = WalletService::storeWalletTransaction($data, 'refund_payment', true);
+            self::updateUserBallance($owner['sold_to'], $totalAmount, 'refund_payment');
+        }
+
+        CampaignTokenService::deleteTokenByCampaignId($campaignId);
+        CampaignService::clearCampaignWalletBalance($campaign);
+    }
+
     public static function storeWalletTransaction(array $data, $type, $redirectProfitSharing = false)
     {
         $walletable_id = isset($data['walletable_id']) ? $data['walletable_id'] : (isset($data['user_id']) ? $data['user_id'] : auth()->id());
@@ -134,17 +171,20 @@ class WalletService
 
                 foreach ($grouppedTokenOwner as $owner) {
                     $profit = $owner['total'] * $campaign->price_per_unit * $campaign->project->profit_sharing_percentage / 100;
+                    $netto = $owner['total'] * $campaign->price_per_unit;
                     $totalAmount = $profit + ($owner['total'] * $campaign->price_per_unit);
                     // $buildDescription = 'Profit sharing payment for campaign "' . $campaign->project->title . '" (' . $owner['total'] . ' tokens x ' . self::toRupiahCurrency($campaign->price_per_unit) . ' x ' . $campaign->project->profit_sharing_percentage . '% = ' . self::toRupiahCurrency($profit) . ')';
-                    $buildDescription = 'Profit sharing payment for campaign "' . $campaign->project->title . '" (' . $owner['total'] . ' tokens x ' . self::toRupiahCurrency($campaign->price_per_unit) . ' x ' . $campaign->project->profit_sharing_percentage . '% = ' . self::toRupiahCurrency($profit) . ') + (' . self::toRupiahCurrency($owner['total'] * $campaign->price_per_unit) . ' = ' . self::toRupiahCurrency($totalAmount) . ')';
+                    $buildDescription = 'Profit sharing payment for campaign "' . $campaign->project->title . '" (' . $owner['total'] . ' tokens x ' . self::toRupiahCurrency($campaign->price_per_unit) . ' x ' . $campaign->project->profit_sharing_percentage . '% = ' . self::toRupiahCurrency($profit) . ') + ' . self::toRupiahCurrency($owner['total'] * $campaign->price_per_unit) . ' = ' . self::toRupiahCurrency($totalAmount);
                     $data = [
                         'amount' => $totalAmount,
                         'payment_method_detail_id' => 1,
                         'description' => $buildDescription,
                         'user_id' => $owner['sold_to'],
                     ];
+
+
                     $ownerWallet = WalletService::storeWalletTransaction($data, 'profit_sharing_payment', true);
-                    self::updateUserBallance($owner['sold_to'], $profit, 'profit_sharing_payment');
+                    self::updateUserBallance($owner['sold_to'], $totalAmount, 'profit_sharing_payment');
                 }
                 CampaignTokenService::deleteTokenByCampaignId($walletTransaction->walletable_id);
                 CampaignService::clearCampaignWalletBalance($campaign);
@@ -154,13 +194,12 @@ class WalletService
         $walletTransaction->save();
     }
 
-
     private static function toRupiahCurrency($amount)
     {
         return 'Rp' . number_format($amount, 0, ',', '.');
     }
 
-    private static function updateUserBallance($userId, $totalPrice, $type)
+    public static function updateUserBallance($userId, $totalPrice, $type)
     {
         $user = UserService::getUserById($userId);
         if ($type == 'topup') {
@@ -169,6 +208,8 @@ class WalletService
             $user->wallet->withdraw($totalPrice, ['description' => 'Withdraw wallet']);
         } else if ($type == 'profit_sharing_payment') {
             $user->wallet->deposit($totalPrice, ['description' => 'Profit sharing payment']);
+        } else if ($type == 'refund_payment') {
+            $user->wallet->deposit($totalPrice, ['description' => 'Refund payment']);
         }
     }
 
@@ -185,6 +226,8 @@ class WalletService
             $code = 'TPC' . date('YmdHis') . rand(1000, 9999);
         } elseif ($type == 'profit_sharing_payment') {
             $code = 'PSP' . date('YmdHis') . rand(1000, 9999);
+        } elseif ($type == 'refund_payment') {
+            $code = 'RF' . date('YmdHis') . rand(1000, 9999);
         }
 
 

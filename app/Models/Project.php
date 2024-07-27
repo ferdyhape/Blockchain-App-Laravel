@@ -61,6 +61,13 @@ class Project extends Model implements HasMedia
         return $this->category_project_submission_status_id === $categoryProjectSubmissionStatus->id;
     }
 
+    // make for isCanceled "Dibatalkan"
+    public function isCanceled()
+    {
+        $categoryProjectSubmissionStatus = CategoryProjectSubmissionStatus::where('name', 'Dibatalkan')->first();
+        return $this->category_project_submission_status_id === $categoryProjectSubmissionStatus->id;
+    }
+
     public function isOnGoing()
     {
         $categoryProjectSubmissionStatus = CategoryProjectSubmissionStatus::where('name', 'Proses Penjalanan Projek')->first();

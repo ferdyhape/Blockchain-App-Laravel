@@ -15,10 +15,11 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->uuid('walletable_id');
             $table->string('walletable_type');
-            $table->foreignUuid('payment_method_detail_id');
+            $table->foreignUuid('payment_method_detail_id')->nullable();
             $table->string('code');
             $table->string('status');
-            $table->enum('type', ['topup', 'withdraw', 'withdraw_campaign', 'topup_campaign', 'profit_sharing_payment']);
+            // $table->enum('type', ['topup', 'withdraw', 'withdraw_campaign', 'topup_campaign', 'profit_sharing_payment']);
+            $table->string('type');
             $table->string('payment_proof')->nullable();
             $table->longText('description')->nullable();
             $table->decimal('amount', 16, 2);

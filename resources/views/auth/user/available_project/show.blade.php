@@ -28,6 +28,19 @@
                                 <h5 class="fw-semibold">Profit Sharing</h5>
                                 <p class="text-muted">{!! $project->description_of_profit_sharing !!}</p>
                             </div>
+
+                            <hr>
+
+                            <div class="fundraising-period ">
+                                <p>Fundraising Period: {{ $project->campaign->fundraising_period_start }}
+                                    -
+                                    {{ $project->campaign->fundraising_period_end }}
+                                </p>
+                                <p>On Going Period: {{ $project->campaign->on_going_period_start }}
+                                    -
+                                    {{ $project->campaign->on_going_period_end }}
+                                </p>
+                            </div>
                             <hr>
                             <div class="income-statement-upload-every d-flex">
                                 <h5>Income Statement Upload Every: <span
@@ -40,6 +53,9 @@
                                         class="text-success fw-bold">{{ $project->profit_sharing_percentage }}%</span>
                                 </h5>
                             </div>
+
+
+
                             {{-- <div class="supporting-documents">
                                 <h5 class="fw-semibold">Supporting Documents</h5>
                                 <div class="row">

@@ -68,7 +68,7 @@
                         <p class="my-1 text-secondary">Sisa hari</p>
                         <h5>
                             @if ($project->campaign)
-                                {{ \Carbon\Carbon::now()->diffInDays($project->campaign->fundraising_period_end) }}
+                                {{ \Carbon\Carbon::now()->diffInDays($project->campaign->fundraising_period_end) + 1 }}
                             @else
                                 -
                             @endif

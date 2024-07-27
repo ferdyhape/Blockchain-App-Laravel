@@ -54,8 +54,8 @@ class SubCategoryProjectSubmission extends Model
                 return 'Projek Sedang Berjalan';
             case 'closed':
                 return 'Projek Selesai';
-            case 'cancelled':
-                return 'Proposal project Anda dibatalkan';
+            case 'canceled':
+                return 'Karena pembelian token tidak mencapai target, maka project ini dibatalkan';
                 // default
             default:
                 return '-';

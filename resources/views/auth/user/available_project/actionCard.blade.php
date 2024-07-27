@@ -8,11 +8,11 @@
                             class="btn btn-success w-100">Beli</a>
                     </div>
                 @endif
-                <div class="col-12">
+                {{-- <div class="col-12">
                     <button type="button" class="btn btn-secondary w-100" data-bs-toggle="modal" data-bs-target="#">
                         Download Prospectus
                     </button>
-                </div>
+                </div> --}}
             </div>
         </div>
     </div>

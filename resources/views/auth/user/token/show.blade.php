@@ -75,6 +75,26 @@
                                             {{ $campaign->project->campaign->maximum_purchase }}
                                         </td>
                                     </tr>
+                                    <tr>
+                                        <td class="text-start text-secondary">
+                                            Periode Penggalangan Dana
+                                        </td>
+                                        <td class="text-start fw-semibold">
+                                            {{ $campaign->fundraising_period_start }} s/d
+                                            {{ $campaign->fundraising_period_end }}
+                                        </td>
+
+                                    </tr>
+
+                                    <tr>
+                                        <td class="text-start text-secondary">
+                                            Periode Proyek Berlangsung
+                                        </td>
+                                        <td class="text-start fw-semibold">
+                                            {{ $campaign->on_going_period_start }} s/d
+                                            {{ $campaign->on_going_period_end }}
+                                        </td>
+                                    </tr>
                                 </table>
                             </div>
                         </div>

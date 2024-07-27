@@ -45,6 +45,9 @@ class SubCategoryProjectSubmissionSeeder extends Seeder
             ],
             'Ditolak' => [
                 'rejected'
+            ],
+            'Dibatalkan' => [
+                'canceled'
             ]
         ];
 

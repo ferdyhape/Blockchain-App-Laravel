@@ -81,10 +81,7 @@
                 </div>
                 <div class="my-4">
                     <div class="fw-bold">
-                        Project anda sudah memasuki tahap tanda tangan kontrak, mohon unduh dokumen kontrak anda <a
-                            href="#">disini</a>
-                        dan kemudian upload
-                        pada form dibawah ini
+                        Project anda sudah memasuki tahap tanda tangan kontrak, mohon upload dokumen kontrak yang sudah ditandatangani
                     </div>
                 </div>
                 <form action="{{ route('dashboard.user.project-management.upload-signed-contract.post', $project->id) }}" method="POST"

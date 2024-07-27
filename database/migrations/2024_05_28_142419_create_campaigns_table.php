@@ -25,7 +25,7 @@ return new class extends Migration
             $table->date('fundraising_period_end')->nullable(); // Fundraising period end
             $table->date('on_going_period_start')->nullable(); // On going period start
             $table->date('on_going_period_end')->nullable(); // On going period end
-            $table->decimal('sold_token_amount', 20, 0)->default(0);
+            $table->decimal('sold_token_amount', 20, 0)->default(0); // jumlah token yang terjual
             $table->string('status')->default('pending'); // status proses penggalangan dana
             // dokumen prospektus akan di handle media library
             $table->timestamps();

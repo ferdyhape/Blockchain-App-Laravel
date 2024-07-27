@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 class ProjectService
 {
 
+
     // profitSharingPayment
     public static function profitSharingPayment($id, $paymentMethodDetailId)
     {
@@ -51,6 +52,11 @@ class ProjectService
             $query->where('on_going_period_end', '<=', Carbon::now());
         })->with('campaign')->get();
 
+        // where fundraising_period_end <= now and sold_token_amount < offered_token_amount
+        $projectCanceled = Project::whereHas('campaign', function ($query) {
+            $query->where('fundraising_period_end', '<=', Carbon::now())->where('sold_token_amount', '<', DB::raw('offered_token_amount'));
+        })->with('campaign')->get();
+
         foreach ($projectOnGoing as $project) {
             self::onGoingProject($project->id);
         }
@@ -58,6 +64,31 @@ class ProjectService
         foreach ($projectClosed as $project) {
             self::closedProject($project->id);
         }
+
+        foreach ($projectCanceled as $project) {
+            self::cancelProject($project->id);
+        }
+    }
+
+    public static function cancelProject($projectId)
+    {
+        $project = ProjectService::getProjectById($projectId);
+        $categoryProjectSubmissionStatus = CategoryProjectSubmissionStatusService::getCategoryByName('Dibatalkan');
+        $subCategoryProjectSubmission = SubCategoryProjectSubmissionService::getSubCategoryByName('canceled');
+
+        if ($project->isCanceled()) {
+            return;
+        }
+
+        CampaignService::updateCampaignStatus($project->campaign, 'canceled');
+        self::updateProjectStatus($project, $categoryProjectSubmissionStatus);
+        WalletService::refundWalletTransaction($project->campaign->id);
+
+
+        $project->progressStatusOfProjectSubmission()->create([
+            'category_project_submission_status_id' => $categoryProjectSubmissionStatus->id,
+            'sub_category_project_submission_id' => $subCategoryProjectSubmission->id,
+        ]);
     }
 
     public static function closedProject($projectId)
