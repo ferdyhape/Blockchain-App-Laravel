@@ -22,3 +22,45 @@
   2024-07-09 13:03:46 App\Jobs\AddTokenProcess .................. 18.34ms DONE
   2024-07-10 03:00:02 App\Jobs\AddTokenProcess ....................... RUNNING
   2024-07-10 03:00:02 App\Jobs\AddTokenProcess .................. 51.61ms DONE
+  2024-07-19 09:29:05 App\Jobs\AddTokenProcess ....................... RUNNING
+  2024-07-19 09:29:05 App\Jobs\AddTokenProcess .................. 61.62ms DONE
+  2024-07-22 18:56:03 App\Jobs\AddTokenProcess ....................... RUNNING
+  2024-07-22 18:56:03 App\Jobs\AddTokenProcess .................. 37.05ms DONE
+  2024-07-23 09:51:52 App\Jobs\AddTokenProcess ....................... RUNNING
+  2024-07-23 09:51:52 App\Jobs\AddTokenProcess .................. 48.57ms DONE
+  2024-07-24 21:17:32 App\Jobs\AddTokenProcess ....................... RUNNING
+  2024-07-24 21:17:32 App\Jobs\AddTokenProcess .................. 48.38ms DONE
+  2024-07-24 22:33:37 App\Jobs\AddTokenProcess ....................... RUNNING
+  2024-07-24 22:33:37 App\Jobs\AddTokenProcess .................. 50.10ms DONE
+  2024-07-24 22:34:19 App\Jobs\AddTokenProcess ....................... RUNNING
+  2024-07-24 22:34:19 App\Jobs\AddTokenProcess .................. 48.60ms DONE
+  2024-07-24 22:50:26 App\Jobs\AddTokenProcess ....................... RUNNING
+  2024-07-24 22:50:26 App\Jobs\AddTokenProcess .................. 22.04ms DONE
+  2024-07-24 23:02:03 App\Jobs\AddTokenProcess ....................... RUNNING
+  2024-07-24 23:02:03 App\Jobs\AddTokenProcess .................. 25.52ms DONE
+  2024-07-27 22:04:28 App\Jobs\AddTokenProcess ....................... RUNNING
+  2024-07-27 22:04:28 App\Jobs\AddTokenProcess .................. 47.62ms DONE
+  2024-07-27 22:05:58 App\Jobs\AddTokenProcess ....................... RUNNING
+  2024-07-27 22:05:58 App\Jobs\AddTokenProcess .................. 29.89ms DONE
+  2024-07-27 22:17:20 App\Jobs\AddTokenProcess ....................... RUNNING
+  2024-07-27 22:17:20 App\Jobs\AddTokenProcess .................. 37.66ms DONE
+  2024-07-27 22:23:32 App\Jobs\AddTokenProcess ....................... RUNNING
+  2024-07-27 22:23:32 App\Jobs\AddTokenProcess .................. 37.77ms DONE
+  2024-07-27 22:28:03 App\Jobs\AddTokenProcess ....................... RUNNING
+  2024-07-27 22:28:03 App\Jobs\AddTokenProcess ................... 8.87ms DONE
+  2024-07-27 22:29:30 App\Jobs\AddTokenProcess ....................... RUNNING
+  2024-07-27 22:29:30 App\Jobs\AddTokenProcess .................. 52.84ms DONE
+  2024-07-27 22:35:30 App\Jobs\AddTokenProcess ....................... RUNNING
+  2024-07-27 22:35:30 App\Jobs\AddTokenProcess .................. 20.61ms DONE
+  2024-07-27 22:35:48 App\Jobs\AddTokenProcess ....................... RUNNING
+  2024-07-27 22:35:48 App\Jobs\AddTokenProcess .................. 92.72ms DONE
+  2024-07-29 14:58:27 App\Jobs\AddTokenProcess ....................... RUNNING
+  2024-07-29 14:58:27 App\Jobs\AddTokenProcess .................. 45.68ms DONE
+  2024-07-29 15:00:09 App\Jobs\AddTokenProcess ....................... RUNNING
+  2024-07-29 15:00:10 App\Jobs\AddTokenProcess .................. 44.33ms DONE
+  2024-07-29 15:11:01 App\Jobs\AddTokenProcess ....................... RUNNING
+  2024-07-29 15:11:01 App\Jobs\AddTokenProcess .................. 10.89ms DONE
+  2024-07-29 15:11:10 App\Jobs\AddTokenProcess ....................... RUNNING
+  2024-07-29 15:11:10 App\Jobs\AddTokenProcess .................. 17.49ms DONE
+  2024-07-30 22:20:27 App\Jobs\AddTokenProcess ....................... RUNNING
+  2024-07-30 22:20:27 App\Jobs\AddTokenProcess .................. 28.58ms DONE

@@ -268,6 +268,31 @@ class TransactionService
         return true;
     }
 
+    public static function checkIfTokenUnAvailable($campaign_id, $quantity)
+    {
+        $relatedCampaign = CampaignService::getCampaignById($campaign_id);
+        // sold_token_amount, offered_token_amount
+        $availableToken = $relatedCampaign->offered_token_amount - $relatedCampaign->sold_token_amount;
+
+        if ($quantity > $availableToken) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public static function checkIfTokenSold($campaign_id)
+    {
+        $relatedCampaign = CampaignService::getCampaignById($campaign_id);
+        $availableToken = $relatedCampaign->offered_token_amount == $relatedCampaign->sold_token_amount;
+
+        if ($availableToken) {
+            return false;
+        }
+
+        return true;
+    }
+
     public static function checkIfWalletBalanceEnough($totalPrice)
     {
         $user = UserService::getUserById(auth()->user()->id);

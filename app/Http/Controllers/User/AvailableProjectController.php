@@ -52,6 +52,14 @@ class AvailableProjectController extends Controller
                 return redirect()->back()->with('error', 'Saldo Wallet tidak mencukupi');
             }
 
+            if (!TransactionService::checkIfTokenUnAvailable($project->campaign->id, $validated['quantity'])) {
+                return redirect()->back()->with('error', 'Jumlah token yang tersedia tidak mencukupi');
+            }
+
+            if (!TransactionService::checkIfTokenSold($project->campaign->id, $validated['quantity'])) {
+                return redirect()->back()->with('error', 'Keseluruhan token yang tersedia telah terjual');
+            }
+
             $totalPrice = $project->campaign->price_per_unit * $validated['quantity'];
 
             return view('auth.user.available_project.preview_transaction', [
